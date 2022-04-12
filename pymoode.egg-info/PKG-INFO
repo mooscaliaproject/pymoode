@@ -1,0 +1,14 @@
+Metadata-Version: 2.1
+Name: pymoode
+Version: 0.1.0
+Summary: A multi-objective optimization package using differential evolution.
+Home-page: https://github.com/mooscaliaproject/pymoode
+Author: Bruno Scalia C. F. Leite
+Author-email: mooscaliaproject@gmail.com
+License: MIT
+Download-URL: https://github.com/mooscaliaproject/pymoode
+Keywords: Multi-objective optimization,NSGA-II,Differential Evolution,Genetic Algorithm,Evolutionary optimization
+Platform: UNKNOWN
+
+UNKNOWN
+
