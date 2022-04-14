@@ -1,5 +1,5 @@
 # pymoode
-A Python framework for Differential Evolution using [pymoo](https://github.com/anyoptimization/pymoo).
+A Python framework for Differential Evolution using [pymoo](https://github.com/anyoptimization/pymoo) (Blank & Deb, 2020).
 
 ## Install
 First, make sure you have a Python 3 environment installed.
@@ -18,7 +18,7 @@ pip install -e git+https://github.com/mooscalia/pymoode#egg=pymoode
 - **DE**: Differential Evolution for single-objective problems proposed by Storn & Price (1997). Other features later implemented are also present, such as dither, jitter, selection variants, and crossover strategies. For details see Price et al. (2005).
 - **NSDE**: Non-dominared Sorting Differential Evolution, a multi-objective algorithm that combines DE mutation and crossover operators to NSGA-II (Deb et al., 2002) survival. This is the version implemented by Leite et al. (2022). A self-adaptive strategy might be used to define mutation parameters from a range by using the SA parameter.
 - **GDE3**: Generalized Differential Evolution 3, a multi-objective algorithm that combines DE mutation and crossover operators to NSGA-II survival with a mixed type survival strategy in which individuals might be removed in one-to-one comparison before Non-dominated Sorting. It is recommended to be used for problems in which premature convergence might be an issue. It was proposed by Kukkonen, S. and Lampinen, J. (2005).
-- **NSDER**: Non-dominared Sorting Differential Evolution based on Reference directions. It is an algorithm for many-objective problems that works as extension of NSDE using NSGA-III (Deb & Jain, 2014) survival strategy.
+- **NSDER**: Non-dominared Sorting Differential Evolution based on Reference directions (Reddy & Dulikravich, 2019). It is an algorithm for many-objective problems that works as extension of NSDE using NSGA-III (Deb & Jain, 2014) survival strategy.
 
 ## Survival Operators
 - **RankSurvival**: Flexible structure to implement NSGA-II rank and crowding survival with different options for crowding metric and elimination of individuals.
@@ -61,13 +61,17 @@ Please cite this library via the original article in which it was published:
 Leite, B., Costa, A. O. S. & Costa Junior, E. F., 2021. A self-adaptive multi-objective differential evolution algorithm applied to the styrene reactor optimization. Journal, Volume XXX, p. XXX.
 
 ## References
+Blank, J. & Deb, K., 2020. pymoo: Multi-Objective Optimization in Python. IEEE Access, Volume 8, pp. 89497-89509.
+
 Deb, K. & Jain, H., 2014. An evolutionary many-objective optimization algorithm using reference-point-based nondominated sorting approach, part I: solving problems with box constraints.. IEEE Transactions on Evolutionary Computation, 18(4), p. 577–601.
 
 Deb, K., Pratap, A., Agarwal, S. & Meyarivan, T. A. M. T., 2002. A Fast and Elitist Multiobjective Genetic Algorithm: NSGA-II. IEEE transactions on evolutionary computation, 6(2), pp. 182-197.
 
-Kukkonen, S. & Lampinen, J., 2005. GDE3: The third evolution step of generalized differential evolution. In: 2005 IEEE congress on evolutionary computation. s.l.:IEEE, pp. 443-450.
+Kukkonen, S. & Lampinen, J., 2005. GDE3: The third evolution step of generalized differential evolution. 2005 IEEE congress on evolutionary computation, Volume 1, pp. 443-450.
 
 Leite, B., Costa, A. O. S. & Costa Junior, E. F., 2021. A self-adaptive multi-objective differential evolution algorithm applied to the styrene reactor optimization. Journal, Volume XXX, p. XXX.
+
+Reddy, S. R. & Dulikravich, G. S., 2019. Many-objective differential evolution optimization based on reference points: NSDE-R. Struct. Multidisc. Optim., Volume 60, pp. 1455-1473.
 
 Price, K. V., Storn, R. M. & Lampinen, J. A., 2005. Differential Evolution: A Practical Approach to Global Optimization. 1st ed. Springer: Berlin.
 
@@ -77,6 +81,6 @@ Storn, R. & Price, K., 1997. Differential evolution–a simple and efficient heu
 e-mail: bruscalia12@gmail.com
 
 ## Acknowledgements
-To Julian Blank, the man who created the amazing structure of pymoo, making such a project possible.
+To Julian Blank, who created the amazing structure of pymoo, making such a project possible.
 
-To Esly Costa Junior, the man who made it possible in the first instance, who trusted in me from the start and guided me through this path of modeling and optimization.
+To Esly F. da Costa Junior, who made it possible all along, trusted in me from the start, and guided me through the path of modeling and optimization.

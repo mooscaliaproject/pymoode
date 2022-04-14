@@ -25,8 +25,10 @@ class NSDER(NSDE):
                  gamma=1e-4,
                  SA=0.5,
                  **kwargs):
-        """NSDE-R is an extension of the algorithm SA-NSDE proposed by Leite et al. (2022) that combines
-        NSGA-III sorting and survival strategies to DE mutation and crossover.
+        """NSDE-R is an extension of NSDE to many-objective problems (Reddy & Dulikravich, 2019) using NSGA-III survival.
+        In this implementation, features of SA-NSDE (Leite et al., 2022) are incorporated.
+        
+        S. R. Reddy and G. S. Dulikravich, "Many-objective differential evolution optimization based on reference points: NSDE-R," Struct. Multidisc. Optim., vol. 60, pp. 1455-1473, 2019.
 
         Args:
             ref_dirs (array like): The reference direction that should be used during the optimization.
