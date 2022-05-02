@@ -5,6 +5,7 @@ from pymoo.util.nds.non_dominated_sorting import NonDominatedSorting
 from pymoo.core.survival import Survival, split_by_feasibility
 from pymoo.core.population import Population
 from pymoo.util.misc import find_duplicates
+from scipy.spatial.distance import pdist, squareform
 
 
 def get_crowding_function(label):
@@ -19,6 +20,8 @@ def get_crowding_function(label):
         fun = calc_crowding_squared_diag
     elif label == "cde":
         fun = calc_crowding_diagonal_entropy
+    elif label == "mnn":
+        fun = calc_mnn
     else:
         raise KeyError("Crwoding function not defined")
     return fun
@@ -188,6 +191,15 @@ class ConstrainedRankSurvival(Survival):
             survivors = self.ranking.do(problem, pop, *args, n_survive=n_survive, **kwargs)
 
         return survivors
+    
+
+class CrowdingDiversity:
+    
+    def do(self, F, filter_out_duplicates=True):
+        self._do(F, filter_out_duplicates=True)
+    
+    def _do(self, filter_out_duplicates=True):
+        pass
 
 
 def calc_crowding_entropy(F, filter_out_duplicates=True):
@@ -422,3 +434,155 @@ def diag_hv_crowding_distance(F, filter_out_duplicates=True):
 
     return dhv
 
+
+def diag_hv_crowding_distance(F, filter_out_duplicates=True):
+    n_points, n_obj = F.shape
+
+    if n_points <= 2:
+        return np.full(n_points, np.inf)
+
+    else:
+
+        if filter_out_duplicates:
+            # filter out solutions which are duplicates - duplicates get a zero finally
+            is_unique = np.where(np.logical_not(find_duplicates(F, epsilon=1e-32)))[0]
+        else:
+            # set every point to be unique without checking it
+            is_unique = np.arange(n_points)
+
+        # index the unique points of the array
+        _F = F[is_unique]
+
+        # sort each column and get index
+        I = np.argsort(_F, axis=0, kind='mergesort')
+
+        # sort the objective space values for the whole matrix
+        _F = _F[I, np.arange(n_obj)]
+
+        # calculate the distance from each point to the last and next
+        dist = np.row_stack([_F, np.full(n_obj, np.inf)]) - np.row_stack([np.full(n_obj, -np.inf), _F])
+
+        # calculate the norm for each objective - set to NaN if all values are equal
+        norm = np.max(_F, axis=0) - np.min(_F, axis=0)
+        norm[norm == 0] = np.nan
+
+        # prepare the distance to last and next vectors
+        dist_scaled = dist.copy()[1:] / norm
+        dist_scaled[np.isnan(dist_scaled)] = 0.0
+        
+        #Diagonal of neighbors HV
+        J = np.argsort(I, axis=0)
+        _dhv = np.square(dist_scaled[J, np.arange(n_obj)]).sum(axis=1) / n_obj
+
+        #Save the final vector which sets the crowding distance for duplicates to zero to be eliminated
+        dhv = np.zeros(n_points)
+        dhv[is_unique] = _dhv
+
+    return dhv
+
+
+def calc_mnn(F, filter_out_duplicates=True):
+    n_points, n_obj = F.shape
+
+    if n_points <= 2:
+        return np.full(n_points, np.inf)
+
+    else:
+
+        if filter_out_duplicates:
+            # filter out solutions which are duplicates - duplicates get a zero finally
+            is_unique = np.where(np.logical_not(find_duplicates(F, epsilon=1e-32)))[0]
+        else:
+            # set every point to be unique without checking it
+            is_unique = np.arange(n_points)
+
+        # index the unique points of the array
+        _F = F[is_unique].copy()
+
+        # calculate the norm for each objective - set to NaN if all values are equal
+        norm = np.max(_F, axis=0) - np.min(_F, axis=0)
+        norm[norm == 0] = 1.0
+        
+        # F normalized
+        _F = (_F - _F.min(axis=0)) / norm
+        
+        # Distances pairwise (inneficient)
+        D = pdist(_F, metric="euclidean")
+        D = squareform(D)
+        
+        # M neighbors
+        M = _F.shape[1]
+        _D = np.sort(D, axis=1)[:, 1:M+1]
+        
+        # Metric d
+        _d = np.prod(_D, axis=1)  
+        
+        # Set top performers as np.inf
+        _extremes = np.argmin(_F, axis=0)
+        _d[_extremes] = np.inf
+
+        # Save the final vector which sets the crowding distance for duplicates to zero to be eliminated
+        d = np.zeros(n_points)
+        d[is_unique] = _d
+
+    return d
+
+
+def calc_crowding_squared_diag(F, filter_out_duplicates=True):
+    n_points, n_obj = F.shape
+
+    if n_points <= 2:
+        return np.full(n_points, np.inf)
+
+    else:
+
+        if filter_out_duplicates:
+            # filter out solutions which are duplicates - duplicates get a zero finally
+            is_unique = np.where(np.logical_not(find_duplicates(F, epsilon=1e-32)))[0]
+        else:
+            # set every point to be unique without checking it
+            is_unique = np.arange(n_points)
+
+        # index the unique points of the array
+        _F = F[is_unique]
+
+        # sort each column and get index
+        I = np.argsort(_F, axis=0, kind='mergesort')
+
+        # sort the objective space values for the whole matrix
+        _F = _F[I, np.arange(n_obj)]
+
+        # calculate the distance from each point to the last and next
+        dist = np.row_stack([_F, np.full(n_obj, np.inf)]) - np.row_stack([np.full(n_obj, -np.inf), _F])
+
+        # calculate the norm for each objective - set to NaN if all values are equal
+        norm = np.max(_F, axis=0) - np.min(_F, axis=0)
+        norm[norm == 0] = np.nan
+
+        # prepare the distance to last and next vectors
+        dl = dist.copy()[:-1] / norm
+        du = dist.copy()[1:] / norm
+        
+        #Fix nan
+        dl[np.isnan(dl)] = 0.0
+        du[np.isnan(du)] = 0.0
+        
+        #Total distance
+        cd = dl + du
+
+        #Get diagonals
+        J = np.argsort(I, axis=0)
+        _diag = np.square(cd[J, np.arange(n_obj)]).sum(axis=1)
+
+        #Save the final vector which sets the crowding diagonals for duplicates to zero to be eliminated
+        diag = np.zeros(n_points)
+        diag[is_unique] = _diag
+
+    return diag
+
+
+def calc_knn(X):
+    
+    _Xsum = np.sum(X, axis=1, keepdims=True)
+    _upper_square = _Xsum - _Xsum.T
+    return _upper_square
