@@ -1,3 +1,2 @@
-matplotlib==3.5.*
 numpy==1.22.*
 pymoo==0.5.*

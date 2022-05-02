@@ -1,12 +1,10 @@
 import numpy as np
 from pymoo.core.crossover import Crossover
-from pymoo.operators.crossover.sbx import SimulatedBinaryCrossover
 from pymoo.core.population import Population
 from pymoo.operators.crossover.binx import mut_binomial
 from pymoo.operators.crossover.expx import mut_exp
 from pymoo.operators.repair.bounds_repair import is_out_of_bounds_by_problem
 
-_scale_vector = np.arcsin(1)
 _small_number = np.finfo(float).eps
 
 

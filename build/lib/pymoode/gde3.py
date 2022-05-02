@@ -2,7 +2,7 @@
 Original article:
 
 Kukkonen, S. & Lampinen, J., 2005. GDE3: The third evolution step of generalized differential evolution.
-In: 2005 IEEE congress on evolutionary computation. s.l.:IEEE, pp. 443-450.
+2005 IEEE congress on evolutionary computation, Volume 1, pp. 443-450.
 """
 
 from pymoode.nsde import NSDE
@@ -30,8 +30,8 @@ class GDE3(NSDE):
         It is implemented in this version with the DE features presented in SA-NSDE by Leite et al. (2022)
         and the same constraint handling strategy of NSGA-II by default.
         We recommend using it to problems with many local fronts in which it is necessary to
-        avoid premature convergence. In this context low CR values (< 0.2) are highly recommended.
-        For problems that demand high CR values (~0.9) NSDE is more recommended.
+        avoid premature convergence. In this context, low CR values (< 0.2) are highly recommended.
+        For problems that demand high CR values (~0.9), NSDE is more recommended.
         For many-objective problems, try using NSDER.
 
         Args:

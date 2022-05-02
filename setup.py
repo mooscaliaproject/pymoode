@@ -16,7 +16,7 @@ setup(
               'Genetic Algorithm',
               'Evolutionary optimization'],
   install_requires=[
-          'numpy==1.19.*',
+          'numpy==1.22.*',
           'pymoo==0.5.*',
       ],
 )
