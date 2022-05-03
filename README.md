@@ -64,7 +64,7 @@ plt.show()
 ## Citation
 Please cite this library via the original article in which it was published:
 
-Leite, B., Costa, A. O. S. & Costa Junior, E. F., 2021. A self-adaptive multi-objective differential evolution algorithm applied to the styrene reactor optimization. Journal, Volume XXX, p. XXX.
+Leite, B., Costa, A. O. S. & Costa Junior, E. F., 2022. A self-adaptive multi-objective differential evolution algorithm applied to the styrene reactor optimization. Available at SSRN: https://ssrn.com/abstract=4081771, or http://dx.doi.org/10.2139/ssrn.4081771.
 
 ## References
 Blank, J. & Deb, K., 2020. pymoo: Multi-Objective Optimization in Python. IEEE Access, Volume 8, pp. 89497-89509.
