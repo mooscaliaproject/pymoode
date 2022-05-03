@@ -76,7 +76,7 @@ Kukkonen, S. & Deb, K., 2006. A fast and effective method for pruning of non-dom
 
 Kukkonen, S. & Lampinen, J., 2005. GDE3: The third evolution step of generalized differential evolution. 2005 IEEE congress on evolutionary computation, Volume 1, pp. 443-450.
 
-Leite, B., Costa, A. O. S. & Costa Junior, E. F., 2021. A self-adaptive multi-objective differential evolution algorithm applied to the styrene reactor optimization. Journal, Volume XXX, p. XXX.
+Leite, B., Costa, A. O. S. & Costa Junior, E. F., 2022. A self-adaptive multi-objective differential evolution algorithm applied to the styrene reactor optimization. Available at SSRN: https://ssrn.com/abstract=4081771, or http://dx.doi.org/10.2139/ssrn.4081771.
 
 Reddy, S. R. & Dulikravich, G. S., 2019. Many-objective differential evolution optimization based on reference points: NSDE-R. Struct. Multidisc. Optim., Volume 60, pp. 1455-1473.
 
