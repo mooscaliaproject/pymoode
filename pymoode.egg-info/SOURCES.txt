@@ -6,7 +6,6 @@ pymoode/des.py
 pymoode/dex.py
 pymoode/experiments.py
 pymoode/gde3.py
-pymoode/knn.py
 pymoode/nsde.py
 pymoode/nsder.py
 pymoode/survivors.py
