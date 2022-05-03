@@ -69,7 +69,7 @@ Leite, B., Costa, A. O. S. & Costa Junior, E. F., 2022. A self-adaptive multi-ob
 ## References
 Blank, J. & Deb, K., 2020. pymoo: Multi-Objective Optimization in Python. IEEE Access, Volume 8, pp. 89497-89509.
 
-Deb, K. & Jain, H., 2014. An evolutionary many-objective optimization algorithm using reference-point-based nondominated sorting approach, part I: solving problems with box constraints.. IEEE Transactions on Evolutionary Computation, 18(4), p. 577–601.
+Deb, K. & Jain, H., 2014. An evolutionary many-objective optimization algorithm using reference-point-based nondominated sorting approach, part I: solving problems with box constraints.. IEEE Transactions on Evolutionary Computation, 18(4), pp. 577–601.
 
 Deb, K., Pratap, A., Agarwal, S. & Meyarivan, T. A. M. T., 2002. A Fast and Elitist Multiobjective Genetic Algorithm: NSGA-II. IEEE transactions on evolutionary computation, 6(2), pp. 182-197.
 
