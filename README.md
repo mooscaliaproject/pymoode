@@ -24,8 +24,13 @@ pip install -e git+https://github.com/mooscalia/pymoode#egg=pymoode
 - **RankSurvival**: Flexible structure to implement NSGA-II rank and crowding survival with different options for crowding metric and elimination of individuals.
 - **ConstrainedRankSurvival**: A survival operator based on rank and crowding with a special constraint handling approach proposed by Kukkonen, S. and Lampinen, J. (2005).
 
+## Crowding Metrics
+- **Crowding Distance**: Proposed by Deb et al. (2002) in NSGA-II. Imported from *pymoo*.
+- **Crowding Entropy**: Proposed by Wang et al. (2009) in MOSADE.
+- ***M*-Nearest Neighbors**: Proposed by Kukkonen and Deb (2006) in an extension of GDE3 to many-objective problems.
+
 ## Usage
-For more examples, see the example notebooks [single](./EXAMPLE_SOO.ipynb), [multi](./EXAMPLE_MULTI.ipynb), [many](./EXAMPLE_MANY.ipynb).
+For more examples, see the example notebooks [single](./EXAMPLE_SOO.ipynb), [multi](./EXAMPLE_MULTI.ipynb), [many](./EXAMPLE_MANY.ipynb), and a [complete tutorial](./tutorial.ipynb)
 
 ```
 import matplotlib.pyplot as plt
@@ -67,6 +72,8 @@ Deb, K. & Jain, H., 2014. An evolutionary many-objective optimization algorithm 
 
 Deb, K., Pratap, A., Agarwal, S. & Meyarivan, T. A. M. T., 2002. A Fast and Elitist Multiobjective Genetic Algorithm: NSGA-II. IEEE transactions on evolutionary computation, 6(2), pp. 182-197.
 
+Kukkonen, S. & Deb, K., 2006. A fast and effective method for pruning of non-dominated solutions in many-objective problems. In: Parallel problem solving from nature-PPSN IX. Berlin: Springer, pp. 553-562.
+
 Kukkonen, S. & Lampinen, J., 2005. GDE3: The third evolution step of generalized differential evolution. 2005 IEEE congress on evolutionary computation, Volume 1, pp. 443-450.
 
 Leite, B., Costa, A. O. S. & Costa Junior, E. F., 2021. A self-adaptive multi-objective differential evolution algorithm applied to the styrene reactor optimization. Journal, Volume XXX, p. XXX.
@@ -76,6 +83,8 @@ Reddy, S. R. & Dulikravich, G. S., 2019. Many-objective differential evolution o
 Price, K. V., Storn, R. M. & Lampinen, J. A., 2005. Differential Evolution: A Practical Approach to Global Optimization. 1st ed. Springer: Berlin.
 
 Storn, R. & Price, K., 1997. Differential evolution–a simple and efficient heuristic for global optimization over continuous spaces. J. Glob. Optim., 11(4), pp. 341-359.
+
+Wang, Y.-N., Wu, L.-H. & Yuan , X.-F., 2010. Multi-objective self-adaptive differential evolution with elitist archive and crowding entropy-based diversity measure. Soft Comput., 14(3), pp. 193-209.
 
 ## Contact
 e-mail: bruscalia12@gmail.com

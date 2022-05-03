@@ -18,5 +18,6 @@ setup(
   install_requires=[
           'numpy==1.22.*',
           'pymoo==0.5.*',
+          'scikit-learn==1.0.*'
       ],
 )
