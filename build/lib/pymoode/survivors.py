@@ -19,7 +19,7 @@ def get_crowding_function(label):
     elif label == "ce":
         fun = FunctionalDiversity(calc_crowding_entropy)
     elif label == "mnn_bak":
-        fun = FunctionalDiversity(calc_mnn)
+        fun = FunctionalDiversity(_calc_mnn)
     elif label == "mnn":
         fun = MNNDiversity(fast_mode=False)
     elif label == "mnn_fast":
@@ -226,6 +226,12 @@ class FunctionalDiversity(CrowdingDiversity):
 class MNNDiversity(CrowdingDiversity):
     
     def __init__(self, fast_mode=False, twonn=False, **kwargs) -> None:
+        """Kukkonen, S. & Deb, K., 2006. A fast and effective method for pruning of non-dominated solutions in many-objective problems. In: Parallel problem solving from nature-PPSN IX. Berlin: Springer, pp. 553-562
+
+        Args:
+            fast_mode (bool, optional): Eliminate all individuals at once. Defaults to False.
+            twonn (bool, optional): Use 2-NN instead of than M-NN. Defaults to False.
+        """
         super().__init__()
         self.fast_mode = fast_mode
         self.twonn = twonn
@@ -248,6 +254,10 @@ class MNNDiversity(CrowdingDiversity):
 
             # index the unique points of the array
             _F = F[is_unique].copy()
+            
+            #Break if many duplicates
+            if _F.shape[0] <= n_obj:
+                return np.full(n_points, np.inf)
 
             # calculate the norm for each objective - set to NaN if all values are equal
             norm = np.max(_F, axis=0) - np.min(_F, axis=0)
@@ -335,6 +345,15 @@ class MNNDiversity(CrowdingDiversity):
             
 
 def calc_crowding_entropy(F, filter_out_duplicates=True, **kwargs):
+    """Wang, Y.-N., Wu, L.-H. & Yuan , X.-F., 2010. Multi-objective self-adaptive differential evolution with elitist archive and crowding entropy-based diversity measure. Soft Comput., 14(3), pp. 193-209.
+
+    Args:
+        F (2d array like): Objective functions.
+        filter_out_duplicates (bool, optional): Defaults to True.
+
+    Returns:
+        crowding_enropies (1d array)
+    """
     n_points, n_obj = F.shape
 
     if n_points <= 2:
@@ -398,7 +417,7 @@ def calc_crowding_entropy(F, filter_out_duplicates=True, **kwargs):
     return ce
 
 
-def calc_mnn(F, filter_out_duplicates=True, **kwargs):
+def _calc_mnn(F, filter_out_duplicates=True, **kwargs):
     n_points, n_obj = F.shape
 
     if n_points <= 2:

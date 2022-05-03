@@ -5,7 +5,7 @@ setup(
   packages = ['pymoode'],
   version = '0.1.0',
   license='MIT',
-  description = 'A multi-objective optimization package using differential evolution.',
+  description = 'A Python optimization package using Differential Evolution.',
   author = 'Bruno Scalia C. F. Leite',
   author_email = 'mooscaliaproject@gmail.com',
   url = 'https://github.com/mooscaliaproject/pymoode',
