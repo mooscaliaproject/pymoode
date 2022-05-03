@@ -17,18 +17,18 @@ pip install -e git+https://github.com/mooscalia/pymoode#egg=pymoode
 ## Algorithms
 - **DE**: Differential Evolution for single-objective problems proposed by Storn & Price (1997). Other features later implemented are also present, such as dither, jitter, selection variants, and crossover strategies. For details see Price et al. (2005).
 - **NSDE**: Non-dominared Sorting Differential Evolution, a multi-objective algorithm that combines DE mutation and crossover operators to NSGA-II (Deb et al., 2002) survival. This is the version implemented by Leite et al. (2022). A self-adaptive strategy might be used to define mutation parameters from a range by using the SA parameter.
-- **GDE3**: Generalized Differential Evolution 3, a multi-objective algorithm that combines DE mutation and crossover operators to NSGA-II survival with a mixed type survival strategy in which individuals might be removed in one-to-one comparison before Non-dominated Sorting. It is recommended to be used for problems in which premature convergence might be an issue. It was proposed by Kukkonen, S. and Lampinen, J. (2005).
+- **GDE3**: Generalized Differential Evolution 3, a multi-objective algorithm that combines DE mutation and crossover operators to NSGA-II survival with a mixed type survival strategy in which individuals might be removed in one-to-one comparison before Non-dominated Sorting. It is recommended to be used for problems in which premature convergence might be an issue. It was proposed by Kukkonen, S. & Lampinen, J. (2005).
 - **NSDER**: Non-dominared Sorting Differential Evolution based on Reference directions (Reddy & Dulikravich, 2019). It is an algorithm for many-objective problems that works as an extension of NSDE using NSGA-III (Deb & Jain, 2014) survival strategy.
 
 ## Survival Operators
 - **RankSurvival**: Flexible structure to implement NSGA-II rank and crowding survival with different options for crowding metric and elimination of individuals.
-- **ConstrainedRankSurvival**: A survival operator based on rank and crowding with a special constraint handling approach proposed by Kukkonen, S. and Lampinen, J. (2005).
+- **ConstrainedRankSurvival**: A survival operator based on rank and crowding with a special constraint handling approach proposed by Kukkonen, S. & Lampinen, J. (2005).
 
 ## Crowding Metrics
 - **Crowding Distance** (*'cd'*): Proposed by Deb et al. (2002) in NSGA-II. Imported from *pymoo*.
 - **Crowding Entropy** (*'ce'*): Proposed by Wang et al. (2009) in MOSADE.
-- ***M*-Nearest Neighbors** (*'mnn'*): Proposed by Kukkonen and Deb (2006) in an extension of GDE3 to many-objective problems.
-- **2-Nearest Neighbors** (*'2nn'*): Also proposed by Kukkonen and Deb (2006), it is a variant of M-Nearest Neighbors in which the number of neighbors is two.
+- ***M*-Nearest Neighbors** (*'mnn'*): Proposed by Kukkonen & Deb (2006) in an extension of GDE3 to many-objective problems.
+- **2-Nearest Neighbors** (*'2nn'*): Also proposed by Kukkonen & Deb (2006), it is a variant of M-Nearest Neighbors in which the number of neighbors is two.
 
 ## Usage
 For more examples, see the example notebooks [single](./EXAMPLE_SOO.ipynb), [multi](./EXAMPLE_MULTI.ipynb), [many](./EXAMPLE_MANY.ipynb), and a [complete tutorial](./tutorial.ipynb)

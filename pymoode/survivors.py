@@ -126,7 +126,7 @@ class ConstrainedRankSurvival(Survival):
     
     def __init__(self, nds=None, ranking=None):
         """The Rank and Crowding survival approach for handling constraints proposed on
-        GDE3 by Kukkonen, S. and Lampinen, J. (2005).
+        GDE3 by Kukkonen, S. & Lampinen, J. (2005).
 
         Args:
             nds (str or None, optional): Pymoo type of non-dominated sorting. Defaults to None.

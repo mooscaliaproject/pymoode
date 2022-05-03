@@ -26,7 +26,7 @@ class GDE3(NSDE):
                  SA=None,
                  rnd_iter=1,
                  **kwargs):
-        """GDE3 was proposed by Kukkonen, S. and Lampinen, J. (2005).
+        """GDE3 was proposed by Kukkonen, S. & Lampinen, J. (2005).
         It is implemented in this version with the DE features presented in SA-NSDE by Leite et al. (2022)
         and the same constraint handling strategy of NSGA-II by default.
         We recommend using it to problems with many local fronts in which it is necessary to
