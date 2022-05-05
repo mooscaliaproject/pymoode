@@ -36,7 +36,7 @@ class NSDE(NSGA2):
         to DE mutation and crossover following the implementation by Leite et al. (2022)
         with a self-adaptative mutation (scale factor) F parameter.
         When using low CR values (~0.2), try using GDE3.
-        For many-objective problems, try using NSDER.
+        For many-objective problems, try using NSDER or RankSurvival with 'mnn' crowding metric.
 
         Args:
             pop_size (int, optional):Population size. Defaults to 100.
@@ -63,7 +63,8 @@ class NSDE(NSGA2):
             refpoint (float or array, optional): Reference point for distances in self-adapting strategy. Defaults to None.
             posterior (Mutation, optional): Pymoo's mutation operators after crossover. Defaults to NoMutation().
             reapair (Repair, optional): Pymoo's repair operators after mating. Defaults to NoRepair().
-            rnd_iter (int, optional): Number of random repairs to difference vectors violating boundaries. Defaults to 1.
+            rnd_iter (int, optional): Number of random repairs to difference vectors violating boundaries
+                before bounce back. Defaults to 1.
             survival (Survival, optional): Pymoo's survival strategy. Defaults to RankAndCrowdingSurvival().
         """
         

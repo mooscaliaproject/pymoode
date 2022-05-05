@@ -57,7 +57,8 @@ class NSDER(NSDE):
             refpoint (float or array, optional): Reference point for distances in self-adapting strategy. Defaults to None.
             posterior (Mutation, optional): Pymoo's mutation operators after crossover. Defaults to NoMutation().
             reapair (Repair, optional): Pymoo's repair operators after mating. Defaults to NoRepair().
-            rnd_iter (int, optional): Number of random repairs to difference vectors violating boundaries. Defaults to 1.
+            rnd_iter (int, optional): Number of random repairs to difference vectors violating boundaries
+                before bounce back. Defaults to 1.
             survival (Survival, optional): Pymoo's survival strategy. Defaults to RankAndCrowdingSurvival().
         """
         
