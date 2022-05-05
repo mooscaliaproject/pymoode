@@ -31,7 +31,7 @@ pip install -e git+https://github.com/mooscalia/pymoode#egg=pymoode
 - **2-Nearest Neighbors** (*'2nn'*): Also proposed by Kukkonen & Deb (2006), it is a variant of M-Nearest Neighbors in which the number of neighbors is two.
 
 ## Usage
-For more examples, see the example notebooks [single](./EXAMPLE_SOO.ipynb), [multi](./EXAMPLE_MULTI.ipynb), [many](./EXAMPLE_MANY.ipynb), and a [complete tutorial](./tutorial.ipynb)
+For more examples, see the example notebooks [single](notebooks/EXAMPLE_SOO.ipynb), [multi](notebooks/EXAMPLE_MULTI.ipynb), [many](notebooks/EXAMPLE_MANY.ipynb) objective problems, and a [complete tutorial](notebooks/tutorial.ipynb)
 
 ```
 import matplotlib.pyplot as plt
