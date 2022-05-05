@@ -1,11 +1,16 @@
 from setuptools import setup
 
+with open("README.md", "r", encoding="utf-8") as fh:
+    long_description = fh.read()
+
 setup(
   name = 'pymoode',
   packages = ['pymoode'],
   version = '0.1.0',
-  license='MIT',
+  license='Apache License 2.0',
   description = 'A Python optimization package using Differential Evolution.',
+  long_description=long_description,
+  long_description_content_type="text/markdown",
   author = 'Bruno Scalia C. F. Leite',
   author_email = 'mooscaliaproject@gmail.com',
   url = 'https://github.com/mooscaliaproject/pymoode',
@@ -22,6 +27,6 @@ setup(
           'numpy==1.22.*',
           'pymoo==0.5.*',
           'scikit-learn==1.0.*',
-          'scipy==1.8.*'
+          'scipy==1.8.*',
       ],
 )

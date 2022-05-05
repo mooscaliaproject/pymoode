@@ -3,6 +3,9 @@ from pymoo.factory import get_performance_indicator
 import scipy.stats
 import pandas as pd
 
+#This is an experimental file that might be used for comparing algorithms
+#Pandas was not included in the requirements
+
 def get_igd_history(problem, result):
     
     igd_function = get_performance_indicator("igd", problem.pareto_front(), norm_by_dist=True)

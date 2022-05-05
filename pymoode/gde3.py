@@ -32,7 +32,7 @@ class GDE3(NSDE):
         We recommend using it to problems with many local fronts in which it is necessary to
         avoid premature convergence. In this context, low CR values (< 0.2) are highly recommended.
         For problems that demand high CR values (~0.9), NSDE is more recommended.
-        For many-objective problems, try using NSDER.
+        For many-objective problems, try using NSDER or RankSurvival with 'mnn' crowding metric.
 
         Args:
             pop_size (int, optional):Population size. Defaults to 100.
@@ -59,7 +59,8 @@ class GDE3(NSDE):
             refpoint (float or array, optional): Reference point for distances in self-adapting strategy. Defaults to None.
             posterior (Mutation, optional): Pymoo's mutation operators after crossover. Defaults to NoMutation().
             reapair (Repair, optional): Pymoo's repair operators after mating. Defaults to NoRepair().
-            rnd_iter (int, optional): Number of random repairs to difference vectors violating boundaries. Defaults to 1.
+            rnd_iter (int, optional): Number of random repairs to difference vectors violating boundaries
+                before bounce back. Defaults to 1.
             survival (Survival, optional): Pymoo's survival strategy. Defaults to RankAndCrowdingSurvival().
                 In GDE3, the survival strategy is applied after a one-to-one comparison between child vector
                 and corresponding parent when both are non-dominated by the other.
