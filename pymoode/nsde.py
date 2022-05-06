@@ -32,6 +32,7 @@ class NSDE(NSGA2):
                  survival=RankAndCrowdingSurvival(),
                  rnd_iter=1,
                  **kwargs):
+        
         """NSDE is an algorithm that combines that combines NSGA-II sorting and survival strategies
         to DE mutation and crossover following the implementation by Leite et al. (2022)
         with a self-adaptative mutation (scale factor) F parameter.
@@ -39,8 +40,8 @@ class NSDE(NSGA2):
         For many-objective problems, try using NSDER or RankSurvival with 'mnn' crowding metric.
 
         Args:
-            pop_size (int, optional):Population size. Defaults to 100.
-            sampling (Sampling, optional): Sampling strategy. Defaults to LHS().
+            pop_size (int, optional): Population size. Defaults to 100.
+            sampling (Sampling, optional): Sampling strategy of pymoo. Defaults to LHS().
             variant (str, optional): Differential evolution strategy. Must be a string in the format:
                 "DE/selection/n/crossover", in which, n in an integer of number of difference vectors,
                 and crossover is either "bin" or "exp".
