@@ -25,6 +25,7 @@ class NSDER(NSDE):
                  gamma=1e-4,
                  SA=0.5,
                  **kwargs):
+        
         """NSDE-R is an extension of NSDE to many-objective problems (Reddy & Dulikravich, 2019) using NSGA-III survival.
         In this implementation, features of SA-NSDE (Leite et al., 2022) are incorporated.
         
@@ -33,8 +34,8 @@ class NSDER(NSDE):
         Args:
             ref_dirs (array like): The reference direction that should be used during the optimization.
                 Each row represents a reference line and each column a variable.
-            pop_size (int, optional):Population size. Defaults to 100.
-            sampling (Sampling, optional): Sampling strategy. Defaults to LHS().
+            pop_size (int, optional): Population size. Defaults to 100.
+            sampling (Sampling, optional): Sampling strategy of pymoo. Defaults to LHS().
             variant (str, optional): Differential evolution strategy. Must be a string in the format:
                 "DE/selection/n/crossover", in which, n in an integer of number of difference vectors,
                 and crossover is either "bin" or "exp".

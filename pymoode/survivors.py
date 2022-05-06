@@ -8,6 +8,7 @@ from pymoo.util.misc import find_duplicates
 from scipy.spatial.distance import pdist, squareform
 from sklearn.neighbors import NearestNeighbors
 
+#Redefine function to be able to support more kwargs
 def calc_crowding_distance(F, filter_out_duplicates=True, **kwargs):
     return _calc_crowding_distance(F, filter_out_duplicates=True)
 
@@ -18,6 +19,7 @@ def get_crowding_function(label):
         fun = FunctionalDiversity(calc_crowding_distance)
     elif label == "ce":
         fun = FunctionalDiversity(calc_crowding_entropy)
+    #Inefficient form based on full pairwise distances matrix
     elif label == "mnn_bak":
         fun = FunctionalDiversity(_calc_mnn)
     elif label == "mnn":
@@ -38,6 +40,7 @@ class RankSurvival(Survival):
                  nds=None,
                  rule="full",
                  crowding_func="cd"):
+        
         """A generalization of the NSGA-II survival operator that ranks individuals by dominance criteria
         and sorts the last front by some crowding metric.
 
@@ -451,7 +454,7 @@ def _calc_mnn(F, filter_out_duplicates=True, **kwargs):
         # F normalized
         _F = (_F - _F.min(axis=0)) / norm
         
-        # Distances pairwise (inneficient)
+        # Distances pairwise (Inefficient)
         D = pdist(_F, metric="euclidean")
         D = squareform(D)
         

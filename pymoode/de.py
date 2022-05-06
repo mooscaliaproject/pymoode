@@ -95,11 +95,12 @@ class DE(GeneticAlgorithm):
                  survival=None,
                  display=SingleObjectiveDisplay(),
                  **kwargs):
+        
         """Differential Evolution proposed by Storn and Price (1997).
 
         Args:
-            pop_size (int, optional):Population size. Defaults to 100.
-            sampling (Sampling, optional): Sampling strategy. Defaults to LHS().
+            pop_size (int, optional): Population size. Defaults to 100.
+            sampling (Sampling, optional): Sampling strategy of pymoo. Defaults to LHS().
             variant (str, optional): Differential evolution strategy. Must be a string in the format:
                 "DE/selection/n/crossover", in which, n in an integer of number of difference vectors,
                 and crossover is either "bin" or "exp".
@@ -165,11 +166,11 @@ class DE(GeneticAlgorithm):
         
         assert infills is not None, "This algorithms uses the AskAndTell interface thus infills must be provided."
 
-        # replace the individuals with the corresponding parents from the mating
+        #One-to-one replacement survival
         self.pop = ImprovementReplacement().do(self.problem, self.pop, infills)
 
-        # sort the population by fitness to make the selection simpler for mating (not an actual survival, just sorting)
+        #Sort the population by fitness to make the selection simpler for mating (not an actual survival, just sorting)
         self.pop = FitnessSurvival().do(self.problem, self.pop)
         
-        #set ranks
+        #Set ranks
         self.pop.set("rank", np.arange(self.pop_size))

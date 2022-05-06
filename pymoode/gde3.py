@@ -26,6 +26,7 @@ class GDE3(NSDE):
                  SA=None,
                  rnd_iter=1,
                  **kwargs):
+        
         """GDE3 was proposed by Kukkonen, S. & Lampinen, J. (2005).
         It is implemented in this version with the DE features presented in SA-NSDE by Leite et al. (2022)
         and the same constraint handling strategy of NSGA-II by default.
@@ -35,8 +36,8 @@ class GDE3(NSDE):
         For many-objective problems, try using NSDER or RankSurvival with 'mnn' crowding metric.
 
         Args:
-            pop_size (int, optional):Population size. Defaults to 100.
-            sampling (Sampling, optional): Sampling strategy. Defaults to LHS().
+            pop_size (int, optional): Population size. Defaults to 100.
+            sampling (Sampling, optional): Sampling strategy of pymoo. Defaults to LHS().
             variant (str, optional): Differential evolution strategy. Must be a string in the format:
                 "DE/selection/n/crossover", in which, n in an integer of number of difference vectors,
                 and crossover is either "bin" or "exp".
