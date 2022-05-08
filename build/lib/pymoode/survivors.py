@@ -8,6 +8,7 @@ from pymoo.util.misc import find_duplicates
 from scipy.spatial.distance import pdist, squareform
 from sklearn.neighbors import NearestNeighbors
 
+#Redefine function to be able to support more kwargs
 def calc_crowding_distance(F, filter_out_duplicates=True, **kwargs):
     return _calc_crowding_distance(F, filter_out_duplicates=True)
 
@@ -18,6 +19,7 @@ def get_crowding_function(label):
         fun = FunctionalDiversity(calc_crowding_distance)
     elif label == "ce":
         fun = FunctionalDiversity(calc_crowding_entropy)
+    #Inefficient form based on full pairwise distances matrix
     elif label == "mnn_bak":
         fun = FunctionalDiversity(_calc_mnn)
     elif label == "mnn":
@@ -38,6 +40,7 @@ class RankSurvival(Survival):
                  nds=None,
                  rule="full",
                  crowding_func="cd"):
+        
         """A generalization of the NSGA-II survival operator that ranks individuals by dominance criteria
         and sorts the last front by some crowding metric.
 
@@ -51,12 +54,19 @@ class RankSurvival(Survival):
             crowding_func (str or callable, optional): Crowding metric. Options are:
                 "cd": crowding distances
                 "ce": crowding entropy
-                "cdsd": squared diagonal of crowding distances hypercube
-                "cde": crowding diagonal entropy
-                "dhv": diagonal of hypervolume added from neighbors.
-                If callable, it takes objective functions as the unique argument and must return metrics.
+                "mnn": M-Neaest Neighbors
+                "2nn": 2-Neaest Neighbors
+                "mnn_fast": M-Neaest Neighbors Bulk Removal
+                "2nn_fast": 2-Neaest Neighbors Bulk Removal
+                If callable, it has the form fun(F, filter_out_duplicates=None, n_remove=None, **kwargs)
+                in which F (n, m) and must return metrics in a (n,) array.
+                "cd" and "ce" are recommended for two-objective problems, whereas "mnn" and "2nn" for many objective.
+                When using either "mnn" or "2nn", individuals are already eliminated in a "single" manner, 
+                therefore "rule" is ignored. To bulk removal, chose "_fast" variants.
                 Defaults to "cd".
         """
+        if crowding_func in ("mnn", "2nn"):
+            rule = "full"
         
         if not hasattr(crowding_func, "__call__"):
             crowding_func = get_crowding_function(crowding_func)
@@ -126,12 +136,13 @@ class ConstrainedRankSurvival(Survival):
     
     def __init__(self, nds=None, ranking=None):
         """The Rank and Crowding survival approach for handling constraints proposed on
-        GDE3 by Kukkonen, S. and Lampinen, J. (2005).
+        GDE3 by Kukkonen, S. & Lampinen, J. (2005).
 
         Args:
             nds (str or None, optional): Pymoo type of non-dominated sorting. Defaults to None.
-            ranking (Survival, optional): Basic survival operator. Defaults to None,
-            which creates a RankSurvival instance.
+            ranking (Survival, optional): Basic survival operator that splts by feasibility. 
+                Feasible and infeasible solutions are ranked by nds separately. Defaults to None,
+                which creates a RankSurvival instance.
         """
         super().__init__(filter_infeasible=False)
         self.nds = nds if nds is not None else NonDominatedSorting()
@@ -220,7 +231,7 @@ class FunctionalDiversity(CrowdingDiversity):
         super().__init__()
     
     def _do(self, F, filter_out_duplicates=True, **kwargs):
-        return self.function(F, filter_out_duplicates)
+        return self.function(F, filter_out_duplicates=filter_out_duplicates, **kwargs)
     
 
 class MNNDiversity(CrowdingDiversity):
@@ -303,6 +314,7 @@ class MNNDiversity(CrowdingDiversity):
             
             _iter = 0
             
+            #Remove elements from heap recursively
             while ((H.shape[0] > n_keep) and (H.shape[0] > n_obj + 1)):
                 
                 #Most crowded element in H
@@ -442,7 +454,7 @@ def _calc_mnn(F, filter_out_duplicates=True, **kwargs):
         # F normalized
         _F = (_F - _F.min(axis=0)) / norm
         
-        # Distances pairwise (inneficient)
+        # Distances pairwise (Inefficient)
         D = pdist(_F, metric="euclidean")
         D = squareform(D)
         

@@ -1,9 +1,9 @@
+import re
 import numpy as np
 from pymoo.core.crossover import Crossover
 from pymoo.core.population import Population
 from pymoo.operators.crossover.binx import mut_binomial
 from pymoo.operators.crossover.expx import mut_exp
-from pymoo.operators.repair.bounds_repair import is_out_of_bounds_by_problem
 
 _small_number = np.finfo(float).eps
 
@@ -32,7 +32,7 @@ def get_relative_positions(dist_i, dist_j):
     #Cumpute additional ratio term as Zhang et al. (2021) doi: 10.1016/j.asoc.2021.107317
     max_dist = np.max(np.vstack((Dist_i, Dist_j)), axis=0)
     min_dist = np.min(np.vstack((Dist_i, Dist_j)), axis=0)
-    ratio_f = ratio_f*min_dist/max_dist
+    ratio_f = ratio_f * min_dist / max_dist
     
     return ratio_f
 
@@ -44,7 +44,7 @@ class DEM:
                  gamma=1e-4,
                  SA=None,
                  refpoint=1.0,
-                 rnd_iter=0,
+                 repair="bounce-back",
                  **kwargs):
 
         #Default value for F
@@ -54,11 +54,16 @@ class DEM:
         #Define which method will be used to generate F values
         if hasattr(F, "__iter__"):
             self.scale_factor = self._randomize_scale_factor
-            self.rand_mult_repair = self._dither_rand_mult_repair
         else:
             self.scale_factor = self._scalar_scale_factor
-            self.rand_mult_repair = self._rand_mult_repair
             SA = None
+        
+        #Define which method will be used to generate F values
+        if not hasattr(repair, "__call__"):
+            try:
+                repair = REPAIRS[repair]
+            except:
+                raise KeyError("Repair must be either callable or in " + REPAIRS)
         
         #Define which strategy of rotation will be used
         if gamma is None:
@@ -78,7 +83,7 @@ class DEM:
         self.gamma = gamma
         self.SA = SA
         self.refpoint = refpoint
-        self.rnd_iter = rnd_iter
+        self.repair = repair
         
     def do(self, problem, pop, parents, **kwargs):
 
@@ -94,25 +99,10 @@ class DEM:
 
         #If the problem has boundaries to be considered
         if problem.has_bounds():
-
-            #Iterations in repair by multiplying difference vectors
-            for _ in range(self.rnd_iter):
+            
+            #Do repair
+            V = self.repair(V, Xr[0], *problem.bounds())
                 
-                #Find the individuals which are still infeasible
-                m = is_out_of_bounds_by_problem(problem, V)
-                
-                if len(m) > 0:
-
-                    rand_mult = self.rand_mult_repair(m)
-                    diffs[m] = rand_mult[:, None] * diffs[m]
-
-                    #Re-perform mutation using a individual-oriented bounce-back to preserve directions
-                    V[m] = Xr[0, m] + diffs[m]
-                    #V[m] = np.where((V[m] < problem.xl) | (V[m] > problem.xu), Xr[0, m] + diffs[m], V[m])
-                    
-            #If still infeasible perform a feature-oriented bounce back
-            V = bounce_back(V, Xr[0], *problem.bounds())
-        
         return Population.new("X", V)
     
     def de_mutation(self, Xr, return_differentials=True):
@@ -209,12 +199,6 @@ class DEM:
             diffs = diffs + diff
         
         return diffs
-    
-    def _dither_rand_mult_repair(self, m):
-        return self.F[0] + (self.F[1] - self.F[0]) * np.random.random(len(m))
-
-    def _rand_mult_repair(self, m):
-        return np.random.random(len(m))
         
     
 class DEX(Crossover):
@@ -227,8 +211,8 @@ class DEX(Crossover):
                  SA=None,
                  refpoint=1.0,
                  n_diffs=1,
-                 rnd_iter=0,
                  at_least_once=True,
+                 repair="bounce-back",
                  **kwargs):
         
         #Default value for F
@@ -240,14 +224,13 @@ class DEX(Crossover):
                        gamma=gamma,
                        SA=SA,
                        refpoint=refpoint,
-                       rnd_iter=rnd_iter,
-                       **kwargs)
+                       repair=repair)
     
         self.CR = CR
         self.variant = variant
         self.at_least_once = at_least_once
         
-        super().__init__(2 + 2 * n_diffs, 1, **kwargs)
+        super().__init__(2 + 2 * n_diffs, 1,  prob=1.0, **kwargs)
     
     def do(self, problem, pop, parents, **kwargs):
         
@@ -278,7 +261,7 @@ class DEX(Crossover):
         off = Population.new("X", X)
         
         return off
-
+    
 
 def bounce_back(Xp, Xb, xl, xu):
     """Repair strategy
@@ -305,6 +288,85 @@ def bounce_back(Xp, Xb, xl, xu):
         Xp[i, j] = XU[i, j] - np.random.random(len(i)) * (XU[i, j] - Xb[i, j])
 
     return Xp
+
+def half_bounce_back(Xp, Xb, xl, xu):
+    """Repair strategy
+
+    Args:
+        Xp (2d array like): Original vectors including violations.
+        Xb (2d array like): Reference vectors for repair in feasible space.
+        xl (1d array like): Lower-bounds.
+        xu (1d array like): Upper-bounds.
+
+    Returns:
+        2d array like: Repaired vectors.
+    """
+    
+    XL = xl[None, :].repeat(len(Xp), axis=0)
+    XU = xu[None, :].repeat(len(Xp), axis=0)
+
+    i, j = np.where(Xp < XL)
+    if len(i) > 0:
+        Xp[i, j] = XL[i, j] + (Xb[i, j] - XL[i, j]) / 2
+
+    i, j = np.where(Xp > XU)
+    if len(i) > 0:
+        Xp[i, j] = XU[i, j] - (XU[i, j] - Xb[i, j]) / 2
+
+    return Xp
+
+def brick_wall(Xp, Xb, xl, xu):
+    """Repair strategy
+
+    Args:
+        Xp (2d array like): Original vectors including violations.
+        Xb (2d array like): Reference vectors for repair in feasible space.
+        xl (1d array like): Lower-bounds.
+        xu (1d array like): Upper-bounds.
+
+    Returns:
+        2d array like: Repaired vectors.
+    """
+    
+    XL = xl[None, :].repeat(len(Xp), axis=0)
+    XU = xu[None, :].repeat(len(Xp), axis=0)
+
+    i, j = np.where(Xp < XL)
+    if len(i) > 0:
+        Xp[i, j] = XL[i, j]
+
+    i, j = np.where(Xp > XU)
+    if len(i) > 0:
+        Xp[i, j] = XU[i, j]
+
+    return Xp
+
+def rand_init(Xp, Xb, xl, xu):
+    """Repair strategy
+
+    Args:
+        Xp (2d array like): Original vectors including violations.
+        Xb (2d array like): Reference vectors for repair in feasible space.
+        xl (1d array like): Lower-bounds.
+        xu (1d array like): Upper-bounds.
+
+    Returns:
+        2d array like: Repaired vectors.
+    """
+    
+    XL = xl[None, :].repeat(len(Xp), axis=0)
+    XU = xu[None, :].repeat(len(Xp), axis=0)
+
+    i, j = np.where(Xp < XL)
+    if len(i) > 0:
+        Xp[i, j] = XL[i, j] + np.random.random(len(i)) * (XU[i, j] - XL[i, j])
+
+    i, j = np.where(Xp > XU)
+    if len(i) > 0:
+        Xp[i, j] = XU[i, j] - np.random.random(len(i)) * (XU[i, j] - XL[i, j])
+
+    return Xp
+
 
 def squared_bounce_back(Xp, Xb, xl, xu):
     """Repair strategy
@@ -338,4 +400,11 @@ def normalize_fun(fun):
     fmax = fun.max(axis=0)
     den = fmax - fmin
     
+    den[den <= 1e-16] = 1.0
+    
     return (fun - fmin)/den
+
+REPAIRS = {"bounce-back":bounce_back,
+           "half-bounce-back":half_bounce_back,
+           "rand-init":rand_init,
+           "brick-wall":brick_wall}

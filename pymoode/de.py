@@ -4,7 +4,6 @@ from pymoo.algorithms.soo.nonconvex.ga import FitnessSurvival
 from pymoo.core.replacement import ImprovementReplacement
 from pymoo.operators.mutation.nom import NoMutation
 from pymoo.operators.sampling.lhs import LHS
-from pymoo.core.repair import NoRepair
 from pymoo.util.display import SingleObjectiveDisplay
 from pymoo.util.termination.default import SingleObjectiveDefaultTermination
 from pymoode.des import DES
@@ -24,9 +23,8 @@ class InfillDE:
                  gamma=1e-4,
                  SA=None,
                  refpoint=None,
-                 posterior=NoMutation(),
-                 repair=None,
-                 rnd_iter=0):
+                 pm=None,
+                 repair="bounce-back"):
         
         #Parse the information from the string
         _, selection_variant, n_diff, crossover_variant, = variant.split("/")
@@ -55,13 +53,11 @@ class InfillDE:
                              SA=SA,
                              refpoint=refpoint,
                              n_diffs=n_diffs,
-                             rnd_iter=rnd_iter,
                              at_least_once=True,
-                             prob=1)
+                             repair=repair)
         
         #Define posterior mutation strategy and repair
-        self.posterior = posterior
-        self.repair = repair if repair is not None else NoRepair()
+        self.pm = pm if pm is not None else NoMutation()
 
     def do(self, problem, pop, n_offsprings, **kwargs):
         
@@ -72,8 +68,7 @@ class InfillDE:
         off = self.crossover.do(problem, pop, parents, **kwargs)
         
         #Perform posterior mutation if passed
-        off = self.posterior.do(problem, off)
-        off = self.repair.do(problem, off)
+        off = self.pm.do(problem, off)
         
         return off
         
@@ -88,11 +83,8 @@ class DE(GeneticAlgorithm):
                  F=(0.5, 1.0),
                  gamma=1e-4,
                  SA=None,
-                 refpoint=1.0,
-                 posterior=NoMutation(),
-                 repair=NoRepair(),
-                 rnd_iter=0,
-                 survival=None,
+                 pm=None,
+                 repair="bounce-back",
                  display=SingleObjectiveDisplay(),
                  **kwargs):
         
@@ -121,10 +113,15 @@ class DE(GeneticAlgorithm):
                 Defaults to (0.5, 1.0).
             gamma (float, optional): Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
             SA (float, optional): Probability of using self-adaptive scale factor. Defaults to None.
-            refpoint (float or array, optional): Reference point for distances in self-adapting strategy. Defaults to None.
-            posterior (Mutation, optional): Pymoo's mutation operators after crossover. Defaults to NoMutation().
-            reapair (Repair, optional): Pymoo's repair operators after mating. Defaults to NoRepair().
-            rnd_iter (int, optional): Number of random repairs to difference vectors violating boundaries. Defaults to 0.
+            pm (Mutation, optional): Pymoo's mutation operators after crossover. Defaults to NoMutation().
+            reapair (Repair, optional): Repair of mutant vectors. Is either callable or one of:
+                "bounce-back"
+                "half-bounce-back"
+                "rand-init"
+                "brick-wall"
+                If callable, has the form fun(Xp, Xb, xl, xu) in which Xp contains original vectors
+                including violations and Xb contains reference vectors for repair in feasible space.
+                Defaults to "bounce-back".
             survival (Survival, optional): Pymoo's survival strategy. Defaults to None.
             display (Display, optional): Pymoo's display operator. Defaults to SingleObjectiveDisplay().
         """
@@ -134,10 +131,9 @@ class DE(GeneticAlgorithm):
                           F=F,
                           gamma=gamma,
                           SA=SA,
-                          refpoint=refpoint,
-                          posterior=posterior,
-                          repair=repair,
-                          rnd_iter=rnd_iter)
+                          refpoint=1.0,
+                          pm=pm,
+                          repair=repair)
         
         #Number of offsprings at each generation
         n_offsprings = pop_size
@@ -145,7 +141,6 @@ class DE(GeneticAlgorithm):
         super().__init__(pop_size=pop_size,
                          sampling=sampling,
                          mating=mating,
-                         survival=survival,
                          n_offsprings=n_offsprings,
                          eliminate_duplicates=False,
                          display=display,

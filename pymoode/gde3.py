@@ -24,7 +24,6 @@ class GDE3(NSDE):
                  F=None,
                  gamma=1e-4,
                  SA=None,
-                 rnd_iter=1,
                  **kwargs):
         
         """GDE3 was proposed by Kukkonen, S. & Lampinen, J. (2005).
@@ -59,10 +58,17 @@ class GDE3(NSDE):
             SA (float, optional): Probability of using self-adaptive scale factor. Defaults to None.
             refpoint (float or array, optional): Reference point for distances in self-adapting strategy. Defaults to None.
             posterior (Mutation, optional): Pymoo's mutation operators after crossover. Defaults to NoMutation().
-            reapair (Repair, optional): Pymoo's repair operators after mating. Defaults to NoRepair().
-            rnd_iter (int, optional): Number of random repairs to difference vectors violating boundaries
-                before bounce back. Defaults to 1.
-            survival (Survival, optional): Pymoo's survival strategy. Defaults to RankAndCrowdingSurvival().
+            pm (Mutation, optional): Pymoo's mutation operators after crossover. Defaults to NoMutation().
+            reapair (Repair, optional): Repair of mutant vectors. Is either callable or one of:
+                "bounce-back"
+                "half-bounce-back"
+                "rand-init"
+                "brick-wall"
+                If callable, has the form fun(Xp, Xb, xl, xu) in which Xp contains original vectors
+                including violations and Xb contains reference vectors for repair in feasible space.
+                Defaults to "bounce-back".
+            survival (Survival, optional): Pymoo's survival strategy. Defaults to RankSurvival() with bulk removal ("full")
+                and crowding distances ("cd").
                 In GDE3, the survival strategy is applied after a one-to-one comparison between child vector
                 and corresponding parent when both are non-dominated by the other.
         """
@@ -72,7 +78,6 @@ class GDE3(NSDE):
                          F=F,
                          gamma=gamma,
                          SA=SA,
-                         rnd_iter=rnd_iter,
                          **kwargs)
 
     def _advance(self, infills=None, **kwargs):

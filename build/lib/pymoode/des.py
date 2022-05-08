@@ -43,9 +43,6 @@ class DES(Selection):
         
         elif variant == "current-to-rand":
             P = self._current_to_rand(pop, n_select, n_parents)
-        
-        elif variant == "niche":
-            P = self._niche(pop, n_select, n_parents)
             
         else:
             P = self._rand(pop, n_select, n_parents)
@@ -174,46 +171,6 @@ class DES(Selection):
         
         P = self._rand(pop, n_select, n_parents, **kwargs)
         P[:, 1:] = rank_sort(P[:, 1:], pop)
-        
-        return P
-    
-    def _niche(self, pop, n_select, n_parents, **kwargs):
-        
-        P_ = self._rand(pop, n_select, 2*(n_parents - 1) + 1, **kwargs)
-        
-        P1 = P_[:, :n_parents]
-        P2 = P_[:, -n_parents:]
-        P2[:, 0] = P1[:, 0]
-        
-        S1 = np.full(P1.shape, np.inf)
-        S2 = np.full(P2.shape, np.inf)
-        
-        F = pop.get("F")
-        
-        F = (F - F.min(axis=0)) / (F.max(axis=0) - F.min(axis=0))
-        
-        #print("F")
-        #print(F)
-        
-        #print("P1, P2")
-        #print(P1)
-        #print(P2)
-        
-        for i in range(1, n_parents):
-            F1 = F[P1[:, i]]
-            F2 = F[P2[:, i]]
-            
-            S1[:, i] = (np.absolute(F - F1)).sum(axis=1)
-            S2[:, i] = (np.absolute(F - F2)).sum(axis=1)
-        
-        P = np.where(S2 < S1, P2, P1)
-        
-        #print("S1, S2")
-        #print(S1)
-        #print(S2)
-        
-        #print("P")
-        #print(P)
         
         return P
     
