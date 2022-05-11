@@ -19,14 +19,15 @@ class NSDER(NSDE):
                  ref_dirs,
                  pop_size=100,
                  sampling=LHS(),
-                 variant="DE/ranked/1/bin",
-                 CR=0.9,
+                 variant="DE/rand/1/bin",
+                 CR=0.7,
                  F=None,
                  gamma=1e-4,
-                 SA=0.5,
+                 SA=None,
                  **kwargs):
         
-        """NSDE-R is an extension of NSDE to many-objective problems (Reddy & Dulikravich, 2019) using NSGA-III survival.
+        """
+        NSDE-R is an extension of NSDE to many-objective problems (Reddy & Dulikravich, 2019) using NSGA-III survival.
         In this implementation, features of SA-NSDE (Leite et al., 2022) are incorporated.
         
         S. R. Reddy and G. S. Dulikravich, "Many-objective differential evolution optimization based on reference points: NSDE-R," Struct. Multidisc. Optim., vol. 60, pp. 1455-1473, 2019.
@@ -54,13 +55,18 @@ class NSDER(NSDE):
                 To reinforce exploration, use higher lower bounds; for exploitation, use lower values.
                 Defaults to (0.0, 1.0).
             gamma (float, optional): Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
-            SA (float, optional): Probability of using self-adaptive scale factor. Defaults to 0.5.
-            refpoint (float or array, optional): Reference point for distances in self-adapting strategy. Defaults to None.
-            posterior (Mutation, optional): Pymoo's mutation operators after crossover. Defaults to NoMutation().
-            reapair (Repair, optional): Pymoo's repair operators after mating. Defaults to NoRepair().
-            rnd_iter (int, optional): Number of random repairs to difference vectors violating boundaries
-                before bounce back. Defaults to 1.
-            survival (Survival, optional): Pymoo's survival strategy. Defaults to RankAndCrowdingSurvival().
+            SA (float, optional): Probability of using self-adaptive scale factor. Defaults to None.
+            pm (Mutation, optional): Pymoo's mutation operators after crossover. Defaults to NoMutation().
+            reapair (Repair, optional): Repair of mutant vectors. Is either callable or one of:
+                "bounce-back"
+                "midway"
+                "rand-init"
+                "to-bounds"
+                If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors
+                including violations, Xb contains reference vectors for repair in feasible space, 
+                xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
+                Defaults to "bounce-back".
+            survival (Survival, optional): Pymoo's survival strategy. If in **kwargs, replaces ReferenceDirectionSurvival.
         """
         
         self.ref_dirs = ref_dirs

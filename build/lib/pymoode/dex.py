@@ -1,4 +1,3 @@
-import re
 import numpy as np
 from pymoo.core.crossover import Crossover
 from pymoo.core.population import Population
@@ -20,11 +19,11 @@ def get_relative_positions(dist_i, dist_j):
     Dist_j = np.linalg.norm(dist_j, axis=1)
     
     #Possible clip, but likely to be unecessary
-    Dist_i = np.clip(Dist_i, _small_number, 1)
-    Dist_j = np.clip(Dist_j, _small_number, 1)
+    Dist_i = np.clip(Dist_i, _small_number, None)
+    Dist_j = np.clip(Dist_j, _small_number, None)
     
     #Compute angular position as ratio from scalar product
-    ratio_f = np.absolute((dist_i * dist_j).sum(axis=1))/(Dist_i * Dist_j)
+    ratio_f = np.absolute((dist_i * dist_j).sum(axis=1)) / (Dist_i * Dist_j)
     
     #Possible clip, but likely to be unecessary
     ratio_f = np.clip(ratio_f, _small_number, 1 - _small_number)
@@ -63,7 +62,7 @@ class DEM:
             try:
                 repair = REPAIRS[repair]
             except:
-                raise KeyError("Repair must be either callable or in " + REPAIRS)
+                raise KeyError("Repair must be either callable or in " + str(list(REPAIRS.keys())))
         
         #Define which strategy of rotation will be used
         if gamma is None:
@@ -121,12 +120,12 @@ class DEM:
         diffs = self.get_diffs(Xr, pairs, n_matings, n_var)
 
         #Add the difference vectors to the base vector
-        Xp = Xr[0] + diffs
+        V = Xr[0] + diffs
 
         if return_differentials:
-            return Xp, diffs
+            return V, diffs
         else:
-            return Xp
+            return V
     
     def _get_fnorm(self, pop, parents):
         self.fnorm = normalize_fun(pop.get("F"))[parents.T].copy()
@@ -263,11 +262,11 @@ class DEX(Crossover):
         return off
     
 
-def bounce_back(Xp, Xb, xl, xu):
+def bounce_back(X, Xb, xl, xu):
     """Repair strategy
 
     Args:
-        Xp (2d array like): Original vectors including violations.
+        X (2d array like): Mutated vectors including violations.
         Xb (2d array like): Reference vectors for repair in feasible space.
         xl (1d array like): Lower-bounds.
         xu (1d array like): Upper-bounds.
@@ -276,24 +275,24 @@ def bounce_back(Xp, Xb, xl, xu):
         2d array like: Repaired vectors.
     """
     
-    XL = xl[None, :].repeat(len(Xp), axis=0)
-    XU = xu[None, :].repeat(len(Xp), axis=0)
+    XL = xl[None, :].repeat(len(X), axis=0)
+    XU = xu[None, :].repeat(len(X), axis=0)
 
-    i, j = np.where(Xp < XL)
+    i, j = np.where(X < XL)
     if len(i) > 0:
-        Xp[i, j] = XL[i, j] + np.random.random(len(i)) * (Xb[i, j] - XL[i, j])
+        X[i, j] = XL[i, j] + np.random.random(len(i)) * (Xb[i, j] - XL[i, j])
 
-    i, j = np.where(Xp > XU)
+    i, j = np.where(X > XU)
     if len(i) > 0:
-        Xp[i, j] = XU[i, j] - np.random.random(len(i)) * (XU[i, j] - Xb[i, j])
+        X[i, j] = XU[i, j] - np.random.random(len(i)) * (XU[i, j] - Xb[i, j])
 
-    return Xp
+    return X
 
-def half_bounce_back(Xp, Xb, xl, xu):
+def midway(X, Xb, xl, xu):
     """Repair strategy
 
     Args:
-        Xp (2d array like): Original vectors including violations.
+        X (2d array like): Mutated vectors including violations.
         Xb (2d array like): Reference vectors for repair in feasible space.
         xl (1d array like): Lower-bounds.
         xu (1d array like): Upper-bounds.
@@ -302,24 +301,24 @@ def half_bounce_back(Xp, Xb, xl, xu):
         2d array like: Repaired vectors.
     """
     
-    XL = xl[None, :].repeat(len(Xp), axis=0)
-    XU = xu[None, :].repeat(len(Xp), axis=0)
+    XL = xl[None, :].repeat(len(X), axis=0)
+    XU = xu[None, :].repeat(len(X), axis=0)
 
-    i, j = np.where(Xp < XL)
+    i, j = np.where(X < XL)
     if len(i) > 0:
-        Xp[i, j] = XL[i, j] + (Xb[i, j] - XL[i, j]) / 2
+        X[i, j] = XL[i, j] + (Xb[i, j] - XL[i, j]) / 2
 
-    i, j = np.where(Xp > XU)
+    i, j = np.where(X > XU)
     if len(i) > 0:
-        Xp[i, j] = XU[i, j] - (XU[i, j] - Xb[i, j]) / 2
+        X[i, j] = XU[i, j] - (XU[i, j] - Xb[i, j]) / 2
 
-    return Xp
+    return X
 
-def brick_wall(Xp, Xb, xl, xu):
+def to_bounds(X, Xb, xl, xu):
     """Repair strategy
 
     Args:
-        Xp (2d array like): Original vectors including violations.
+        X (2d array like): Mutated vectors including violations.
         Xb (2d array like): Reference vectors for repair in feasible space.
         xl (1d array like): Lower-bounds.
         xu (1d array like): Upper-bounds.
@@ -328,24 +327,24 @@ def brick_wall(Xp, Xb, xl, xu):
         2d array like: Repaired vectors.
     """
     
-    XL = xl[None, :].repeat(len(Xp), axis=0)
-    XU = xu[None, :].repeat(len(Xp), axis=0)
+    XL = xl[None, :].repeat(len(X), axis=0)
+    XU = xu[None, :].repeat(len(X), axis=0)
 
-    i, j = np.where(Xp < XL)
+    i, j = np.where(X < XL)
     if len(i) > 0:
-        Xp[i, j] = XL[i, j]
+        X[i, j] = XL[i, j]
 
-    i, j = np.where(Xp > XU)
+    i, j = np.where(X > XU)
     if len(i) > 0:
-        Xp[i, j] = XU[i, j]
+        X[i, j] = XU[i, j]
 
-    return Xp
+    return X
 
-def rand_init(Xp, Xb, xl, xu):
+def rand_init(X, Xb, xl, xu):
     """Repair strategy
 
     Args:
-        Xp (2d array like): Original vectors including violations.
+        X (2d array like): Mutated vectors including violations.
         Xb (2d array like): Reference vectors for repair in feasible space.
         xl (1d array like): Lower-bounds.
         xu (1d array like): Upper-bounds.
@@ -354,25 +353,25 @@ def rand_init(Xp, Xb, xl, xu):
         2d array like: Repaired vectors.
     """
     
-    XL = xl[None, :].repeat(len(Xp), axis=0)
-    XU = xu[None, :].repeat(len(Xp), axis=0)
+    XL = xl[None, :].repeat(len(X), axis=0)
+    XU = xu[None, :].repeat(len(X), axis=0)
 
-    i, j = np.where(Xp < XL)
+    i, j = np.where(X < XL)
     if len(i) > 0:
-        Xp[i, j] = XL[i, j] + np.random.random(len(i)) * (XU[i, j] - XL[i, j])
+        X[i, j] = XL[i, j] + np.random.random(len(i)) * (XU[i, j] - XL[i, j])
 
-    i, j = np.where(Xp > XU)
+    i, j = np.where(X > XU)
     if len(i) > 0:
-        Xp[i, j] = XU[i, j] - np.random.random(len(i)) * (XU[i, j] - XL[i, j])
+        X[i, j] = XU[i, j] - np.random.random(len(i)) * (XU[i, j] - XL[i, j])
 
-    return Xp
+    return X
 
 
-def squared_bounce_back(Xp, Xb, xl, xu):
+def squared_bounce_back(X, Xb, xl, xu):
     """Repair strategy
 
     Args:
-        Xp (2d array like): Original vectors including violations.
+        X (2d array like): Mutated vectors including violations.
         Xb (2d array like): Reference vectors for repair in feasible space.
         xl (1d array like): Lower-bounds.
         xu (1d array like): Upper-bounds.
@@ -381,18 +380,18 @@ def squared_bounce_back(Xp, Xb, xl, xu):
         2d array like: Repaired vectors.
     """
     
-    XL = xl[None, :].repeat(len(Xp), axis=0)
-    XU = xu[None, :].repeat(len(Xp), axis=0)
+    XL = xl[None, :].repeat(len(X), axis=0)
+    XU = xu[None, :].repeat(len(X), axis=0)
 
-    i, j = np.where(Xp < XL)
+    i, j = np.where(X < XL)
     if len(i) > 0:
-        Xp[i, j] = XL[i, j] + np.square(np.random.random(len(i))) * (Xb[i, j] - XL[i, j])
+        X[i, j] = XL[i, j] + np.square(np.random.random(len(i))) * (Xb[i, j] - XL[i, j])
 
-    i, j = np.where(Xp > XU)
+    i, j = np.where(X > XU)
     if len(i) > 0:
-        Xp[i, j] = XU[i, j] - np.square(np.random.random(len(i))) * (XU[i, j] - Xb[i, j])
+        X[i, j] = XU[i, j] - np.square(np.random.random(len(i))) * (XU[i, j] - Xb[i, j])
 
-    return Xp
+    return X
 
 def normalize_fun(fun):
     
@@ -405,6 +404,6 @@ def normalize_fun(fun):
     return (fun - fmin)/den
 
 REPAIRS = {"bounce-back":bounce_back,
-           "half-bounce-back":half_bounce_back,
+           "midway":midway,
            "rand-init":rand_init,
-           "brick-wall":brick_wall}
+           "to-bounds":to_bounds}

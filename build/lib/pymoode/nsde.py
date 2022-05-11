@@ -20,11 +20,11 @@ class NSDE(NSGA2):
     def __init__(self,
                  pop_size=100,
                  sampling=LHS(),
-                 variant="DE/ranked/1/bin",
+                 variant="DE/rand/1/bin",
                  CR=0.9,
                  F=None,
                  gamma=1e-4,
-                 SA=0.5,
+                 SA=None,
                  pm=None,
                  repair="bounce-back",
                  survival=RankSurvival(),
@@ -49,7 +49,7 @@ class NSDE(NSGA2):
                     - "current-to-best"
                     - "current-to-rand"
                     - "rand-to-best"
-                Defaults to "DE/ranked/1/bin"
+                Defaults to "DE/rand/1/bin"
             CR (float, optional): Crossover parameter. Defined in the range [0, 1]
                 To reinforce mutation, use higher values. To control convergence speed, use lower values.
                 Defaults to 0.9.
@@ -61,10 +61,10 @@ class NSDE(NSGA2):
             pm (Mutation, optional): Pymoo's mutation operators after crossover. Defaults to NoMutation().
             reapair (Repair, optional): Repair of mutant vectors. Is either callable or one of:
                 "bounce-back"
-                "half-bounce-back"
+                "midway"
                 "rand-init"
-                "brick-wall"
-                If callable, has the form fun(Xp, Xb, xl, xu) in which Xp contains original vectors
+                "to-bounds"
+                If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors
                 including violations and Xb contains reference vectors for repair in feasible space.
                 Defaults to "bounce-back".
             survival (Survival, optional): Pymoo's survival strategy. Defaults to RankSurvival() with bulk removal ("full")

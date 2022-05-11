@@ -116,11 +116,12 @@ class DE(GeneticAlgorithm):
             pm (Mutation, optional): Pymoo's mutation operators after crossover. Defaults to NoMutation().
             reapair (Repair, optional): Repair of mutant vectors. Is either callable or one of:
                 "bounce-back"
-                "half-bounce-back"
+                "midway"
                 "rand-init"
-                "brick-wall"
-                If callable, has the form fun(Xp, Xb, xl, xu) in which Xp contains original vectors
-                including violations and Xb contains reference vectors for repair in feasible space.
+                "to-bounds"
+                If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors
+                including violations, Xb contains reference vectors for repair in feasible space, 
+                xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
                 Defaults to "bounce-back".
             survival (Survival, optional): Pymoo's survival strategy. Defaults to None.
             display (Display, optional): Pymoo's display operator. Defaults to SingleObjectiveDisplay().

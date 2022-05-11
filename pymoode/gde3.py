@@ -20,13 +20,14 @@ class GDE3(NSDE):
     def __init__(self,
                  pop_size=100,
                  variant="DE/rand/1/bin",
-                 CR=0.2,
+                 CR=0.5,
                  F=None,
                  gamma=1e-4,
                  SA=None,
                  **kwargs):
         
-        """GDE3 was proposed by Kukkonen, S. & Lampinen, J. (2005).
+        """
+        GDE3 was proposed by Kukkonen, S. & Lampinen, J. (2005).
         It is implemented in this version with the DE features presented in SA-NSDE by Leite et al. (2022)
         and the same constraint handling strategy of NSGA-II by default.
         We recommend using it to problems with many local fronts in which it is necessary to
@@ -61,11 +62,12 @@ class GDE3(NSDE):
             pm (Mutation, optional): Pymoo's mutation operators after crossover. Defaults to NoMutation().
             reapair (Repair, optional): Repair of mutant vectors. Is either callable or one of:
                 "bounce-back"
-                "half-bounce-back"
+                "midway"
                 "rand-init"
-                "brick-wall"
-                If callable, has the form fun(Xp, Xb, xl, xu) in which Xp contains original vectors
-                including violations and Xb contains reference vectors for repair in feasible space.
+                "to-bounds"
+                If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors
+                including violations, Xb contains reference vectors for repair in feasible space, 
+                xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
                 Defaults to "bounce-back".
             survival (Survival, optional): Pymoo's survival strategy. Defaults to RankSurvival() with bulk removal ("full")
                 and crowding distances ("cd").
