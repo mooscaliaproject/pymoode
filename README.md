@@ -44,7 +44,7 @@ problem = get_problem("tnk")
 ```
 
 ```
-nsde = NSDE(pop_size=50, CR=0.8, F=(0.2, 1.0), variant="DE/ranked/1/bin", SA=0.5)
+nsde = NSDE(pop_size=50, CR=0.5, F=(0.2, 1.0), variant="DE/ranked/1/bin", SA=0.5)
     
 res_nsde = moo_minimize(problem, nsde, ('n_gen', 200), save_history=True, verbose=True)
 ```
