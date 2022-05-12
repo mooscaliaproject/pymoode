@@ -87,43 +87,62 @@ class DE(GeneticAlgorithm):
                  repair="bounce-back",
                  display=SingleObjectiveDisplay(),
                  **kwargs):
-        
-        """Differential Evolution proposed by Storn and Price (1997).
+        """
+        Single-objective Differential Evolution proposed by Storn and Price (1997).
 
-        Args:
-            pop_size (int, optional): Population size. Defaults to 100.
-            sampling (Sampling, optional): Sampling strategy of pymoo. Defaults to LHS().
-            variant (str, optional): Differential evolution strategy. Must be a string in the format:
-                "DE/selection/n/crossover", in which, n in an integer of number of difference vectors,
-                and crossover is either "bin" or "exp".
-                Selection variants are:
-                    - "ranked"
-                    - "rand"
-                    - "best"
-                    - "current-to-best"
-                    - "current-to-rand"
-                    - "rand-to-best"
-                Defaults to "DE/rand/1/bin"
-                "DE/ranked/1/bin" is highly recommended when using high CR values.
-            CR (float, optional): Crossover parameter. Defined in the range [0, 1]
-                To reinforce mutation, use higher values. To control convergence speed, use lower values.
-                Defaults to 0.7.
-            F (iterable of float or float, optional): Scale factor or mutation parameter. Defined in the range (0, 2]
-                To reinforce exploration, use higher lower bounds; for exploitation, use lower values.
-                Defaults to (0.5, 1.0).
-            gamma (float, optional): Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
-            SA (float, optional): Probability of using self-adaptive scale factor. Defaults to None.
-            pm (Mutation, optional): Pymoo's mutation operators after crossover. Defaults to NoMutation().
-            reapair (Repair, optional): Repair of mutant vectors. Is either callable or one of:
-                "bounce-back"
-                "midway"
-                "rand-init"
-                "to-bounds"
-                If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors
-                including violations and Xb contains reference vectors for repair in feasible space.
-                Defaults to "bounce-back".
-            survival (Survival, optional): Pymoo's survival strategy. Defaults to None.
-            display (Display, optional): Pymoo's display operator. Defaults to SingleObjectiveDisplay().
+        Storn, R. & Price, K., 1997. Differential evolution–a simple and efficient heuristic for global optimization over continuous spaces. J. Glob. Optim., 11(4), pp. 341-359.
+
+        Parameters
+        ----------
+        
+        pop_size : int, optional
+            Population size. Defaults to 100.
+            
+        sampling : Sampling, optional
+            Sampling strategy of pymoo. Defaults to LHS().
+            
+        variant : str, optional
+            Differential evolution strategy. Must be a string in the format:
+            "DE/selection/n/crossover", in which, n in an integer of number of difference vectors, and crossover is either 'bin' or 'exp'.
+            Selection variants are:
+            
+                - "ranked'
+                - 'rand'
+                - 'best'
+                - 'current-to-best'
+                - 'current-to-best'
+                - 'current-to-rand'
+                - 'rand-to-best'
+                
+            The selection strategy 'ranked' might be helpful to improve convergence speed without much harm to diversity. Defaults to 'DE/rand/1/bin'.
+            
+        CR : float, optional
+            Crossover parameter. Defined in the range [0, 1]
+            To reinforce mutation, use higher values. To control convergence speed, use lower values.
+            
+        F : iterable of float or float, optional
+            Scale factor or mutation parameter. Defined in the range (0, 2]
+            To reinforce exploration, use higher lower bounds; for exploitation, use lower values.
+            
+        gamma : float, optional
+            Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
+            
+        SA : float, optional
+            Probability of using self-adaptive scale factor. Defaults to None.
+            
+        pm : Mutation, optional
+            Pymoo's mutation operators after crossover. Defaults to NoMutation().
+            
+        reapair : Repair, optional
+            Repair of mutant vectors. Is either callable or one of:
+        
+                - 'bounce-back'
+                - 'midway'
+                - 'rand-init'
+                - 'to-bounds'
+            
+            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
+            Defaults to 'bounce-back'.
         """
         
         mating = InfillDE(variant=variant,

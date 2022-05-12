@@ -24,11 +24,11 @@ def get_crowding_function(label):
         fun = FunctionalDiversity(_calc_mnn)
     elif label == "mnn":
         fun = MNNDiversity(fast_mode=False)
-    elif label == "mnn_fast":
+    elif label == "mnn-fast":
         fun = MNNDiversity(fast_mode=True)
     elif label == "2nn":
         fun = MNNDiversity(fast_mode=False, twonn=True)
-    elif label == "2nn_fast":
+    elif label == "2nn-fast":
         fun = MNNDiversity(fast_mode=True, twonn=True)
     else:
         raise KeyError("Crwoding function not defined")
@@ -41,29 +41,40 @@ class RankSurvival(Survival):
                  rule="full",
                  crowding_func="cd"):
         
-        """A generalization of the NSGA-II survival operator that ranks individuals by dominance criteria
+        """
+        A generalization of the NSGA-II survival operator that ranks individuals by dominance criteria
         and sorts the last front by some crowding metric.
 
-        Args:
-            nds (str or None, optional): Pymoo type of non-dominated sorting. Defaults to None.
-            rule (str, optional): Rule to remove individuals exceeding popsize. Options are:
-                "full", "sqrt", and "single". The rule "full" corresponds to the original version,
-                in which all individuals exceeding the front are removed at onde. Other options remove
-                individuals recursively and recalculate metrics at each iteration, which helps improving
-                diversity, although is more computationally expensive. Defaults to "full".
-            crowding_func (str or callable, optional): Crowding metric. Options are:
-                "cd": crowding distances
-                "ce": crowding entropy
-                "mnn": M-Neaest Neighbors
-                "2nn": 2-Neaest Neighbors
-                "mnn_fast": M-Neaest Neighbors Bulk Removal
-                "2nn_fast": 2-Neaest Neighbors Bulk Removal
-                If callable, it has the form fun(F, filter_out_duplicates=None, n_remove=None, **kwargs)
-                in which F (n, m) and must return metrics in a (n,) array.
-                "cd" and "ce" are recommended for two-objective problems, whereas "mnn" and "2nn" for many objective.
-                When using either "mnn" or "2nn", individuals are already eliminated in a "single" manner, 
-                therefore "rule" is ignored. To bulk removal, chose "_fast" variants.
-                Defaults to "cd".
+        Parameters
+        ----------
+        
+        nds : str or None, optional
+            Pymoo type of non-dominated sorting. Defaults to None.
+
+        rule : str, optional
+            Rule to remove individuals exceeding popsize. Options are:
+            
+                - 'full'
+                - 'sqrt'
+                - 'single'
+            
+            The rule 'full' corresponds to the original version, in which all individuals exceeding the front are removed at onde. Other options remove individuals recursively and recalculate metrics at each iteration, which helps improving diversity, although is more computationally expensive. Defaults to 'full'.
+            
+        crowding_func : str or callable, optional
+            Crowding metric. Options are:
+            
+                - 'cd': crowding distances
+                - 'ce': crowding entropy
+                - 'mnn': M-Neaest Neighbors
+                - '2nn': 2-Neaest Neighbors
+                - 'mnn-fast': M-Neaest Neighbors Bulk Removal
+                - '2nn-fast': 2-Neaest Neighbors Bulk Removal
+                
+            If callable, it has the form ``fun(F, filter_out_duplicates=None, n_remove=None, **kwargs)``
+            in which F (n, m) and must return metrics in a (n,) array. The options 'cd' and 'ce' are recommended for two-objective problems, whereas 'mnn' and '2nn' for many objective.
+            When using either 'mnn' or '2nn', individuals are already eliminated in a 'single' manner, 
+            therefore 'rule' is ignored. To bulk removal, chose '-fast' variants.
+            Defaults to 'cd'.
         """
         if crowding_func in ("mnn", "2nn"):
             rule = "full"
@@ -135,14 +146,20 @@ class RankSurvival(Survival):
 class ConstrainedRankSurvival(Survival):
     
     def __init__(self, nds=None, ranking=None):
-        """The Rank and Crowding survival approach for handling constraints proposed on
+        """
+        The Rank and Crowding survival approach for handling constraints proposed on
         GDE3 by Kukkonen, S. & Lampinen, J. (2005).
 
-        Args:
-            nds (str or None, optional): Pymoo type of non-dominated sorting. Defaults to None.
-            ranking (Survival, optional): Basic survival operator that splts by feasibility. 
-                Feasible and infeasible solutions are ranked by nds separately. Defaults to None,
-                which creates a RankSurvival instance.
+        Parameters
+        ----------
+        
+        nds : str or None, optional
+            Pymoo type of non-dominated sorting. Defaults to None.
+            
+        ranking : Survival, optional
+            Basic survival operator that splts by feasibility. 
+            Feasible and infeasible solutions are ranked by nds separately. Defaults to None,
+            which creates a RankSurvival instance.
         """
         super().__init__(filter_infeasible=False)
         self.nds = nds if nds is not None else NonDominatedSorting()
@@ -237,11 +254,17 @@ class FunctionalDiversity(CrowdingDiversity):
 class MNNDiversity(CrowdingDiversity):
     
     def __init__(self, fast_mode=False, twonn=False, **kwargs) -> None:
-        """Kukkonen, S. & Deb, K., 2006. A fast and effective method for pruning of non-dominated solutions in many-objective problems. In: Parallel problem solving from nature-PPSN IX. Berlin: Springer, pp. 553-562
+        """
+        Kukkonen, S. & Deb, K., 2006. A fast and effective method for pruning of non-dominated solutions in many-objective problems. In: Parallel problem solving from nature-PPSN IX. Berlin: Springer, pp. 553-562
 
-        Args:
-            fast_mode (bool, optional): Eliminate all individuals at once. Defaults to False.
-            twonn (bool, optional): Use 2-NN instead of than M-NN. Defaults to False.
+        Parameters
+        ----------
+        
+        fast_mode : bool, optional
+            Eliminate all individuals at once. Defaults to False.
+            
+        twonn : bool, optional
+            Use 2-NN instead of than M-NN. Defaults to False.
         """
         super().__init__()
         self.fast_mode = fast_mode
