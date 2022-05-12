@@ -19,46 +19,76 @@ class NSDER(NSDE):
                  ref_dirs,
                  pop_size=100,
                  sampling=LHS(),
-                 variant="DE/ranked/1/bin",
-                 CR=0.9,
+                 variant="DE/rand/1/bin",
+                 CR=0.7,
                  F=None,
                  gamma=1e-4,
-                 SA=0.5,
+                 SA=None,
                  **kwargs):
-        """NSDE-R is an extension of NSDE to many-objective problems (Reddy & Dulikravich, 2019) using NSGA-III survival.
-        In this implementation, features of SA-NSDE (Leite et al., 2022) are incorporated.
+        """
+        NSDE-R is an extension of NSDE to many-objective problems (Reddy & Dulikravich, 2019) using NSGA-III survival.
         
         S. R. Reddy and G. S. Dulikravich, "Many-objective differential evolution optimization based on reference points: NSDE-R," Struct. Multidisc. Optim., vol. 60, pp. 1455-1473, 2019.
 
-        Args:
-            ref_dirs (array like): The reference direction that should be used during the optimization.
-                Each row represents a reference line and each column a variable.
-            pop_size (int, optional):Population size. Defaults to 100.
-            sampling (Sampling, optional): Sampling strategy. Defaults to LHS().
-            variant (str, optional): Differential evolution strategy. Must be a string in the format:
-                "DE/selection/n/crossover", in which, n in an integer of number of difference vectors,
-                and crossover is either "bin" or "exp".
-                Selection variants are:
-                    - "ranked"
-                    - "rand"
-                    - "best"
-                    - "current-to-best"
-                    - "current-to-rand"
-                    - "rand-to-best"
-                Defaults to "DE/ranked/1/bin"
-            CR (float, optional): Crossover parameter. Defined in the range [0, 1]
-                To reinforce mutation, use higher values. To control convergence speed, use lower values.
-                Defaults to 0.9.
-            F (iterable of float or float, optional): Scale factor or mutation parameter. Defined in the range (0, 2]
-                To reinforce exploration, use higher lower bounds; for exploitation, use lower values.
-                Defaults to (0.0, 1.0).
-            gamma (float, optional): Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
-            SA (float, optional): Probability of using self-adaptive scale factor. Defaults to 0.5.
-            refpoint (float or array, optional): Reference point for distances in self-adapting strategy. Defaults to None.
-            posterior (Mutation, optional): Pymoo's mutation operators after crossover. Defaults to NoMutation().
-            reapair (Repair, optional): Pymoo's repair operators after mating. Defaults to NoRepair().
-            rnd_iter (int, optional): Number of random repairs to difference vectors violating boundaries. Defaults to 1.
-            survival (Survival, optional): Pymoo's survival strategy. Defaults to RankAndCrowdingSurvival().
+        Parameters
+        ----------
+        
+        ref_dirs : array like
+            The reference directions that should be used during the optimization.
+        
+        pop_size : int, optional
+            Population size. Defaults to 100.
+            
+        sampling : Sampling, optional
+            Sampling strategy of pymoo. Defaults to LHS().
+            
+        variant : str, optional
+            Differential evolution strategy. Must be a string in the format:
+            "DE/selection/n/crossover", in which, n in an integer of number of difference vectors, and crossover is either 'bin' or 'exp'.
+            Selection variants are:
+            
+                - "ranked'
+                - 'rand'
+                - 'best'
+                - 'current-to-best'
+                - 'current-to-best'
+                - 'current-to-rand'
+                - 'rand-to-best'
+                
+            The selection strategy 'ranked' might be helpful to improve convergence speed without much harm to diversity. Defaults to 'DE/rand/1/bin'.
+            
+        CR : float, optional
+            Crossover parameter. Defined in the range [0, 1]
+            To reinforce mutation, use higher values. To control convergence speed, use lower values.
+            
+        F : iterable of float or float, optional
+            Scale factor or mutation parameter. Defined in the range (0, 2]
+            To reinforce exploration, use higher lower bounds; for exploitation, use lower values.
+            
+        gamma : float, optional
+            Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
+            
+        SA : float, optional
+            Probability of using self-adaptive scale factor. Defaults to None.
+            
+        pm : Mutation, optional
+            Pymoo's mutation operators after crossover. Defaults to NoMutation().
+            
+        reapair : Repair, optional
+            Repair of mutant vectors. Is either callable or one of:
+        
+                - 'bounce-back'
+                - 'midway'
+                - 'rand-init'
+                - 'to-bounds'
+            
+            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
+            Defaults to 'bounce-back'.
+            
+        survival : Survival, optional
+            Pymoo's survival strategy.
+            Defaults to RankSurvival() with bulk removal ('full') and crowding distances ('cd').
+            In GDE3, the survival strategy is applied after a one-to-one comparison between child vector and corresponding parent when both are non-dominated by the other.
         """
         
         self.ref_dirs = ref_dirs

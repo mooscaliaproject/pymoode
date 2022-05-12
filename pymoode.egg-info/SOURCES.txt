@@ -1,3 +1,4 @@
+LICENSE
 README.md
 setup.py
 pymoode/__init__.py
