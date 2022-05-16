@@ -5,6 +5,7 @@ pymoode/__init__.py
 pymoode/de.py
 pymoode/des.py
 pymoode/dex.py
+pymoode/diversity.py
 pymoode/experiments.py
 pymoode/gde3.py
 pymoode/nsde.py

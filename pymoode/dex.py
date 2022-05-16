@@ -31,7 +31,7 @@ def get_relative_positions(dist_i, dist_j):
     #Cumpute additional ratio term as Zhang et al. (2021) doi: 10.1016/j.asoc.2021.107317
     max_dist = np.max(np.vstack((Dist_i, Dist_j)), axis=0)
     min_dist = np.min(np.vstack((Dist_i, Dist_j)), axis=0)
-    ratio_f = ratio_f * min_dist / max_dist
+    ratio_f = np.square(ratio_f * min_dist / max_dist)
     
     return ratio_f
 
@@ -174,22 +174,23 @@ class DEM:
         for i, j in pairs:
         
             #Obtain F randomized in range
-            F_pred = self.scale_factor(n_matings)
+            F_dither = self.scale_factor(n_matings)
             
             #Get relative positions
             dist_i = self.fnorm[i] - self.refpoint
             dist_j = self.fnorm[j] - self.refpoint
             ratio_f = get_relative_positions(dist_i, dist_j)
             
-            #Impact of ratio in F range
-            F_init = self.F[0] + (self.F[1] - self.F[0]) * ratio_f
+            #Biased F
+            F_sa = self.F[0] + (F_dither - self.F[0]) * ratio_f\
+                + (self.F[1] - F_dither) * np.square(ratio_f)
             
             #Obtain F
-            F = F_init.copy() + (F_pred - F_init) * ratio_f
+            F = F_sa.copy()
             
             #Restore some random F values
             rand_mask = np.random.random(n_matings) > self.SA
-            F[rand_mask] = F_pred[rand_mask]
+            F[rand_mask] = F_dither[rand_mask]
             
             #New difference vector
             diff = self.get_diff(F, Xr[i], Xr[j], n_matings, n_var)
