@@ -12,28 +12,74 @@ _small_number = np.finfo(float).eps
 # =========================================================================================================
 
 
-def get_relative_positions(dist_i, dist_j):
+def get_relative_positions_stable(f_i, f_j):
+    
+    #Distance to nadir point
+    d_i = f_i - 1.0
+    d_j = f_j - 1.0
     
     #Vectors norm
-    Dist_i = np.linalg.norm(dist_i, axis=1)
-    Dist_j = np.linalg.norm(dist_j, axis=1)
+    D_i = np.linalg.norm(d_i, axis=1)
+    D_j = np.linalg.norm(d_j, axis=1)
     
     #Possible clip, but likely to be unecessary
-    Dist_i = np.clip(Dist_i, _small_number, None)
-    Dist_j = np.clip(Dist_j, _small_number, None)
+    D_i = np.clip(D_i, _small_number, None)
+    D_j = np.clip(D_j, _small_number, None)
     
     #Compute angular position as ratio from scalar product
-    ratio_f = np.absolute((dist_i * dist_j).sum(axis=1)) / (Dist_i * Dist_j)
+    cos_theta = np.absolute((d_i * d_j).sum(axis=1)) / (D_i * D_j)
     
     #Possible clip, but likely to be unecessary
-    ratio_f = np.clip(ratio_f, _small_number, 1 - _small_number)
+    cos_theta = np.clip(cos_theta, _small_number, 1 - _small_number)
+    
+    #Transform cosine metric to enphasize differences
+    psi = 1 - np.sqrt(1 - cos_theta * cos_theta)
     
     #Cumpute additional ratio term as Zhang et al. (2021) doi: 10.1016/j.asoc.2021.107317
-    max_dist = np.max(np.vstack((Dist_i, Dist_j)), axis=0)
-    min_dist = np.min(np.vstack((Dist_i, Dist_j)), axis=0)
-    ratio_f = ratio_f * min_dist / max_dist
+    max_dist = np.max(np.vstack((D_i, D_j)), axis=0)
+    min_dist = np.min(np.vstack((D_i, D_j)), axis=0)
     
-    return ratio_f
+    #Compute overall metric
+    phi = psi * min_dist / max_dist
+    
+    return phi
+
+def get_relative_positions_explore(f_i, f_j):
+    
+    #Distance to nadir point
+    d_i = f_i - 1.0
+    d_j = f_j - 1.0
+    
+    #Vectors norm
+    D_i = np.linalg.norm(d_i, axis=1)
+    D_j = np.linalg.norm(d_j, axis=1)
+    
+    #Possible clip, but likely to be unecessary
+    D_i = np.clip(D_i, _small_number, None)
+    D_j = np.clip(D_j, _small_number, None)
+    
+    #Compute angular position as ratio from scalar product
+    cos_theta = np.absolute((d_i * d_j).sum(axis=1)) / (D_i * D_j)
+    
+    #Possible clip, but likely to be unecessary
+    cos_theta = np.clip(cos_theta, _small_number, 1 - _small_number)
+    
+    #Transform cosine metric to enphasize differences
+    psi = cos_theta * cos_theta
+    
+    #Cumpute additional ratio term as Zhang et al. (2021) doi: 10.1016/j.asoc.2021.107317
+    max_dist = np.max(np.vstack((D_i, D_j)), axis=0)
+    min_dist = np.min(np.vstack((D_i, D_j)), axis=0)
+    
+    #Compute overall metric
+    phi = psi * min_dist / max_dist
+    
+    return phi
+
+DIST_FUNC = {
+    "stability":get_relative_positions_stable,
+    "explore":get_relative_positions_explore
+}
 
 
 class DEM:
@@ -42,8 +88,8 @@ class DEM:
                  F=None,
                  gamma=1e-4,
                  SA=None,
-                 refpoint=1.0,
                  repair="bounce-back",
+                 dist_metric="stability",
                  **kwargs):
 
         #Default value for F
@@ -74,15 +120,25 @@ class DEM:
         if SA is None:
             self.get_fnorm = self._avoid_fnorm
             self.get_diffs = self._simple_diffs
+            dist_metric = None
         else:
             self.get_fnorm = self._get_fnorm
             self.get_diffs = self._adaptive_diffs
             
+            #dist_metric might be callable
+            if hasattr(dist_metric, "__call__"):
+                pass
+            else:
+                try:
+                    dist_metric = DIST_FUNC[dist_metric]
+                except:
+                    raise KeyError("Distance metric not available. Use a callable, 'stability', or 'explore'.")
+            
         self.F = F
         self.gamma = gamma
         self.SA = SA
-        self.refpoint = refpoint
         self.repair = repair
+        self.dist_metric = dist_metric
         
     def do(self, problem, pop, parents, **kwargs):
 
@@ -174,22 +230,23 @@ class DEM:
         for i, j in pairs:
         
             #Obtain F randomized in range
-            F_pred = self.scale_factor(n_matings)
+            F_dither = self.scale_factor(n_matings)
             
             #Get relative positions
-            dist_i = self.fnorm[i] - self.refpoint
-            dist_j = self.fnorm[j] - self.refpoint
-            ratio_f = get_relative_positions(dist_i, dist_j)
+            f_i = self.fnorm[i]
+            f_j = self.fnorm[j]
+            ratio_f = self.dist_metric(f_i, f_j)
             
-            #Impact of ratio in F range
-            F_init = self.F[0] + (self.F[1] - self.F[0]) * ratio_f
+            #Biased F
+            F_sa = self.F[0] + (F_dither - self.F[0]) * ratio_f\
+                + (self.F[1] - F_dither) * np.square(ratio_f)
             
             #Obtain F
-            F = F_init.copy() + (F_pred - F_init) * ratio_f
+            F = F_sa.copy()
             
             #Restore some random F values
             rand_mask = np.random.random(n_matings) > self.SA
-            F[rand_mask] = F_pred[rand_mask]
+            F[rand_mask] = F_dither[rand_mask]
             
             #New difference vector
             diff = self.get_diff(F, Xr[i], Xr[j], n_matings, n_var)
@@ -208,10 +265,10 @@ class DEX(Crossover):
                  F=None,
                  gamma=1e-4,
                  SA=None,
-                 refpoint=1.0,
                  n_diffs=1,
                  at_least_once=True,
                  repair="bounce-back",
+                 dist_metric="stability",
                  **kwargs):
         
         #Default value for F
@@ -222,8 +279,8 @@ class DEX(Crossover):
         self.dem = DEM(F=F,
                        gamma=gamma,
                        SA=SA,
-                       refpoint=refpoint,
-                       repair=repair)
+                       repair=repair,
+                       dist_metric=dist_metric)
     
         self.CR = CR
         self.variant = variant

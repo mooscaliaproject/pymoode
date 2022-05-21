@@ -22,9 +22,9 @@ class InfillDE:
                  F=(0.5, 1.0),
                  gamma=1e-4,
                  SA=None,
-                 refpoint=None,
                  pm=None,
-                 repair="bounce-back"):
+                 repair="bounce-back",
+                 dist_metric="stability"):
         
         #Parse the information from the string
         _, selection_variant, n_diff, crossover_variant, = variant.split("/")
@@ -33,10 +33,6 @@ class InfillDE:
         #When "to" in variant there are more than 1 difference vectors
         if "-to-" in variant:
             n_diffs += 1
-        
-        #Reference point for self-adaptative mutation hyperparameter
-        if refpoint is None:
-            refpoint = 1.0
         
         #Define parent selection operator
         self.selection = DES(selection_variant)
@@ -51,10 +47,10 @@ class InfillDE:
                              F=F,
                              gamma=gamma,
                              SA=SA,
-                             refpoint=refpoint,
                              n_diffs=n_diffs,
                              at_least_once=True,
-                             repair=repair)
+                             repair=repair,
+                             dist_metric=dist_metric)
         
         #Define posterior mutation strategy and repair
         self.pm = pm if pm is not None else NoMutation()
