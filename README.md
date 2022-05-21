@@ -1,6 +1,17 @@
 # pymoode
 A Python framework for Differential Evolution using [pymoo](https://github.com/anyoptimization/pymoo) (Blank & Deb, 2020).
 
+## Contents
+- [Install](#install)
+- [Algoritms](#algorithms)
+- [Survival Operators](#survival-operators)
+- [Crowding Metrics](#crowding-metrics)
+- [Usage](#usage)
+- [Citation](#citation)
+- [References](#references)
+- [Contact](#contact)
+- [Acknowledgements](#acknowledgements)
+
 ## Install
 First, make sure you have a Python 3 environment installed.
 

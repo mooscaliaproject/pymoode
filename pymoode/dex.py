@@ -44,7 +44,7 @@ def get_relative_positions_stable(f_i, f_j):
     
     return phi
 
-def get_relative_positions_explore(f_i, f_j):
+def get_relative_positions_moderate(f_i, f_j):
     
     #Distance to nadir point
     d_i = f_i - 1.0
@@ -76,8 +76,41 @@ def get_relative_positions_explore(f_i, f_j):
     
     return phi
 
+def get_relative_positions_explore(f_i, f_j):
+    
+    #Distance to nadir point
+    d_i = f_i - 1.0
+    d_j = f_j - 1.0
+    
+    #Vectors norm
+    D_i = np.linalg.norm(d_i, axis=1)
+    D_j = np.linalg.norm(d_j, axis=1)
+    
+    #Possible clip, but likely to be unecessary
+    D_i = np.clip(D_i, _small_number, None)
+    D_j = np.clip(D_j, _small_number, None)
+    
+    #Compute angular position as ratio from scalar product
+    cos_theta = np.absolute((d_i * d_j).sum(axis=1)) / (D_i * D_j)
+    
+    #Possible clip, but likely to be unecessary
+    cos_theta = np.clip(cos_theta, _small_number, 1 - _small_number)
+    
+    #Transform cosine metric to enphasize differences
+    psi = cos_theta
+    
+    #Cumpute additional ratio term as Zhang et al. (2021) doi: 10.1016/j.asoc.2021.107317
+    max_dist = np.max(np.vstack((D_i, D_j)), axis=0)
+    min_dist = np.min(np.vstack((D_i, D_j)), axis=0)
+    
+    #Compute overall metric
+    phi = psi * min_dist / max_dist
+    
+    return phi
+
 DIST_FUNC = {
     "stability":get_relative_positions_stable,
+    "moderate":get_relative_positions_moderate,
     "explore":get_relative_positions_explore
 }
 
