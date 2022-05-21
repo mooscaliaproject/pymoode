@@ -7,13 +7,24 @@ Author: Bruno Scalia C. F. Leite
 Author-email: mooscaliaproject@gmail.com
 License: Apache License 2.0
 Download-URL: https://github.com/mooscaliaproject/pymoode
-Keywords: Multi-objective optimization,NSGA-II,GDE3,NSDE,Differential Evolution,Genetic Algorithm,Evolutionary Algorithms,Evolutionary optimization
+Keywords: Multi-objective optimization,NSGA-II,GDE3,NSDE,SA-NSDE,NSDE-R,Differential Evolution,Genetic Algorithm,Evolutionary Algorithms,Evolutionary optimization
 Platform: UNKNOWN
 Description-Content-Type: text/markdown
 License-File: LICENSE
 
 # pymoode
 A Python framework for Differential Evolution using [pymoo](https://github.com/anyoptimization/pymoo) (Blank & Deb, 2020).
+
+## Contents
+- [Install](#install)
+- [Algoritms](#algorithms)
+- [Survival Operators](#survival-operators)
+- [Crowding Metrics](#crowding-metrics)
+- [Usage](#usage)
+- [Citation](#citation)
+- [References](#references)
+- [Contact](#contact)
+- [Acknowledgements](#acknowledgements)
 
 ## Install
 First, make sure you have a Python 3 environment installed.
@@ -45,7 +56,7 @@ pip install -e git+https://github.com/mooscalia/pymoode#egg=pymoode
 - **2-Nearest Neighbors** (*'2nn'*): Also proposed by Kukkonen & Deb (2006), it is a variant of M-Nearest Neighbors in which the number of neighbors is two.
 
 ## Usage
-For more examples, see the example notebooks [single](./EXAMPLE_SOO.ipynb), [multi](./EXAMPLE_MULTI.ipynb), [many](./EXAMPLE_MANY.ipynb), and a [complete tutorial](./tutorial.ipynb)
+For more examples, see the example notebooks [single](notebooks/EXAMPLE_SOO.ipynb), [multi](notebooks/EXAMPLE_MULTI.ipynb), [many](notebooks/EXAMPLE_MANY.ipynb) objective problems, and a [complete tutorial](notebooks/tutorial.ipynb)
 
 ```
 import matplotlib.pyplot as plt
@@ -58,7 +69,7 @@ problem = get_problem("tnk")
 ```
 
 ```
-nsde = NSDE(pop_size=50, CR=0.8, F=(0.2, 1.0), variant="DE/ranked/1/bin", SA=0.5)
+nsde = NSDE(pop_size=50, CR=0.5, F=(0.2, 1.0), variant="DE/ranked/1/bin", SA=0.5)
     
 res_nsde = moo_minimize(problem, nsde, ('n_gen', 200), save_history=True, verbose=True)
 ```
@@ -108,4 +119,5 @@ e-mail: bruscalia12@gmail.com
 To Julian Blank, who created the amazing structure of pymoo, making such a project possible.
 
 To Esly F. da Costa Junior, who made it possible all along, trusted in me from the start, and guided me through the path of modeling and optimization.
+
 
