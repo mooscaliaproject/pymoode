@@ -7,13 +7,24 @@ Author: Bruno Scalia C. F. Leite
 Author-email: mooscaliaproject@gmail.com
 License: Apache License 2.0
 Download-URL: https://github.com/mooscaliaproject/pymoode
-Keywords: Multi-objective optimization,NSGA-II,GDE3,NSDE,Differential Evolution,Genetic Algorithm,Evolutionary Algorithms,Evolutionary optimization
+Keywords: Multi-objective optimization,NSGA-II,GDE3,NSDE,SA-NSDE,NSDE-R,Differential Evolution,Genetic Algorithm,Evolutionary Algorithms,Evolutionary optimization
 Platform: UNKNOWN
 Description-Content-Type: text/markdown
 License-File: LICENSE
 
 # pymoode
 A Python framework for Differential Evolution using [pymoo](https://github.com/anyoptimization/pymoo) (Blank & Deb, 2020).
+
+## Contents
+- [Install](#install)
+- [Algoritms](#algorithms)
+- [Survival Operators](#survival-operators)
+- [Crowding Metrics](#crowding-metrics)
+- [Usage](#usage)
+- [Citation](#citation)
+- [References](#references)
+- [Contact](#contact)
+- [Acknowledgements](#acknowledgements)
 
 ## Install
 First, make sure you have a Python 3 environment installed.
