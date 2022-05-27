@@ -1,6 +1,8 @@
 # pymoode
 A Python framework for Differential Evolution using [pymoo](https://github.com/anyoptimization/pymoo) (Blank & Deb, 2020).
 
+![pymoode-logo](images/logo_pymoode.png)
+
 ## Contents
 - [Install](#install)
 - [Algorithms](#algorithms)
@@ -70,7 +72,7 @@ ax.legend()
 fig.tight_layout()
 plt.show()
 ```
-![tnk_nsde](https://github.com/mooscaliaproject/pymoode/blob/56d66f8c671e4aa1a4a808454cf1fe42860d14b3/images/tnk_gde3.png)
+![tnk_nsde](https://github.com/mooscaliaproject/pymoode/blob/images/tnk_gde3.png)
 
 ## Citation
 Please cite this library via its current ResearchGate file:
