@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
   name = 'pymoode',
   packages = ['pymoode'],
-  version = '0.1.1',
+  version = '0.1.5',
   license='Apache License 2.0',
   description = 'A Python optimization package using Differential Evolution.',
   long_description=long_description,
