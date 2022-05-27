@@ -3,7 +3,7 @@ A Python framework for Differential Evolution using [pymoo](https://github.com/a
 
 ## Contents
 - [Install](#install)
-- [Algoritms](#algorithms)
+- [Algorithms](#algorithms)
 - [Survival Operators](#survival-operators)
 - [Crowding Metrics](#crowding-metrics)
 - [Usage](#usage)
@@ -29,7 +29,7 @@ pip install -e git+https://github.com/mooscalia/pymoode#egg=pymoode
 - **DE**: Differential Evolution for single-objective problems proposed by Storn & Price (1997). Other features later implemented are also present, such as dither, jitter, selection variants, and crossover strategies. For details see Price et al. (2005).
 - **NSDE**: Non-dominated Sorting Differential Evolution, a multi-objective algorithm that combines DE mutation and crossover operators to NSGA-II (Deb et al., 2002) survival.
 - **GDE3**: Generalized Differential Evolution 3, a multi-objective algorithm that combines DE mutation and crossover operators to NSGA-II survival with a hybrid type survival strategy. In this algorithm individuals might be removed in a one-to-one comparison before truncating the population by the multi-objective survival operator. It was proposed by Kukkonen, S. & Lampinen, J. (2005).
-- **NSDER**: Non-dominated Sorting Differential Evolution based on Reference directions (Reddy & Dulikravich, 2019). It is an algorithm for many-objective problems that works as an extension of NSDE using NSGA-III (Deb & Jain, 2014) survival strategy.
+- **NSDE-R**: Non-dominated Sorting Differential Evolution based on Reference directions (Reddy & Dulikravich, 2019). It is an algorithm for many-objective problems that works as an extension of NSDE using NSGA-III (Deb & Jain, 2014) survival strategy.
 
 ## Survival Operators
 - **RankSurvival**: Flexible structure to implement NSGA-II rank and crowding survival with different options for crowding metric and elimination of individuals.
@@ -42,7 +42,7 @@ pip install -e git+https://github.com/mooscalia/pymoode#egg=pymoode
 - **2-Nearest Neighbors** (*'2nn'*): Also proposed by Kukkonen & Deb (2006), it is a variant of M-Nearest Neighbors in which the number of neighbors is two.
 
 ## Usage
-For more examples, see the example notebooks [single](notebooks/EXAMPLE_SOO.ipynb), [multi](notebooks/EXAMPLE_MULTI.ipynb), [many](notebooks/EXAMPLE_MANY.ipynb) objective problems, and a [complete tutorial](notebooks/tutorial.ipynb)
+For more examples, see the example notebooks [single](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_SOO.ipynb), [multi](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_MULTI.ipynb), [many](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_MANY.ipynb) objective problems, and a [complete tutorial](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/tutorial.ipynb)
 
 ```
 import matplotlib.pyplot as plt
@@ -70,7 +70,8 @@ ax.legend()
 fig.tight_layout()
 plt.show()
 ```
-![tnk_nsde](./images/tnk_gde3.png)
+
+![tnk_nsde](https://github.com/mooscaliaproject/pymoode/blob/b02d9d46e8d9558af670a2c80eec9689c49d79cb/images/tnk_gde3.png)
 
 ## Citation
 Please cite this library via its current ResearchGate file:
