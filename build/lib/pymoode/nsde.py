@@ -24,19 +24,15 @@ class NSDE(NSGA2):
                  CR=0.7,
                  F=None,
                  gamma=1e-4,
-                 SA=None,
                  pm=None,
                  repair="bounce-back",
                  survival=RankSurvival(),
                  **kwargs):
         """
-        NSDE is an algorithm that combines that combines NSGA-II sorting and survival strategies to DE mutation and crossover following the implementation by Leite et al. (2022) with a self-adaptative mutation (scale factor) F parameter as in SA-NSDE.
+        NSDE is an algorithm that combines that combines NSGA-II sorting and survival strategies 
+        to DE mutation and crossover.
         
-        When using low CR values (~0.3), try using GDE3.
-        
-        For many-objective problems, try using NSDER or RankSurvival with 'mnn' crowding metric.
-
-        Leite, B., Costa, A. O. S. & Costa Junior, E. F., 2022. A self-adaptive multi-objective differential evolution algorithm applied to the styrene reactor optimization. Available at SSRN: https://ssrn.com/abstract=4081771, or http://dx.doi.org/10.2139/ssrn.4081771.
+        For many-objective problems, try using NSDE-R or RankSurvival with 'mnn' crowding metric.
 
         Parameters
         ----------
@@ -73,9 +69,6 @@ class NSDE(NSGA2):
         gamma : float, optional
             Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
             
-        SA : float, optional
-            Probability of using self-adaptive scale factor. Defaults to None.
-            
         pm : Mutation, optional
             Pymoo's mutation operators after crossover. Defaults to NoMutation().
             
@@ -104,7 +97,6 @@ class NSDE(NSGA2):
                           CR=CR,
                           F=F,
                           gamma=gamma,
-                          SA=SA,
                           pm=pm,
                           repair=repair)
         

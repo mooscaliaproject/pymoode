@@ -23,7 +23,6 @@ class NSDER(NSDE):
                  CR=0.7,
                  F=None,
                  gamma=1e-4,
-                 SA=None,
                  **kwargs):
         """
         NSDE-R is an extension of NSDE to many-objective problems (Reddy & Dulikravich, 2019) using NSGA-III survival.
@@ -67,9 +66,6 @@ class NSDER(NSDE):
             
         gamma : float, optional
             Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
-            
-        SA : float, optional
-            Probability of using self-adaptive scale factor. Defaults to None.
             
         pm : Mutation, optional
             Pymoo's mutation operators after crossover. Defaults to NoMutation().
@@ -116,7 +112,6 @@ class NSDER(NSDE):
                          CR=CR,
                          F=F,
                          gamma=gamma,
-                         SA=SA,
                          survival=survival,
                          **kwargs)
 

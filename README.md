@@ -27,8 +27,8 @@ pip install -e git+https://github.com/mooscalia/pymoode#egg=pymoode
 
 ## Algorithms
 - **DE**: Differential Evolution for single-objective problems proposed by Storn & Price (1997). Other features later implemented are also present, such as dither, jitter, selection variants, and crossover strategies. For details see Price et al. (2005).
-- **NSDE**: Non-dominated Sorting Differential Evolution, a multi-objective algorithm that combines DE mutation and crossover operators to NSGA-II (Deb et al., 2002) survival. This is the version implemented by Leite et al. (2022). A self-adaptive strategy might be used to define mutation parameters from a range by using the SA parameter.
-- **GDE3**: Generalized Differential Evolution 3, a multi-objective algorithm that combines DE mutation and crossover operators to NSGA-II survival with a mixed type survival strategy in which individuals might be removed in one-to-one comparison before Non-dominated Sorting. It is recommended to be used for problems in which premature convergence might be an issue. It was proposed by Kukkonen, S. & Lampinen, J. (2005).
+- **NSDE**: Non-dominated Sorting Differential Evolution, a multi-objective algorithm that combines DE mutation and crossover operators to NSGA-II (Deb et al., 2002) survival.
+- **GDE3**: Generalized Differential Evolution 3, a multi-objective algorithm that combines DE mutation and crossover operators to NSGA-II survival with a hybrid type survival strategy. In this algorithm individuals might be removed in a one-to-one comparison before truncating the population by the multi-objective survival operator. It was proposed by Kukkonen, S. & Lampinen, J. (2005).
 - **NSDER**: Non-dominated Sorting Differential Evolution based on Reference directions (Reddy & Dulikravich, 2019). It is an algorithm for many-objective problems that works as an extension of NSDE using NSGA-III (Deb & Jain, 2014) survival strategy.
 
 ## Survival Operators
@@ -48,34 +48,34 @@ For more examples, see the example notebooks [single](notebooks/EXAMPLE_SOO.ipyn
 import matplotlib.pyplot as plt
 from pymoo.factory import get_problem
 from pymoo.util.plotting import plot
-from pymoo.optimize import minimize as moo_minimize
+from pymoo.optimize import minimize
 from pymoode.nsde import NSDE
 
 problem = get_problem("tnk")
 ```
 
 ```
-nsde = NSDE(pop_size=50, CR=0.5, F=(0.2, 1.0), variant="DE/ranked/1/bin", SA=0.5)
+gde3 = GDE3(pop_size=50, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9))
     
-res_nsde = moo_minimize(problem, nsde, ('n_gen', 200), save_history=True, verbose=True)
+res = minimize(problem, nsde, ('n_gen', 200), save_history=True, verbose=True)
 ```
 
 ```
 fig, ax = plt.subplots(figsize=[6, 5], dpi=100)
 ax.scatter(pf[:, 0], pf[:, 1], color="navy", label="True Front")
-ax.scatter(res_nsde.F[:, 0], res_nsde.F[:, 1], color="firebrick", label="NSDE")
+ax.scatter(res.F[:, 0], res.F[:, 1], color="firebrick", label="NSDE")
 ax.set_ylabel("$f_2$")
 ax.set_xlabel("$f_1$")
 ax.legend()
 fig.tight_layout()
 plt.show()
 ```
-![tnk_nsde](./images/tnk_nsde.png)
+![tnk_nsde](./images/tnk_gde3.png)
 
 ## Citation
-Please cite this library via the original article in which it was published:
+Please cite this library via its current ResearchGate file:
 
-Leite, B., Costa, A. O. S. & Costa Junior, E. F., 2022. A self-adaptive multi-objective differential evolution algorithm applied to the styrene reactor optimization. Available at SSRN: https://ssrn.com/abstract=4081771, or http://dx.doi.org/10.2139/ssrn.4081771.
+Leite, B., 2022. pymoode: Differential Evolution in Python.
 
 ## References
 Blank, J. & Deb, K., 2020. pymoo: Multi-Objective Optimization in Python. IEEE Access, Volume 8, pp. 89497-89509.
@@ -87,8 +87,6 @@ Deb, K., Pratap, A., Agarwal, S. & Meyarivan, T. A. M. T., 2002. A Fast and Elit
 Kukkonen, S. & Deb, K., 2006. A fast and effective method for pruning of non-dominated solutions in many-objective problems. In: Parallel problem solving from nature-PPSN IX. Berlin: Springer, pp. 553-562.
 
 Kukkonen, S. & Lampinen, J., 2005. GDE3: The third evolution step of generalized differential evolution. 2005 IEEE congress on evolutionary computation, Volume 1, pp. 443-450.
-
-Leite, B., Costa, A. O. S. & Costa Junior, E. F., 2022. A self-adaptive multi-objective differential evolution algorithm applied to the styrene reactor optimization. Available at SSRN: https://ssrn.com/abstract=4081771, or http://dx.doi.org/10.2139/ssrn.4081771.
 
 Reddy, S. R. & Dulikravich, G. S., 2019. Many-objective differential evolution optimization based on reference points: NSDE-R. Struct. Multidisc. Optim., Volume 60, pp. 1455-1473.
 

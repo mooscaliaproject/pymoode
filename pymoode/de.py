@@ -21,10 +21,8 @@ class InfillDE:
                  CR=0.7,
                  F=(0.5, 1.0),
                  gamma=1e-4,
-                 SA=None,
                  pm=None,
-                 repair="bounce-back",
-                 dist_metric="stability"):
+                 repair="bounce-back"):
         
         #Parse the information from the string
         _, selection_variant, n_diff, crossover_variant, = variant.split("/")
@@ -46,11 +44,9 @@ class InfillDE:
                              CR=CR,
                              F=F,
                              gamma=gamma,
-                             SA=SA,
                              n_diffs=n_diffs,
                              at_least_once=True,
-                             repair=repair,
-                             dist_metric=dist_metric)
+                             repair=repair)
         
         #Define posterior mutation strategy and repair
         self.pm = pm if pm is not None else NoMutation()
@@ -78,7 +74,6 @@ class DE(GeneticAlgorithm):
                  CR=0.7,
                  F=(0.5, 1.0),
                  gamma=1e-4,
-                 SA=None,
                  pm=None,
                  repair="bounce-back",
                  display=SingleObjectiveDisplay(),
@@ -102,7 +97,7 @@ class DE(GeneticAlgorithm):
             "DE/selection/n/crossover", in which, n in an integer of number of difference vectors, and crossover is either 'bin' or 'exp'.
             Selection variants are:
             
-                - "ranked'
+                - 'ranked'
                 - 'rand'
                 - 'best'
                 - 'current-to-best'
@@ -123,9 +118,6 @@ class DE(GeneticAlgorithm):
         gamma : float, optional
             Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
             
-        SA : float, optional
-            Probability of using self-adaptive scale factor. Defaults to None.
-            
         pm : Mutation, optional
             Pymoo's mutation operators after crossover. Defaults to NoMutation().
             
@@ -145,8 +137,6 @@ class DE(GeneticAlgorithm):
                           CR=CR,
                           F=F,
                           gamma=gamma,
-                          SA=SA,
-                          refpoint=1.0,
                           pm=pm,
                           repair=repair)
         
