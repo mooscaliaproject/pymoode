@@ -61,7 +61,7 @@ class GDE3(NSDE):
             
         F : iterable of float or float, optional
             Scale factor or mutation parameter. Defined in the range (0, 2]
-            To reinforce exploration, use higher lower bounds; for exploitation, use lower values.
+            To reinforce exploration, use higher values; for exploitation, use lower values.
             
         gamma : float, optional
             Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
