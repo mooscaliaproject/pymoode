@@ -2,15 +2,7 @@
 A Python framework for Differential Evolution using [pymoo](https://github.com/anyoptimization/pymoo) (Blank & Deb, 2020).
 
 ## Contents
-- [Install](#install)
-- [Algorithms](#algorithms)
-- [Survival Operators](#survival-operators)
-- [Crowding Metrics](#crowding-metrics)
-- [Usage](#usage)
-- [Citation](#citation)
-- [References](#references)
-- [Contact](#contact)
-- [Acknowledgements](#acknowledgements)
+[Install](#install) / [Algorithms](#algorithms) / [Survival Operators](#survival-operators) / [Crowding Metrics](#crowding-metrics) / [Usage](#usage) / [Citation](#citation) / [References](#references) / [Contact](#contact) / [Acknowledgements](#acknowledgements)
 
 ## Install
 First, make sure you have a Python 3 environment installed.
@@ -44,7 +36,7 @@ pip install -e git+https://github.com/mooscalia/pymoode#egg=pymoode
 ## Usage
 For more examples, see the example notebooks [single](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_SOO.ipynb), [multi](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_MULTI.ipynb), [many](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_MANY.ipynb) objective problems, and a [complete tutorial](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/tutorial.ipynb)
 
-```
+```python
 import matplotlib.pyplot as plt
 from pymoo.factory import get_problem
 from pymoo.util.plotting import plot
@@ -54,16 +46,16 @@ from pymoode.nsde import NSDE
 problem = get_problem("tnk")
 ```
 
-```
+```python
 gde3 = GDE3(pop_size=50, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9))
     
 res = minimize(problem, nsde, ('n_gen', 200), save_history=True, verbose=True)
 ```
 
-```
+```python
 fig, ax = plt.subplots(figsize=[6, 5], dpi=100)
 ax.scatter(pf[:, 0], pf[:, 1], color="navy", label="True Front")
-ax.scatter(res.F[:, 0], res.F[:, 1], color="firebrick", label="NSDE")
+ax.scatter(res.F[:, 0], res.F[:, 1], color="firebrick", label="GDE3")
 ax.set_ylabel("$f_2$")
 ax.set_xlabel("$f_1$")
 ax.legend()
@@ -71,7 +63,7 @@ fig.tight_layout()
 plt.show()
 ```
 
-![tnk_nsde](https://github.com/mooscaliaproject/pymoode/blob/b02d9d46e8d9558af670a2c80eec9689c49d79cb/images/tnk_gde3.png)
+![tnk_nsde](https://github.com/mooscaliaproject/pymoode/raw/b02d9d46e8d9558af670a2c80eec9689c49d79cb/images/tnk_gde3.png)
 
 ## Citation
 Please cite this library via its current ResearchGate file:
