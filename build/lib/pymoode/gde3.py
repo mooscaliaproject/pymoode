@@ -1,8 +1,7 @@
-"""
-Original article:
+"""Created by
 
-Kukkonen, S. & Lampinen, J., 2005. GDE3: The third evolution step of generalized differential evolution.
-2005 IEEE congress on evolutionary computation, Volume 1, pp. 443-450.
+Bruno Scalia C. F. Leite, 2022
+
 """
 
 from pymoode.nsde import NSDE
@@ -23,17 +22,12 @@ class GDE3(NSDE):
                  CR=0.5,
                  F=None,
                  gamma=1e-4,
-                 SA=None,
                  **kwargs):
         """
         GDE3 is an extension of DE to multi-objective problems using a mixed type survival strategy.
         It is implemented in this version with the same constraint handling strategy of NSGA-II by default.
         
-        We recommend using it to problems with many local fronts in which it is necessary to avoid premature convergence. In this context, low CR values (~ 0.3) are highly recommended.
-        
-        For problems that demand high CR values (~0.9), NSDE is more recommended.
-        
-        For many-objective problems, try using NSDER or RankSurvival with 'mnn' crowding metric.
+        For many-objective problems, try using NSDE-R or RankSurvival with 'mnn' crowding metric.
 
         Kukkonen, S. & Lampinen, J., 2005. GDE3: The third evolution step of generalized differential evolution. 2005 IEEE congress on evolutionary computation, Volume 1, pp. 443-450.
 
@@ -51,7 +45,7 @@ class GDE3(NSDE):
             "DE/selection/n/crossover", in which, n in an integer of number of difference vectors, and crossover is either 'bin' or 'exp'.
             Selection variants are:
             
-                - "ranked'
+                - 'ranked'
                 - 'rand'
                 - 'best'
                 - 'current-to-best'
@@ -71,9 +65,6 @@ class GDE3(NSDE):
             
         gamma : float, optional
             Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
-            
-        SA : float, optional
-            Probability of using self-adaptive scale factor. Defaults to None.
             
         pm : Mutation, optional
             Pymoo's mutation operators after crossover. Defaults to NoMutation().
@@ -100,7 +91,6 @@ class GDE3(NSDE):
                          CR=CR,
                          F=F,
                          gamma=gamma,
-                         SA=SA,
                          **kwargs)
 
     def _advance(self, infills=None, **kwargs):

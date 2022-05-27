@@ -4,125 +4,17 @@ from pymoo.core.population import Population
 from pymoo.operators.crossover.binx import mut_binomial
 from pymoo.operators.crossover.expx import mut_exp
 
-_small_number = np.finfo(float).eps
-
 
 # =========================================================================================================
 # Implementation
 # =========================================================================================================
-
-
-def get_relative_positions_stable(f_i, f_j):
-    
-    #Distance to nadir point
-    d_i = f_i - 1.0
-    d_j = f_j - 1.0
-    
-    #Vectors norm
-    D_i = np.linalg.norm(d_i, axis=1)
-    D_j = np.linalg.norm(d_j, axis=1)
-    
-    #Possible clip, but likely to be unecessary
-    D_i = np.clip(D_i, _small_number, None)
-    D_j = np.clip(D_j, _small_number, None)
-    
-    #Compute angular position as ratio from scalar product
-    cos_theta = np.absolute((d_i * d_j).sum(axis=1)) / (D_i * D_j)
-    
-    #Possible clip, but likely to be unecessary
-    cos_theta = np.clip(cos_theta, _small_number, 1 - _small_number)
-    
-    #Transform cosine metric to enphasize differences
-    psi = 1 - np.sqrt(1 - cos_theta * cos_theta)
-    
-    #Cumpute additional ratio term as Zhang et al. (2021) doi: 10.1016/j.asoc.2021.107317
-    max_dist = np.max(np.vstack((D_i, D_j)), axis=0)
-    min_dist = np.min(np.vstack((D_i, D_j)), axis=0)
-    
-    #Compute overall metric
-    phi = psi * min_dist / max_dist
-    
-    return phi
-
-def get_relative_positions_moderate(f_i, f_j):
-    
-    #Distance to nadir point
-    d_i = f_i - 1.0
-    d_j = f_j - 1.0
-    
-    #Vectors norm
-    D_i = np.linalg.norm(d_i, axis=1)
-    D_j = np.linalg.norm(d_j, axis=1)
-    
-    #Possible clip, but likely to be unecessary
-    D_i = np.clip(D_i, _small_number, None)
-    D_j = np.clip(D_j, _small_number, None)
-    
-    #Compute angular position as ratio from scalar product
-    cos_theta = np.absolute((d_i * d_j).sum(axis=1)) / (D_i * D_j)
-    
-    #Possible clip, but likely to be unecessary
-    cos_theta = np.clip(cos_theta, _small_number, 1 - _small_number)
-    
-    #Transform cosine metric to enphasize differences
-    psi = cos_theta * cos_theta
-    
-    #Cumpute additional ratio term as Zhang et al. (2021) doi: 10.1016/j.asoc.2021.107317
-    max_dist = np.max(np.vstack((D_i, D_j)), axis=0)
-    min_dist = np.min(np.vstack((D_i, D_j)), axis=0)
-    
-    #Compute overall metric
-    phi = psi * min_dist / max_dist
-    
-    return phi
-
-def get_relative_positions_explore(f_i, f_j):
-    
-    #Distance to nadir point
-    d_i = f_i - 1.0
-    d_j = f_j - 1.0
-    
-    #Vectors norm
-    D_i = np.linalg.norm(d_i, axis=1)
-    D_j = np.linalg.norm(d_j, axis=1)
-    
-    #Possible clip, but likely to be unecessary
-    D_i = np.clip(D_i, _small_number, None)
-    D_j = np.clip(D_j, _small_number, None)
-    
-    #Compute angular position as ratio from scalar product
-    cos_theta = np.absolute((d_i * d_j).sum(axis=1)) / (D_i * D_j)
-    
-    #Possible clip, but likely to be unecessary
-    cos_theta = np.clip(cos_theta, _small_number, 1 - _small_number)
-    
-    #Transform cosine metric to enphasize differences
-    psi = cos_theta
-    
-    #Cumpute additional ratio term as Zhang et al. (2021) doi: 10.1016/j.asoc.2021.107317
-    max_dist = np.max(np.vstack((D_i, D_j)), axis=0)
-    min_dist = np.min(np.vstack((D_i, D_j)), axis=0)
-    
-    #Compute overall metric
-    phi = psi * min_dist / max_dist
-    
-    return phi
-
-DIST_FUNC = {
-    "stability":get_relative_positions_stable,
-    "moderate":get_relative_positions_moderate,
-    "explore":get_relative_positions_explore
-}
-
 
 class DEM:
     
     def __init__(self,
                  F=None,
                  gamma=1e-4,
-                 SA=None,
                  repair="bounce-back",
-                 dist_metric="stability",
                  **kwargs):
 
         #Default value for F
@@ -134,7 +26,6 @@ class DEM:
             self.scale_factor = self._randomize_scale_factor
         else:
             self.scale_factor = self._scalar_scale_factor
-            SA = None
         
         #Define which method will be used to generate F values
         if not hasattr(repair, "__call__"):
@@ -149,38 +40,15 @@ class DEM:
         else:
             self.get_diff = self._diff_jitter
         
-        #Define base functions based on self-adaptive strategy
-        if SA is None:
-            self.get_fnorm = self._avoid_fnorm
-            self.get_diffs = self._simple_diffs
-            dist_metric = None
-        else:
-            self.get_fnorm = self._get_fnorm
-            self.get_diffs = self._adaptive_diffs
-            
-            #dist_metric might be callable
-            if hasattr(dist_metric, "__call__"):
-                pass
-            else:
-                try:
-                    dist_metric = DIST_FUNC[dist_metric]
-                except:
-                    raise KeyError("Distance metric not available. Use a callable, 'stability', or 'explore'.")
-            
         self.F = F
         self.gamma = gamma
-        self.SA = SA
         self.repair = repair
-        self.dist_metric = dist_metric
         
     def do(self, problem, pop, parents, **kwargs):
 
         #Get all X values for mutation parents
         Xr = pop.get("X")[parents.T].copy()
         assert len(Xr.shape) == 3, "Please provide a three-dimensional matrix n_parents x pop_size x n_vars."
-
-        #Obtain normalized function values if necessary
-        self.get_fnorm(pop, parents)
         
         #Create mutation vectors
         V, diffs = self.de_mutation(Xr, return_differentials=True)
@@ -194,10 +62,6 @@ class DEM:
         return Population.new("X", V)
     
     def de_mutation(self, Xr, return_differentials=True):
-    
-        #Probability
-        if (not self.SA is None) and (self.fnorm is None):
-            print("WARNING: did not pass a normalized function arg")
         
         n_parents, n_matings, n_var = Xr.shape
         assert n_parents % 2 == 1, "For the differential an odd number of values need to be provided"
@@ -216,12 +80,6 @@ class DEM:
         else:
             return V
     
-    def _get_fnorm(self, pop, parents):
-        self.fnorm = normalize_fun(pop.get("F"))[parents.T].copy()
-
-    def _avoid_fnorm(self, pop, parents):
-        self.fnorm = None
-    
     def _randomize_scale_factor(self, n_matings):
          return (self.F[0] + np.random.random(n_matings) * (self.F[1] - self.F[0]))
      
@@ -235,7 +93,7 @@ class DEM:
     def _diff_simple(self, F, Xi, Xj, n_matings, n_var):
         return F[:, None] * (Xi - Xj)
     
-    def _simple_diffs(self, Xr, pairs, n_matings, n_var):
+    def get_diffs(self, Xr, pairs, n_matings, n_var):
         
         #The differentials from each pair subtraction
         diffs = np.zeros((n_matings, n_var))
@@ -253,55 +111,18 @@ class DEM:
             diffs = diffs + diff
         
         return diffs
-
-    def _adaptive_diffs(self, Xr, pairs, n_matings, n_var):
-        
-        #The differentials from each pair subtraction
-        diffs = np.zeros((n_matings, n_var))
-        
-        #For each difference
-        for i, j in pairs:
-        
-            #Obtain F randomized in range
-            F_dither = self.scale_factor(n_matings)
-            
-            #Get relative positions
-            f_i = self.fnorm[i]
-            f_j = self.fnorm[j]
-            ratio_f = self.dist_metric(f_i, f_j)
-            
-            #Biased F
-            F_sa = self.F[0] + (F_dither - self.F[0]) * ratio_f\
-                + (self.F[1] - F_dither) * np.square(ratio_f)
-            
-            #Obtain F
-            F = F_sa.copy()
-            
-            #Restore some random F values
-            rand_mask = np.random.random(n_matings) > self.SA
-            F[rand_mask] = F_dither[rand_mask]
-            
-            #New difference vector
-            diff = self.get_diff(F, Xr[i], Xr[j], n_matings, n_var)
-            
-            #Add the difference to the first vector
-            diffs = diffs + diff
-        
-        return diffs
         
     
 class DEX(Crossover):
     
     def __init__(self,
                  variant="bin",
-                 CR=0.9,
+                 CR=0.7,
                  F=None,
                  gamma=1e-4,
-                 SA=None,
                  n_diffs=1,
                  at_least_once=True,
                  repair="bounce-back",
-                 dist_metric="stability",
                  **kwargs):
         
         #Default value for F
@@ -311,9 +132,7 @@ class DEX(Crossover):
         #Create instace for mutation
         self.dem = DEM(F=F,
                        gamma=gamma,
-                       SA=SA,
-                       repair=repair,
-                       dist_metric=dist_metric)
+                       repair=repair)
     
         self.CR = CR
         self.variant = variant
