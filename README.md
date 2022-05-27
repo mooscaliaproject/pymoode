@@ -1,8 +1,6 @@
 # pymoode
 A Python framework for Differential Evolution using [pymoo](https://github.com/anyoptimization/pymoo) (Blank & Deb, 2020).
 
-![pymoode-logo](images/logo_pymoode.png)
-
 ## Contents
 - [Install](#install)
 - [Algorithms](#algorithms)
