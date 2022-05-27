@@ -70,7 +70,7 @@ ax.legend()
 fig.tight_layout()
 plt.show()
 ```
-![tnk_nsde](https://github.com/mooscaliaproject/pymoode/images/tnk_gde3.png)
+![tnk_nsde](https://github.com/mooscaliaproject/pymoode/blob/main/images/tnk_gde3.png)
 
 ## Citation
 Please cite this library via its current ResearchGate file:
