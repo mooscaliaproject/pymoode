@@ -44,7 +44,7 @@ pip install -e git+https://github.com/mooscalia/pymoode#egg=pymoode
 - **2-Nearest Neighbors** (*'2nn'*): Also proposed by Kukkonen & Deb (2006), it is a variant of M-Nearest Neighbors in which the number of neighbors is two.
 
 ## Usage
-For more examples, see the example notebooks [single](notebooks/EXAMPLE_SOO.ipynb), [multi](notebooks/EXAMPLE_MULTI.ipynb), [many](notebooks/EXAMPLE_MANY.ipynb) objective problems, and a [complete tutorial](notebooks/tutorial.ipynb)
+For more examples, see the example notebooks [single](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_SOO.ipynb), [multi](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_MULTI.ipynb), [many](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_MANY.ipynb) objective problems, and a [complete tutorial](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/tutorial.ipynb)
 
 ```
 import matplotlib.pyplot as plt
@@ -72,7 +72,11 @@ ax.legend()
 fig.tight_layout()
 plt.show()
 ```
+<<<<<<< HEAD
 ![tnk_nsde](https://github.com/mooscaliaproject/pymoode/blob/images/tnk_gde3.png)
+=======
+![tnk_nsde](https://github.com/mooscaliaproject/pymoode/blob/main/images/tnk_gde3.png)
+>>>>>>> a378e00384bd2745a843c7b1afea6956867dfeae
 
 ## Citation
 Please cite this library via its current ResearchGate file:
