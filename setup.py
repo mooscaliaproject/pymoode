@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
   name = 'pymoode',
   packages = ['pymoode'],
-  version = '0.1.5',
+  version = '0.1.7',
   license='Apache License 2.0',
   description = 'A Python optimization package using Differential Evolution.',
   long_description=long_description,
@@ -26,9 +26,9 @@ setup(
               'Evolutionary Algorithms',
               'Evolutionary optimization'],
   install_requires=[
-          'numpy>=1.22.*',
+          'numpy>=1.19.*',
           'pymoo==0.5.*',
           'scikit-learn>=1.0.*',
-          'scipy>=1.8.*',
+          'scipy>=1.7.*',
       ],
 )
