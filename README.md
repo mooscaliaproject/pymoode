@@ -29,7 +29,7 @@ pip install -e git+https://github.com/mooscalia/pymoode#egg=pymoode
 
 ## Crowding Metrics
 - **Crowding Distance** (*'cd'*): Proposed by Deb et al. (2002) in NSGA-II. Imported from *pymoo*.
-- **Crowding Entropy** (*'ce'*): Proposed by Wang et al. (2009) in MOSADE.
+- **Crowding Entropy** (*'ce'*): Proposed by Wang et al. (2010) in MOSADE.
 - ***M*-Nearest Neighbors** (*'mnn'*): Proposed by Kukkonen & Deb (2006) in an extension of GDE3 to many-objective problems.
 - **2-Nearest Neighbors** (*'2nn'*): Also proposed by Kukkonen & Deb (2006), it is a variant of M-Nearest Neighbors in which the number of neighbors is two.
 
@@ -68,12 +68,12 @@ plt.show()
 ## Citation
 Please cite this library via its current ResearchGate file:
 
-Leite, B., 2022. pymoode: Differential Evolution in Python.
+Leite, B., 2022. pymoode: Differential Evolution in Python. doi:10.13140/RG.2.2.12935.27043
 
 ## References
 Blank, J. & Deb, K., 2020. pymoo: Multi-Objective Optimization in Python. IEEE Access, Volume 8, pp. 89497-89509.
 
-Deb, K. & Jain, H., 2014. An evolutionary many-objective optimization algorithm using reference-point-based nondominated sorting approach, part I: solving problems with box constraints.. IEEE Transactions on Evolutionary Computation, 18(4), pp. 577–601.
+Deb, K. & Jain, H., 2014. An evolutionary many-objective optimization algorithm using reference-point-based nondominated sorting approach, part I: solving problems with box constraints. IEEE Transactions on Evolutionary Computation, 18(4), pp. 577–601.
 
 Deb, K., Pratap, A., Agarwal, S. & Meyarivan, T. A. M. T., 2002. A Fast and Elitist Multiobjective Genetic Algorithm: NSGA-II. IEEE transactions on evolutionary computation, 6(2), pp. 182-197.
 
@@ -87,7 +87,7 @@ Price, K. V., Storn, R. M. & Lampinen, J. A., 2005. Differential Evolution: A Pr
 
 Storn, R. & Price, K., 1997. Differential evolution–a simple and efficient heuristic for global optimization over continuous spaces. J. Glob. Optim., 11(4), pp. 341-359.
 
-Wang, Y.-N., Wu, L.-H. & Yuan , X.-F., 2010. Multi-objective self-adaptive differential evolution with elitist archive and crowding entropy-based diversity measure. Soft Comput., 14(3), pp. 193-209.
+Wang, Y.-N., Wu, L.-H. & Yuan, X.-F., 2010. Multi-objective self-adaptive differential evolution with elitist archive and crowding entropy-based diversity measure. Soft Comput., 14(3), pp. 193-209.
 
 ## Contact
 e-mail: bruscalia12@gmail.com
