@@ -380,14 +380,23 @@ class MNNDiversity(CrowdingDiversity):
             
 
 def calc_crowding_entropy(F, filter_out_duplicates=True, **kwargs):
-    """Wang, Y.-N., Wu, L.-H. & Yuan, X.-F., 2010. Multi-objective self-adaptive differential evolution with elitist archive and crowding entropy-based diversity measure. Soft Comput., 14(3), pp. 193-209.
+    """Wang, Y.-N., Wu, L.-H. & Yuan, X.-F., 2010. Multi-objective self-adaptive differential 
+    evolution with elitist archive and crowding entropy-based diversity measure. 
+    Soft Comput., 14(3), pp. 193-209.
 
-    Args:
-        F (2d array like): Objective functions.
-        filter_out_duplicates (bool, optional): Defaults to True.
+    Parameters
+    ----------
+    
+    F : 2d array like
+        Objective functions.
+        
+    filter_out_duplicates : bool, optional
+        Defaults to True.
 
-    Returns:
-        crowding_enropies (1d array)
+    Returns
+    -------
+    
+    crowding_enropies : 1d array
     """
     n_points, n_obj = F.shape
 
