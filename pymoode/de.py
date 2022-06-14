@@ -171,5 +171,3 @@ class DE(GeneticAlgorithm):
         
         #Set ranks
         self.pop.set("rank", np.arange(self.pop_size))
-
-DE()
