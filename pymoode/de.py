@@ -85,7 +85,6 @@ class DE(GeneticAlgorithm):
 
         Parameters
         ----------
-        
         pop_size : int, optional
             Population size. Defaults to 100.
             
@@ -93,9 +92,7 @@ class DE(GeneticAlgorithm):
             Sampling strategy of pymoo. Defaults to LHS().
             
         variant : str, optional
-            Differential evolution strategy. Must be a string in the format:
-            "DE/selection/n/crossover", in which, n in an integer of number of difference vectors, and crossover is either 'bin' or 'exp'.
-            Selection variants are:
+            Differential evolution strategy. Must be a string in the format: "DE/selection/n/crossover", in which, n in an integer of number of difference vectors, and crossover is either 'bin' or 'exp'. Selection variants are:
             
                 - 'ranked'
                 - 'rand'
@@ -174,3 +171,5 @@ class DE(GeneticAlgorithm):
         
         #Set ranks
         self.pop.set("rank", np.arange(self.pop_size))
+
+DE()

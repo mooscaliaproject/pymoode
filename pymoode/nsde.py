@@ -36,7 +36,6 @@ class NSDE(NSGA2):
 
         Parameters
         ----------
-        
         pop_size : int, optional
             Population size. Defaults to 100.
             
@@ -44,9 +43,7 @@ class NSDE(NSGA2):
             Sampling strategy of pymoo. Defaults to LHS().
             
         variant : str, optional
-            Differential evolution strategy. Must be a string in the format:
-            "DE/selection/n/crossover", in which, n in an integer of number of difference vectors, and crossover is either 'bin' or 'exp'.
-            Selection variants are:
+            Differential evolution strategy. Must be a string in the format: "DE/selection/n/crossover", in which, n in an integer of number of difference vectors, and crossover is either 'bin' or 'exp'. Selection variants are:
             
                 - "ranked'
                 - 'rand'

@@ -47,7 +47,6 @@ class RankSurvival(Survival):
 
         Parameters
         ----------
-        
         nds : str or None, optional
             Pymoo type of non-dominated sorting. Defaults to None.
 
@@ -152,7 +151,6 @@ class ConstrainedRankSurvival(Survival):
 
         Parameters
         ----------
-        
         nds : str or None, optional
             Pymoo type of non-dominated sorting. Defaults to None.
             
@@ -259,7 +257,6 @@ class MNNDiversity(CrowdingDiversity):
 
         Parameters
         ----------
-        
         fast_mode : bool, optional
             Eliminate all individuals at once. Defaults to False.
             
@@ -386,7 +383,6 @@ def calc_crowding_entropy(F, filter_out_duplicates=True, **kwargs):
 
     Parameters
     ----------
-    
     F : 2d array like
         Objective functions.
         
@@ -395,7 +391,6 @@ def calc_crowding_entropy(F, filter_out_duplicates=True, **kwargs):
 
     Returns
     -------
-    
     crowding_enropies : 1d array
     """
     n_points, n_obj = F.shape

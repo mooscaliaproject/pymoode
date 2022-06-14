@@ -31,7 +31,6 @@ class NSDER(NSDE):
 
         Parameters
         ----------
-        
         ref_dirs : array like
             The reference directions that should be used during the optimization.
         
@@ -42,9 +41,7 @@ class NSDER(NSDE):
             Sampling strategy of pymoo. Defaults to LHS().
             
         variant : str, optional
-            Differential evolution strategy. Must be a string in the format:
-            "DE/selection/n/crossover", in which, n in an integer of number of difference vectors, and crossover is either 'bin' or 'exp'.
-            Selection variants are:
+            Differential evolution strategy. Must be a string in the format: "DE/selection/n/crossover", in which, n in an integer of number of difference vectors, and crossover is either 'bin' or 'exp'. Selection variants are:
             
                 - "ranked'
                 - 'rand'
