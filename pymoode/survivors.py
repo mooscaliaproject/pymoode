@@ -80,6 +80,9 @@ class RankSurvival(Survival):
         
         if not hasattr(crowding_func, "__call__"):
             crowding_func = get_crowding_function(crowding_func)
+            
+        else:
+            crowding_func = FunctionalDiversity(crowding_func)
 
         super().__init__(filter_infeasible=True)
         self.nds = nds if nds is not None else NonDominatedSorting()
@@ -355,7 +358,7 @@ class MNNDiversity(CrowdingDiversity):
                 
                     #Get distances and indexes
                     _D, _mnn = knn.kneighbors(X=_F[wnn], return_distance=True)
-                    D[wnn], Mnn[wnn] = _D[:, 1:], _mnn[:, 1:]
+                    D[wnn], Mnn[wnn] = _D[:, 1:].copy(), H[_mnn[:, 1:]].copy()
                     
                     #Get d metrics
                     d[wnn] = np.prod(D[wnn], axis=1)
