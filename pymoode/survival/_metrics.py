@@ -19,7 +19,7 @@ def calc_crowding_distance(F, **kwargs):
 if IS_COMPILED:
     
     from pymoode.cython.mnn import calc_mnn, calc_2nn
-    from pymoode.cython.pruned_cd import calc_pcd
+    from pymoode.cython.pruning_cd import calc_pcd
 
     def calc_mnn_nds(F, n_remove: int=0):
         return calc_mnn(F, n_remove=n_remove)
@@ -34,7 +34,7 @@ else:
     
     print("WARNING: Failed to import cython modules. Slow implementation on.")
     from pymoode.misc.mnn import calc_mnn
-    from pymoode.misc.pruned_cd import calc_pcd
+    from pymoode.misc.pruning_cd import calc_pcd
     
     def calc_mnn_nds(F, n_remove: int=0):
         return calc_mnn(F, n_remove=n_remove, twonn=False)
@@ -49,7 +49,7 @@ def get_crowding_function(label):
 
     if label == "cd":
         fun = FunctionalDiversity(calc_crowding_distance, filter_out_duplicates=False)
-    elif (label == "pcd") or (label == "pruned-cd"):
+    elif (label == "pcd") or (label == "pruning-cd"):
         fun = FunctionalDiversity(calc_pcd_nds, filter_out_duplicates=True)
     elif label == "ce":
         fun = FunctionalDiversity(calc_crowding_entropy, filter_out_duplicates=True)

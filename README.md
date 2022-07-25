@@ -29,7 +29,7 @@ pip install -e git+https://github.com/mooscalia/pymoode#egg=pymoode
 
 ## Crowding Metrics
 - **Crowding Distance** (*'cd'*): Proposed by Deb et al. (2002) in NSGA-II. Imported from *pymoo*.
-- **Pruned Crowding Distance** (*'pruned-cd'* or *'pcd'*): Proposed by Kukkonen & Deb (2006a) it recursively recalculates crowding distances as removes individuals from a population to improve diversity.
+- **Pruning Crowding Distance** (*'pruning-cd'* or *'pcd'*): Proposed by Kukkonen & Deb (2006a), it recursively recalculates crowding distances as removes individuals from a population to improve diversity.
 - ***M*-Nearest Neighbors** (*'mnn'*): Proposed by Kukkonen & Deb (2006b) in an extension of GDE3 to many-objective problems.
 - **2-Nearest Neighbors** (*'2nn'*): Also proposed by Kukkonen & Deb (2006b), it is a variant of M-Nearest Neighbors in which the number of neighbors is two.
 - **Crowding Entropy** (*'ce'*): Proposed by Wang et al. (2010) in MOSADE.
@@ -90,26 +90,8 @@ gde3mnn = GDE3(
 res = minimize(problem, gde3mnn, ('n_gen', 250), seed=12)
 ```
 
-```python
-fig, ax = plt.subplots(figsize=[6, 5], dpi=100, subplot_kw={'projection':'3d'})
-
-fig.patch.set_facecolor('white')
-
-ax.scatter(res_dtlz2.F[:, 0], res_dtlz2.F[:, 1], res_dtlz2.F[:, 2],
-           color="navy", label="GDE3-MNN", marker="o")
-
-ax.view_init(elev=30, azim=30)
-
-ax.set_xlabel("$f_1$")
-ax.set_ylabel("$f_2$")
-ax.set_zlabel("$f_3$")
-ax.legend()
-fig.tight_layout()
-plt.show()
-```
-
 <p align="center">
-  <img src="images\gde3mnn_example.png" alt="gde3_dtlz2"/>
+  <img src="images\gde3mnn_example.gif" alt="gde3_dtlz2"/>
 </p>
 
 ## Structure
