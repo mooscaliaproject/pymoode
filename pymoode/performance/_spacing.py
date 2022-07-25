@@ -20,7 +20,7 @@ class SpacingIndicator(Indicator):
         
         #knn
         D = squareform(pdist(F, metric="cityblock"))
-        d = np.sort(D, axis=1)[:, 1]
+        d = np.partition(D, 1, axis=1)[:, 1]
         dm = np.mean(d)
         
         #Get spacing
