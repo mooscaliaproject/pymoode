@@ -73,7 +73,7 @@ plt.show()
 ```
 
 <p align="center">
-  <img src="images\tnk_gde3.png" alt="tnk_gde3"/>
+  <img src="https://github.com/mooscaliaproject/pymoode/raw/main/images/tnk_gde3.png" alt="tnk_gde3"/>
 </p>
 
 Alternatively, on the many-objective problem DTLZ2, it would produce amazing results.
@@ -92,7 +92,7 @@ res = minimize(problem, gde3mnn, ('n_gen', 250), seed=12)
 ```
 
 <p align="center">
-  <img src="images\gde3mnn_example.gif" alt="gde3_dtlz2"/>
+  <img src="https://github.com/mooscaliaproject/pymoode/raw/main/images/gde3mnn_example.gif" alt="gde3_dtlz2"/>
 </p>
 
 ## Structure
