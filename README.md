@@ -2,7 +2,7 @@
 A Python framework for Differential Evolution using [pymoo](https://github.com/anyoptimization/pymoo) (Blank & Deb, 2020).
 
 ## Contents
-[Install](#install) / [Algorithms](#algorithms) / [Survival Operators](#survival-operators) / [Crowding Metrics](#crowding-metrics) / [Usage](#usage) / [Citation](#citation) / [References](#references) / [Contact](#contact) / [Acknowledgements](#acknowledgements)
+[Install](#install) / [Algorithms](#algorithms) / [Survival Operators](#survival-operators) / [Crowding Metrics](#crowding-metrics) / [Usage](#usage) / [Structure](#structure) / [Citation](#citation) / [References](#references) / [Contact](#contact) / [Acknowledgements](#acknowledgements)
 
 ## Install
 First, make sure you have a Python 3 environment installed.
@@ -20,36 +20,45 @@ pip install -e git+https://github.com/mooscalia/pymoode#egg=pymoode
 ## Algorithms
 - **DE**: Differential Evolution for single-objective problems proposed by Storn & Price (1997). Other features later implemented are also present, such as dither, jitter, selection variants, and crossover strategies. For details see Price et al. (2005).
 - **NSDE**: Non-dominated Sorting Differential Evolution, a multi-objective algorithm that combines DE mutation and crossover operators to NSGA-II (Deb et al., 2002) survival.
-- **GDE3**: Generalized Differential Evolution 3, a multi-objective algorithm that combines DE mutation and crossover operators to NSGA-II survival with a hybrid type survival strategy. In this algorithm, individuals might be removed in a one-to-one comparison before truncating the population by the multi-objective survival operator. It was proposed by Kukkonen, S. & Lampinen, J. (2005).
+- **GDE3**: Generalized Differential Evolution 3, a multi-objective algorithm that combines DE mutation and crossover operators to NSGA-II survival with a hybrid type survival strategy. In this algorithm, individuals might be removed in a one-to-one comparison before truncating the population by the multi-objective survival operator. It was proposed by Kukkonen, S. & Lampinen, J. (2005). Variants with M-Nearest Neighbors and 2-Nearest Neighbors survival are also available.
 - **NSDE-R**: Non-dominated Sorting Differential Evolution based on Reference directions (Reddy & Dulikravich, 2019). It is an algorithm for many-objective problems that works as an extension of NSDE using NSGA-III (Deb & Jain, 2014) survival strategy.
 
 ## Survival Operators
-- **RankSurvival**: Flexible structure to implement NSGA-II rank and crowding survival with different options for crowding metric and elimination of individuals.
-- **ConstrainedRankSurvival**: A survival operator based on rank and crowding with a special constraint handling approach proposed by Kukkonen, S. & Lampinen, J. (2005).
+- **RandAndCrowding**: Flexible structure to implement NSGA-II rank and crowding survival with different options for crowding metric and elimination of individuals.
+- **ConstrRankAndCrowding**: A survival operator based on rank and crowding with a special constraint handling approach proposed by Kukkonen, S. & Lampinen, J. (2005).
 
 ## Crowding Metrics
 - **Crowding Distance** (*'cd'*): Proposed by Deb et al. (2002) in NSGA-II. Imported from *pymoo*.
+- **Pruning Crowding Distance** (*'pruning-cd'* or *'pcd'*): Proposed by Kukkonen & Deb (2006a), it recursively recalculates crowding distances as removes individuals from a population to improve diversity.
+- ***M*-Nearest Neighbors** (*'mnn'*): Proposed by Kukkonen & Deb (2006b) in an extension of GDE3 to many-objective problems.
+- **2-Nearest Neighbors** (*'2nn'*): Also proposed by Kukkonen & Deb (2006b), it is a variant of M-Nearest Neighbors in which the number of neighbors is two.
 - **Crowding Entropy** (*'ce'*): Proposed by Wang et al. (2010) in MOSADE.
-- ***M*-Nearest Neighbors** (*'mnn'*): Proposed by Kukkonen & Deb (2006) in an extension of GDE3 to many-objective problems.
-- **2-Nearest Neighbors** (*'2nn'*): Also proposed by Kukkonen & Deb (2006), it is a variant of M-Nearest Neighbors in which the number of neighbors is two.
+
+Metrics *'pcd'*, *'mnn'*, and *'2nn'* are recursively recalculated as individuals are removed, to improve the population diversity. Therefore, they are implemented using cython to reduce computational time. If compilation fails, .py files are used instead, which makes it slightly slower.
 
 ## Usage
 For more examples, see the example notebooks [single](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_SOO.ipynb), [multi](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_MULTI.ipynb), [many](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_MANY.ipynb) objective problems, and a [complete tutorial](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/tutorial.ipynb)
 
 ```python
+import numpy as np
 import matplotlib.pyplot as plt
-from pymoo.factory import get_problem
+from pymoo.problems import get_problem
 from pymoo.util.plotting import plot
 from pymoo.optimize import minimize
-from pymoode.nsde import NSDE
+from pymoode.algorithms import GDE3
+from pymoode.survival import RankAndCrowding
 
 problem = get_problem("tnk")
+pf = problem.pareto_front()
 ```
 
 ```python
-gde3 = GDE3(pop_size=50, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9))
+gde3 = GDE3(
+    pop_size=50, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9),
+    survival=RankAndCrowding(crowding_func="pcd")
+)
     
-res = minimize(problem, nsde, ('n_gen', 200), save_history=True, verbose=True)
+res = minimize(problem, gde3, ('n_gen', 200), seed=12)
 ```
 
 ```python
@@ -63,7 +72,51 @@ fig.tight_layout()
 plt.show()
 ```
 
-![tnk_nsde](https://github.com/mooscaliaproject/pymoode/raw/b02d9d46e8d9558af670a2c80eec9689c49d79cb/images/tnk_gde3.png)
+<p align="center">
+  <img src="images\tnk_gde3.png" alt="tnk_gde3"/>
+</p>
+
+Alternatively, on the many-objective problem DTLZ2, it would produce amazing results.
+
+```python
+problem = get_problem("dtlz2")
+```
+
+```python
+gde3mnn = GDE3(
+    pop_size=150, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9),
+    survival=RankAndCrowding(crowding_func="mnn")
+)
+    
+res = minimize(problem, gde3mnn, ('n_gen', 250), seed=12)
+```
+
+<p align="center">
+  <img src="images\gde3mnn_example.gif" alt="gde3_dtlz2"/>
+</p>
+
+## Structure
+
+```
+pymoode
+├───algorithms
+│   ├───DE
+│   ├───GDE3
+│   ├───NSDE
+│   └───NSDER
+├───survival
+│   ├───RankAndCrowding
+│   └───ConstrRankAndCrowding
+├───performance
+│   └───SpacingIndicator
+└───operators
+    ├───dex.py
+    │   ├───DEX
+    │   └───DEM
+    └───des.py
+        └───DES
+```
+
 
 ## Citation
 Please cite this library via its current ResearchGate file:
@@ -77,7 +130,9 @@ Deb, K. & Jain, H., 2014. An evolutionary many-objective optimization algorithm 
 
 Deb, K., Pratap, A., Agarwal, S. & Meyarivan, T. A. M. T., 2002. A Fast and Elitist Multiobjective Genetic Algorithm: NSGA-II. IEEE transactions on evolutionary computation, 6(2), pp. 182-197.
 
-Kukkonen, S. & Deb, K., 2006. A fast and effective method for pruning of non-dominated solutions in many-objective problems. In: Parallel problem solving from nature-PPSN IX. Berlin: Springer, pp. 553-562.
+Kukkonen, S. & Deb, K., 2006a. Improved Pruning of Non-Dominated Solutions Based on Crowding Distance for Bi-Objective Optimization Problems. Vancouver, s.n., pp. 1179-1186.
+
+Kukkonen, S. & Deb, K., 2006b. A fast and effective method for pruning of non-dominated solutions in many-objective problems. In: Parallel problem solving from nature-PPSN IX. Berlin: Springer, pp. 553-562.
 
 Kukkonen, S. & Lampinen, J., 2005. GDE3: The third evolution step of generalized differential evolution. 2005 IEEE congress on evolutionary computation, Volume 1, pp. 443-450.
 
@@ -95,4 +150,4 @@ e-mail: bruscalia12@gmail.com
 ## Acknowledgements
 To Julian Blank, who created the amazing structure of pymoo, making such a project possible.
 
-To Esly F. da Costa Junior, who made it possible all along, trusted in me from the start, and guided me through the path of modeling and optimization.
+To Esly F. da Costa Junior, who made it possible all along.
