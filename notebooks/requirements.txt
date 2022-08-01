@@ -1,4 +1,0 @@
-numpy>=1.19.*
-pymoo==0.5.*
-scipy>=1.7.*,
-future
