@@ -77,7 +77,7 @@ BASE_PACKAGE = 'pymoode'
 setup(
     name = 'pymoode',
     packages = [BASE_PACKAGE] + [f"{BASE_PACKAGE}." + e for e in find_packages(where=BASE_PACKAGE)],
-    version = '0.2.dev1',
+    version = '0.2.0rc2',
     license='Apache License 2.0',
     description = 'A Python optimization package using Differential Evolution.',
     long_description=long_description,
@@ -100,7 +100,7 @@ setup(
                 'Evolutionary Optimization'],
     install_requires=[
             'numpy>=1.19.*',
-            'pymoo==0.5.*',
+            'pymoo==0.6.*',
             'scipy>=1.7.*',
             'future',
         ],

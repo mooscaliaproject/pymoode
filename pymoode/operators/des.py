@@ -17,8 +17,7 @@ class DES(Selection):
         super().__init__()
         self.variant = variant
 
-    #def _do(self, problem, pop, n_select, n_parents, **kwargs):
-    def _do(self, pop, n_select, n_parents, **kwargs):
+    def _do(self, problem, pop, n_select, n_parents, **kwargs):
         
         #Obtain number of elements in population
         n_pop = len(pop)

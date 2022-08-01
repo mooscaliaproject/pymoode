@@ -4,10 +4,8 @@ from pymoo.algorithms.soo.nonconvex.ga import FitnessSurvival
 from pymoo.core.replacement import ImprovementReplacement
 from pymoo.operators.mutation.nom import NoMutation
 from pymoo.operators.sampling.lhs import LHS
-from pymoo.util.display import SingleObjectiveDisplay
-from pymoo.util.termination.default import SingleObjectiveDefaultTermination
-# from pymoo.termination.default import DefaultSingleObjectiveTermination
-# from pymoo.util.display.single import SingleObjectiveOutput
+from pymoo.termination.default import DefaultSingleObjectiveTermination
+from pymoo.util.display.single import SingleObjectiveOutput
 from pymoode.operators.des import DES
 from pymoode.operators.dex import DEX
 
@@ -56,8 +54,8 @@ class InfillDE:
     def do(self, problem, pop, n_offsprings, **kwargs):
         
         #Select parents including donor vector
-        #to_pop=False
-        parents = self.selection.do(pop, n_offsprings, self.crossover.n_parents, **kwargs)
+        parents = self.selection.do(problem, pop, n_offsprings, self.crossover.n_parents,
+                                    to_pop=False, **kwargs)
         
         #Perform mutation included in DEX and crossover
         off = self.crossover.do(problem, pop, parents, **kwargs)
@@ -79,7 +77,7 @@ class DE(GeneticAlgorithm):
                  gamma=1e-4,
                  pm=None,
                  repair="bounce-back",
-                 display=SingleObjectiveDisplay(),
+                 output=SingleObjectiveOutput(),
                  **kwargs):
         """
         Single-objective Differential Evolution proposed by Storn and Price (1997).
@@ -148,12 +146,10 @@ class DE(GeneticAlgorithm):
                          mating=mating,
                          n_offsprings=n_offsprings,
                          eliminate_duplicates=False,
-                         display=display,
-                         # output=output,
+                         output=output,
                          **kwargs)
 
-        self.default_termination = SingleObjectiveDefaultTermination()
-        # self.termination = DefaultSingleObjectiveTermination()
+        self.termination = DefaultSingleObjectiveTermination()
 
     def _initialize_advance(self, infills=None, **kwargs):
         self.pop = FitnessSurvival().do(self.problem, infills, n_survive=self.pop_size)
