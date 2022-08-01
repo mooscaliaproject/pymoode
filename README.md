@@ -40,8 +40,9 @@ Metrics *'pcd'*, *'mnn'*, and *'2nn'* are recursively recalculated as individual
 For more examples, see the example notebooks [single](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_SOO.ipynb), [multi](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_MULTI.ipynb), [many](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_MANY.ipynb) objective problems, and a [complete tutorial](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/tutorial.ipynb)
 
 ```python
+import numpy as np
 import matplotlib.pyplot as plt
-from pymoo.factory import get_problem
+from pymoo.problems import get_problem
 from pymoo.util.plotting import plot
 from pymoo.optimize import minimize
 from pymoode.algorithms import GDE3
