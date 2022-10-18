@@ -1,1 +1,2 @@
 *.ipynb linguist-detectable=false
+pymoode/backups/* linguist-detectable=false
