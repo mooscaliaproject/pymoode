@@ -27,7 +27,7 @@ jobs:
       - name: Install pymoode
         run: |
           pip install .
-          rm -rf pymoode
+          rmdir /s /q pymoode
       - name: Check Compilation
         run: |
           python -c "from pymoode.survival._metrics import IS_COMPILED;print('Compiled Extensions: ', IS_COMPILED)"
