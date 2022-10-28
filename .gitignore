@@ -1,0 +1,13 @@
+build
+dist
+experimental
+pymoode.egg-info
+/venv
+cythonize_files.py
+/pymoode/cython/*.html
+/pymoode/cython/*.pyd
+__pycache__/
+cheat_codes.txt
+notebooks/validate_runtime.ipynb
+notebooks/portfolio.ipynb
+images/*.gif

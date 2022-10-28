@@ -3,7 +3,6 @@ import sys
 from setuptools import find_packages, setup, Extension
 
 import numpy as np
-from Cython.Build import cythonize
 
 # ---------------------------------------------------------------------------------------------------------
 # ADD MARKED HTML FILES FOR CYTHON
@@ -33,6 +32,7 @@ cython_files = os.listdir(cython_folder)
 
 # if the pyx files should be translated and then compiled
 if do_cythonize:
+    from Cython.Build import cythonize
     ext_modules = cythonize(["pymoode/cython/*.pyx"])
 
 # otherwise use the existing pyx files - normal case during pip installation
@@ -74,10 +74,10 @@ with open("README.md", "r", encoding="utf-8") as fh:
     
 BASE_PACKAGE = 'pymoode'
 
-setup(
+base_kwargs = dict(
     name = 'pymoode',
     packages = [BASE_PACKAGE] + [f"{BASE_PACKAGE}." + e for e in find_packages(where=BASE_PACKAGE)],
-    version = '0.2.0',
+    version = '0.2.1.dev1',
     license='Apache License 2.0',
     description = 'A Python optimization package using Differential Evolution.',
     long_description=long_description,
@@ -86,7 +86,6 @@ setup(
     author_email = 'mooscaliaproject@gmail.com',
     url = 'https://github.com/mooscaliaproject/pymoode',
     download_url = 'https://github.com/mooscaliaproject/pymoode',
-    ext_modules = ext_modules,
     include_dirs = np.get_include(),
     keywords = ['Multi-objective optimization',
                 'GDE3',
@@ -105,3 +104,21 @@ setup(
             'future',
         ],
 )
+
+compiled_kwargs = base_kwargs.copy()
+compiled_kwargs["ext_modules"] = ext_modules
+
+try:
+    setup(**compiled_kwargs)
+    print('*' * 75)
+    print("External cython modules found.")
+    print("To verify compilation success run:")
+    print("from pymoode.survival._metrics import IS_COMPILED")
+    print('*' * 75)
+except:
+    print('*' * 75)
+    print("Running setup with cython compilation failed.")
+    print("Attempt to a pure Python setup.")
+    print("If no compilation occurs, .py files will be used instead, which provide the same results but with worse computational time.")
+    print('*' * 75)
+    setup(**base_kwargs)
