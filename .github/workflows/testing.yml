@@ -18,7 +18,7 @@ jobs:
           python-version: '3.10'
       - name: Install Dependencies
         run: |
-          pip install numpy Cython scipy>=1.8.1
+          pip install numpy Cython
           pip install -r requirements.txt
       - name: Install pymoode (DEBUG)
         run: |
