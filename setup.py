@@ -100,7 +100,7 @@ base_kwargs = dict(
     install_requires=[
             'numpy>=1.19.*',
             'pymoo==0.6.*',
-            'scipy>=1.7.*',
+            'scipy>=1.8.*',
             'future',
         ],
 )
