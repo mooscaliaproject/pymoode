@@ -19,9 +19,9 @@ def test_many():
     ref_dirs = get_reference_directions("das-dennis", 3, n_partitions=15)
     igd = IGD(pf=problem.pareto_front(), zero_to_one=True)
     
-    NGEN = 250
+    NGEN = 150
     POPSIZE = 136
-    SEED = 3
+    SEED = 5
     
     gde3 = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.2, F=(0.0, 1.0), gamma=1e-4,
                 survival=RankAndCrowding(crowding_func="mnn"))
@@ -34,7 +34,7 @@ def test_many():
                         verbose=True)
     
     igd_gde3 = igd.do(res_gde3.F)
-    assert abs(igd_gde3 - 0.04033600998468917) <= 1e-8
+    assert abs(igd_gde3 - 0.04011488503871424) <= 1e-8
     
     nsder = NSDER(ref_dirs=ref_dirs, pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 1.0), gamma=1e-4)
     
@@ -46,7 +46,7 @@ def test_many():
                         verbose=True)
     
     igd_nsder = igd.do(res_nsder.F)
-    assert abs(igd_nsder - 0.00292746167097894) <= 1e-8
+    assert abs(igd_nsder - 0.004877000918527632) <= 1e-8
     
     
     
