@@ -119,9 +119,9 @@ pymoode
 
 
 ## Citation
-Please cite this library via its current ResearchGate file:
+This package was developed as part of an academic optimization project. Please, if you use it for research purposes, cite it using the published article:
 
-Leite, B., 2022. pymoode: Differential Evolution in Python. doi:10.13140/RG.2.2.12935.27043
+Leite, B., Costa, A. O. S., Costa, E. F., 2023. Multi-objective optimization of adiabatic styrene reactors using Generalized Differential Evolution 3 (GDE3). Chem. Eng. Sci., 265, Article 118196. doi:10.1016/j.ces.2022.118196.
 
 ## References
 Blank, J. & Deb, K., 2020. pymoo: Multi-Objective Optimization in Python. IEEE Access, Volume 8, pp. 89497-89509.
