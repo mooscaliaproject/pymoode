@@ -20,6 +20,7 @@ jobs:
         run: |
           pip install numpy Cython
           pip install -r requirements.txt
+          pip install pytest
       - name: Install pymoode (DEBUG)
         run: |
           python setup.py install
