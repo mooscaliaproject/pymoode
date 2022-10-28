@@ -8,7 +8,12 @@ from pymoode.algorithms import GDE3
 from pymoode.survival import RankAndCrowding
 from pymoo.util.ref_dirs import get_reference_directions
 
+import numpy as np
+
 def test_many():
+    
+    np.random.seed(3)
+    assert abs(np.random.rand() - 0.5507979025745755) <= 1e-8
     
     problem = get_problem("dtlz2")
     ref_dirs = get_reference_directions("das-dennis", 3, n_partitions=15)
