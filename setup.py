@@ -156,8 +156,6 @@ if not params.nolibs:
 compiled_kwargs = base_kwargs.copy()
 compiled_kwargs["ext_modules"] = ext_modules
 
-breakpoint()
-
 try:
     setup(**compiled_kwargs)
     print('*' * 75)
