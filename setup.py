@@ -56,7 +56,7 @@ parser.add_argument('--nolibs', dest='nolibs', action='store_true', help='Whethe
 parser.add_argument('--markcython', dest='markcython', action='store_true', help='Whether to mark the html cython files.')
 
 params, _ = parser.parse_known_args()
-sys.argv = [arg for arg in sys.argv if not arg.removeprefix('--') in params]
+sys.argv = [arg for arg in sys.argv if not arg.lstrip("-") in params]
 
 # ---------------------------------------------------------------------------------------------------------
 # ADD MARKED HTML FILES FOR CYTHON
