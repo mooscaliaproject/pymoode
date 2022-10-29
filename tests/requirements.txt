@@ -1,5 +1,5 @@
 numpy==1.23.1
 pymoo==0.6.*
-scipy==1.9.3
+scipy==1.8.*
 future
 pytest

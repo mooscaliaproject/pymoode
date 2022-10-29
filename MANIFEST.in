@@ -1,2 +1,2 @@
-recursive-include pymoode *.py *.cpp
-recursive-exclude pymoode *.so *.pyx *.pxd *.html
+recursive-include pymoode *.py *.pyx *.pxd
+recursive-exclude pymoode *.so *.cpp *.html
