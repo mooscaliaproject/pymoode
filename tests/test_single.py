@@ -6,7 +6,33 @@ from pymoode.algorithms import GDE3
 from pymoode.algorithms import DE
 
 
-def test_single():
+@pytest.mark.parametrize('selection', ["rand", "best", "current-to-best", "current-to-rand", "ranked"])
+@pytest.mark.parametrize('crossover', ["bin", "exp"])
+@pytest.mark.parametrize('repair', ["bounce-back", "midway", "rand-init", "to-bounds"])
+def test_de_run(selection, crossover, repair):
+    problem = get_problem("rastrigin")
+    
+    NGEN = 100
+    POPSIZE = 20
+    SEED = 3
+    
+    #DE Parameters
+    CR = 0.5
+    F = (0.3, 1.0)
+
+    de = DE(pop_size=POPSIZE, variant=f"DE/{selection}/1/{crossover}", CR=CR, F=F, repair=repair)
+
+    res_de = minimize(problem,
+                    de,
+                    ('n_gen', NGEN),
+                    seed=SEED,
+                    save_history=False,
+                    verbose=False)
+
+    assert len(res_de.opt) > 0
+
+
+def test_de_perf():
     problem = get_problem("rastrigin")
     
     NGEN = 100
@@ -23,8 +49,8 @@ def test_single():
                     de,
                     ('n_gen', NGEN),
                     seed=SEED,
-                    save_history=True,
-                    verbose=True)
+                    save_history=False,
+                    verbose=False)
 
     assert len(res_de.opt) > 0
     assert res_de.F <= 1e-6
@@ -35,9 +61,8 @@ def test_single():
                     gde3,
                     ('n_gen', NGEN),
                     seed=SEED,
-                    save_history=True,
-                    verbose=True)
+                    save_history=False,
+                    verbose=False)
     
     assert res_gde3.F <= 1e-6
-
 
