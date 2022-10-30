@@ -31,7 +31,7 @@ def test_many_run(selection, crossover, crowding_func):
                         save_history=False,
                         verbose=False)
     
-    assert len(res_gde3) > 0
+    assert len(res_gde3.opt) > 0
     
 
 def test_many_perf():

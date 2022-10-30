@@ -26,7 +26,7 @@ def test_multi_run(crowding_func):
                         save_history=False,
                         verbose=False)
     
-    assert len(res_gde3) > 0
+    assert len(res_gde3.opt) > 0
     
 
 def test_multi_perf():
