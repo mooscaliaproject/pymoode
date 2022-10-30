@@ -1,8 +1,6 @@
 import numpy as np
 from pymoo.core.crossover import Crossover
 from pymoo.core.population import Population
-from pymoo.operators.crossover.binx import mut_binomial
-from pymoo.operators.crossover.expx import mut_exp
 
 
 # =========================================================================================================
@@ -169,7 +167,67 @@ class DEX(Crossover):
         off = Population.new("X", X)
         
         return off
+
+
+# =========================================================================================================
+# Crossovers
+# =========================================================================================================
+
+# From version 0.5.0 of pymoo
+def row_at_least_once_true(M):
     
+    _, d = M.shape
+    
+    for k in np.where(~np.any(M, axis=1))[0]:
+        M[k, np.random.randint(d)] = True
+        
+    return M
+
+
+def mut_binomial(n_matings, n_var, prob, at_least_once=True):
+
+    M = np.random.random((n_matings, n_var)) < prob
+
+    if at_least_once:
+        M = row_at_least_once_true(M)
+
+    return M
+
+
+def mut_exp(n_matings, n_var, prob, at_least_once=True):
+
+    # the mask do to the crossover
+    M = np.full((n_matings, n_var), False)
+
+    # start point of crossover
+    s = np.random.randint(0, n_var, size=n_matings)
+
+    # create for each individual the crossover range
+    for i in range(n_matings):
+
+        # the actual index where we start
+        start = s[i]
+        for j in range(n_var):
+
+            # the current position where we are pointing to
+            current = (start + j) % n_var
+
+            # replace only if random value keeps being smaller than CR
+            if np.random.random() <= prob:
+                M[i, current] = True
+            else:
+                break
+
+    if at_least_once:
+        M = row_at_least_once_true(M)
+
+    return M
+
+
+# =========================================================================================================
+# Repairs
+# =========================================================================================================
+
 
 def bounce_back(X, Xb, xl, xu):
     """Repair strategy
@@ -235,6 +293,9 @@ def to_bounds(X, Xb, xl, xu):
     Returns:
         2d array like: Repaired vectors.
     """
+    
+    xl = np.array(xl)
+    xu = np.array(xu)
     
     XL = xl[None, :].repeat(len(X), axis=0)
     XU = xu[None, :].repeat(len(X), axis=0)
