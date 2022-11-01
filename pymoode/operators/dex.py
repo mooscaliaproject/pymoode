@@ -12,7 +12,7 @@ class DEM(Crossover):
     def __init__(self,
                  F=None,
                  gamma=1e-4,
-                 repair="bounce-back",
+                 de_repair="bounce-back",
                  n_diffs=1,
                  **kwargs):
         
@@ -30,9 +30,9 @@ class DEM(Crossover):
             self.scale_factor = self._scalar_scale_factor
         
         # Define which method will be used to generate F values
-        if not hasattr(repair, "__call__"):
+        if not hasattr(de_repair, "__call__"):
             try:
-                repair = REPAIRS[repair]
+                de_repair = REPAIRS[de_repair]
             except:
                 raise KeyError("Repair must be either callable or in " + str(list(REPAIRS.keys())))
         
@@ -44,7 +44,7 @@ class DEM(Crossover):
         
         self.F = F
         self.gamma = gamma
-        self.repair = repair
+        self.de_repair = de_repair
     
         
     def do(self, problem, pop, parents=None, **kwargs):
@@ -62,8 +62,8 @@ class DEM(Crossover):
         # If the problem has boundaries to be considered
         if problem.has_bounds():
             
-            # Do repair
-            V = self.repair(V, Xr[0], *problem.bounds())
+            # Do de_repair
+            V = self.de_repair(V, Xr[0], *problem.bounds())
                 
         return Population.new("X", V)
     
@@ -128,7 +128,7 @@ class DEX(Crossover):
                  gamma=1e-4,
                  n_diffs=1,
                  at_least_once=True,
-                 repair="bounce-back",
+                 de_repair="bounce-back",
                  **kwargs):
         
         # Crossover basic structure
@@ -141,7 +141,7 @@ class DEX(Crossover):
         # Create instace for mutation
         self.dem = DEM(F=F,
                        gamma=gamma,
-                       repair=repair,
+                       de_repair=de_repair,
                        n_diffs=n_diffs)
     
         self.CR = CR
@@ -249,7 +249,7 @@ def bounce_back(X, Xb, xl, xu):
 
     Args:
         X (2d array like): Mutated vectors including violations.
-        Xb (2d array like): Reference vectors for repair in feasible space.
+        Xb (2d array like): Reference vectors for de_repair in feasible space.
         xl (1d array like): Lower-bounds.
         xu (1d array like): Upper-bounds.
 
@@ -275,7 +275,7 @@ def midway(X, Xb, xl, xu):
 
     Args:
         X (2d array like): Mutated vectors including violations.
-        Xb (2d array like): Reference vectors for repair in feasible space.
+        Xb (2d array like): Reference vectors for de_repair in feasible space.
         xl (1d array like): Lower-bounds.
         xu (1d array like): Upper-bounds.
 
@@ -301,7 +301,7 @@ def to_bounds(X, Xb, xl, xu):
 
     Args:
         X (2d array like): Mutated vectors including violations.
-        Xb (2d array like): Reference vectors for repair in feasible space.
+        Xb (2d array like): Reference vectors for de_repair in feasible space.
         xl (1d array like): Lower-bounds.
         xu (1d array like): Upper-bounds.
 
@@ -330,7 +330,7 @@ def rand_init(X, Xb, xl, xu):
 
     Args:
         X (2d array like): Mutated vectors including violations.
-        Xb (2d array like): Reference vectors for repair in feasible space.
+        Xb (2d array like): Reference vectors for de_repair in feasible space.
         xl (1d array like): Lower-bounds.
         xu (1d array like): Upper-bounds.
 
@@ -357,7 +357,7 @@ def squared_bounce_back(X, Xb, xl, xu):
 
     Args:
         X (2d array like): Mutated vectors including violations.
-        Xb (2d array like): Reference vectors for repair in feasible space.
+        Xb (2d array like): Reference vectors for de_repair in feasible space.
         xl (1d array like): Lower-bounds.
         xu (1d array like): Upper-bounds.
 

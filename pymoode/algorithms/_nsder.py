@@ -62,7 +62,7 @@ class NSDER(NSDE):
         pm : Mutation, optional
             Pymoo's mutation operators after crossover. Defaults to NoMutation().
             
-        reapair : Repair, optional
+        de_reapair : str or callable, optional
             Repair of mutant vectors. Is either callable or one of:
         
                 - 'bounce-back'
@@ -70,7 +70,7 @@ class NSDER(NSDE):
                 - 'rand-init'
                 - 'to-bounds'
             
-            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
+            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for de_repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
             Defaults to 'bounce-back'.
             
         survival : Survival, optional

@@ -22,7 +22,7 @@ class InfillDE:
                  F=(0.5, 1.0),
                  gamma=1e-4,
                  pm=None,
-                 repair="bounce-back"):
+                 de_repair="bounce-back"):
         
         # Parse the information from the string
         _, selection_variant, n_diff, crossover_variant, = variant.split("/")
@@ -46,9 +46,9 @@ class InfillDE:
                              gamma=gamma,
                              n_diffs=n_diffs,
                              at_least_once=True,
-                             repair=repair)
+                             de_repair=de_repair)
         
-        # Define posterior mutation strategy and repair
+        # Define posterior mutation strategy and de_repair
         self.pm = pm if pm is not None else NoMutation()
 
     def do(self, problem, pop, n_offsprings, **kwargs):
@@ -75,7 +75,7 @@ class DE(GeneticAlgorithm):
                  F=(0.5, 1.0),
                  gamma=1e-4,
                  pm=None,
-                 repair="bounce-back",
+                 de_repair="bounce-back",
                  output=SingleObjectiveOutput(),
                  **kwargs):
         """
@@ -118,7 +118,7 @@ class DE(GeneticAlgorithm):
         pm : Mutation, optional
             Pymoo's mutation operators after crossover. Defaults to NoMutation().
             
-        reapair : Repair, optional
+        de_reapair : str or callable, optional
             Repair of mutant vectors. Is either callable or one of:
         
                 - 'bounce-back'
@@ -126,7 +126,7 @@ class DE(GeneticAlgorithm):
                 - 'rand-init'
                 - 'to-bounds'
             
-            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
+            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for de_repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
             Defaults to 'bounce-back'.
         """
         
@@ -135,7 +135,7 @@ class DE(GeneticAlgorithm):
                           F=F,
                           gamma=gamma,
                           pm=pm,
-                          repair=repair)
+                          de_repair=de_repair)
         
         # Number of offsprings at each generation
         n_offsprings = pop_size

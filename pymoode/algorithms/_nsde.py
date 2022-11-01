@@ -19,7 +19,7 @@ class NSDE(NSGA2):
                  F=None,
                  gamma=1e-4,
                  pm=None,
-                 repair="bounce-back",
+                 de_repair="bounce-back",
                  survival=RankAndCrowding(),
                  **kwargs):
         """
@@ -65,7 +65,7 @@ class NSDE(NSGA2):
         pm : Mutation, optional
             Pymoo's mutation operators after crossover. Defaults to NoMutation().
             
-        reapair : Repair, optional
+        de_reapair : str or callable, optional
             Repair of mutant vectors. Is either callable or one of:
         
                 - 'bounce-back'
@@ -73,7 +73,7 @@ class NSDE(NSGA2):
                 - 'rand-init'
                 - 'to-bounds'
             
-            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
+            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for de_repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
             Defaults to 'bounce-back'.
             
         survival : Survival, optional
@@ -91,7 +91,7 @@ class NSDE(NSGA2):
                           F=F,
                           gamma=gamma,
                           pm=pm,
-                          repair=repair)
+                          de_repair=de_repair)
         
         # Init from pymoo's NSGA2
         super().__init__(pop_size=pop_size,

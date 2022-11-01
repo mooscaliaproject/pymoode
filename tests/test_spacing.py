@@ -18,7 +18,7 @@ def test_spacing_zero_to_one():
     POPSIZE = 100
     SEED = 5
     
-    gde3 = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), repair="bounce-back",
+    gde3 = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), de_repair="bounce-back",
                 survival=RankAndCrowding(crowding_func="pcd"))
 
     res_gde3 = minimize(problem,

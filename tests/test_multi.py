@@ -20,7 +20,7 @@ def test_multi_run(survival, crowding_func):
     POPSIZE = 100
     SEED = 5
     
-    gde3 = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), repair="bounce-back",
+    gde3 = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), de_repair="bounce-back",
                 survival=survival(crowding_func=crowding_func))
 
     res_gde3 = minimize(problem,
@@ -62,7 +62,7 @@ def test_gde3_pm_run():
     POPSIZE = 100
     SEED = 5
     
-    gde3 = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), repair="bounce-back",
+    gde3 = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), de_repair="bounce-back",
                 survival=RankAndCrowding(crowding_func="pcd"), pm=PM())
 
     res_gde3 = minimize(problem,
@@ -84,7 +84,7 @@ def test_multi_perf():
     POPSIZE = 100
     SEED = 5
     
-    gde3 = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), repair="bounce-back",
+    gde3 = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), de_repair="bounce-back",
                 survival=RankAndCrowding(crowding_func="cd"))
 
     res_gde3 = minimize(problem,
@@ -97,7 +97,7 @@ def test_multi_perf():
     igd_gde3 = igd.do(res_gde3.F)
     assert abs(igd_gde3 - 0.005859828655308572) <= 1e-8
     
-    gde3p = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), repair="bounce-back",
+    gde3p = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), de_repair="bounce-back",
                 survival=RankAndCrowding(crowding_func="pcd"))
 
     res_gde3p = minimize(problem,
@@ -110,7 +110,7 @@ def test_multi_perf():
     igd_gde3p = igd.do(res_gde3p.F)
     assert abs(igd_gde3p - 0.004744463013355145) <= 1e-8
     
-    nsde = NSDE(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), repair="bounce-back",
+    nsde = NSDE(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), de_repair="bounce-back",
                 survival=RankAndCrowding(crowding_func="pcd"))
         
     res_nsde = minimize(problem,
