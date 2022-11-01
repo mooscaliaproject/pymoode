@@ -19,6 +19,7 @@ class NSDER(NSDE):
                  CR=0.7,
                  F=None,
                  gamma=1e-4,
+                 de_repair="bounce-back",
                  **kwargs):
         """
         NSDE-R is an extension of NSDE to many-objective problems (Reddy & Dulikravich, 2019) using NSGA-III survival.

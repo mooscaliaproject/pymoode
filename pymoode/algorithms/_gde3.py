@@ -18,6 +18,7 @@ class GDE3(NSDE):
                  CR=0.5,
                  F=None,
                  gamma=1e-4,
+                 de_repair="bounce-back",
                  **kwargs):
         """
         GDE3 is an extension of DE to multi-objective problems using a mixed type survival strategy.
