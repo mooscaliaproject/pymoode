@@ -19,24 +19,24 @@ class DEM(Crossover):
         # Crossover basic structure
         super().__init__(1 + 2 * n_diffs, 1,  prob=1.0, **kwargs)
 
-        #Default value for F
+        # Default value for F
         if F is None:
             F = (0.0, 1.0)
         
-        #Define which method will be used to generate F values
+        # Define which method will be used to generate F values
         if hasattr(F, "__iter__"):
             self.scale_factor = self._randomize_scale_factor
         else:
             self.scale_factor = self._scalar_scale_factor
         
-        #Define which method will be used to generate F values
+        # Define which method will be used to generate F values
         if not hasattr(repair, "__call__"):
             try:
                 repair = REPAIRS[repair]
             except:
                 raise KeyError("Repair must be either callable or in " + str(list(REPAIRS.keys())))
         
-        #Define which strategy of rotation will be used
+        # Define which strategy of rotation will be used
         if gamma is None:
             self.get_diff = self._diff_simple
         else:
@@ -72,13 +72,13 @@ class DEM(Crossover):
         n_parents, n_matings, n_var = Xr.shape
         assert n_parents % 2 == 1, "For the differential an odd number of values need to be provided"
 
-        #Build the pairs for the differentials
+        # Build the pairs for the differentials
         pairs = (np.arange(n_parents - 1) + 1).reshape(-1, 2)
 
-        #The differentials from each pair subtraction
+        # The differentials from each pair subtraction
         diffs = self.get_diffs(Xr, pairs, n_matings, n_var)
 
-        #Add the difference vectors to the base vector
+        # Add the difference vectors to the base vector
         V = Xr[0] + diffs
 
         if return_differentials:
@@ -101,19 +101,19 @@ class DEM(Crossover):
     
     def get_diffs(self, Xr, pairs, n_matings, n_var):
         
-        #The differentials from each pair subtraction
+        # The differentials from each pair subtraction
         diffs = np.zeros((n_matings, n_var))
         
-        #For each difference
+        # For each difference
         for i, j in pairs:
         
-            #Obtain F randomized in range
+            # Obtain F randomized in range
             F = self.scale_factor(n_matings)
             
-            #New difference vector
+            # New difference vector
             diff = self.get_diff(F, Xr[i], Xr[j], n_matings, n_var)
             
-            #Add the difference to the first vector
+            # Add the difference to the first vector
             diffs = diffs + diff
         
         return diffs
@@ -131,11 +131,14 @@ class DEX(Crossover):
                  repair="bounce-back",
                  **kwargs):
         
-        #Default value for F
+        # Crossover basic structure
+        super().__init__(2 + 2 * n_diffs, 1,  prob=1.0, **kwargs)
+        
+        # Default value for F
         if F is None:
             F = (0.0, 1.0)
         
-        #Create instace for mutation
+        # Create instace for mutation
         self.dem = DEM(F=F,
                        gamma=gamma,
                        repair=repair,
@@ -144,8 +147,6 @@ class DEX(Crossover):
         self.CR = CR
         self.variant = variant
         self.at_least_once = at_least_once
-        
-        super().__init__(2 + 2 * n_diffs, 1,  prob=1.0, **kwargs)
         
     
     def do(self, problem, pop, parents=None, **kwargs):
@@ -157,25 +158,25 @@ class DEX(Crossover):
         # Get all X values for mutation parents
         X = pop[:, 0].get("X")
         
-        #About Xi
+        # About Xi
         n_matings, n_var = X.shape
         
-        #Obtain mutants
+        # Obtain mutants
         mutants = self.dem.do(problem, pop[:, 1:], **kwargs)
         
-        #Obtain V
+        # Obtain V
         V = mutants.get("X")
         
-        #Binomial crossover
+        # Binomial crossover
         if self.variant == "bin":
             M = mut_binomial(n_matings, n_var, self.CR, at_least_once=self.at_least_once)
-        #Exponential crossover
+        # Exponential crossover
         elif self.variant == "exp":
             M = mut_exp(n_matings, n_var, self.CR, at_least_once=self.at_least_once)
         else:
             raise Exception(f"Unknown variant: {self.variant}")
 
-        #Add mutated elements in corresponding main parent
+        # Add mutated elements in corresponding main parent
         X[M] = V[M]
 
         off = Population.new("X", X)
