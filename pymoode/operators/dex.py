@@ -62,7 +62,7 @@ class DEM(Crossover):
         if problem.has_bounds():
             
             # Do repair
-            V = self.de_repair(V, Xr[0], *problem.bounds())
+            V = self.repair(V, Xr[0], *problem.bounds())
                 
         return Population.new("X", V)
     
