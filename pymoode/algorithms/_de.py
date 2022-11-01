@@ -60,7 +60,7 @@ class InfillDE:
         off = self.crossover(problem, parents, **kwargs)
         
         # Perform posterior mutation if passed
-        off = self.pm.do(problem, off)
+        off = self.pm(problem, off)
         
         return off
         

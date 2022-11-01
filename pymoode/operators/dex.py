@@ -15,6 +15,9 @@ class DEM(Crossover):
                  repair="bounce-back",
                  n_diffs=1,
                  **kwargs):
+        
+        # Crossover basic structure
+        super().__init__(1 + 2 * n_diffs, 1,  prob=1.0, **kwargs)
 
         #Default value for F
         if F is None:
@@ -42,8 +45,6 @@ class DEM(Crossover):
         self.F = F
         self.gamma = gamma
         self.repair = repair
-        
-        super().__init__(1 + 2 * n_diffs, 1,  prob=1.0, **kwargs)
     
         
     def do(self, problem, pop, parents=None, **kwargs):
