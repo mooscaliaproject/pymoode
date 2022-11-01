@@ -4,11 +4,12 @@ from pymoo.optimize import minimize
 from pymoo.problems import get_problem
 from pymoo.indicators.igd import IGD
 from pymoode.algorithms import GDE3, NSDE
-from pymoode.survival import RankAndCrowding
+from pymoode.survival import RankAndCrowding, ConstrRankAndCrowding
 
 
+@pytest.mark.parametrize('survival', [RankAndCrowding, ConstrRankAndCrowding])
 @pytest.mark.parametrize('crowding_func', ["mnn", "2nn", "cd", "pcd", "ce"])
-def test_multi_run(crowding_func):
+def test_multi_run(survival, crowding_func):
     
     problem = get_problem("truss2d")
 
@@ -17,7 +18,7 @@ def test_multi_run(crowding_func):
     SEED = 5
     
     gde3 = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), repair="bounce-back",
-                survival=RankAndCrowding(crowding_func=crowding_func))
+                survival=survival(crowding_func=crowding_func))
 
     res_gde3 = minimize(problem,
                         gde3,
