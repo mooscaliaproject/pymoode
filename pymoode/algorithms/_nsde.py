@@ -2,6 +2,7 @@ from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.operators.sampling.lhs import LHS
 from pymoode.algorithms._de import InfillDE
 from pymoode.survival._classes import RankAndCrowding
+from pymoode.operators.dex import _validate_deprecated_repair
 
 
 # =========================================================================================================
@@ -81,6 +82,8 @@ class NSDE(NSGA2):
             Defaults to RankAndCrowding() with crowding distances ('cd').
             In GDE3, the survival strategy is applied after a one-to-one comparison between child vector and corresponding parent when both are non-dominated by the other.
         """
+        
+        de_repair, kwargs["repair"] = _validate_deprecated_repair(de_repair, **kwargs)
         
         # Number of offsprings at each generation
         n_offsprings = pop_size

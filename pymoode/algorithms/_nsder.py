@@ -3,6 +3,7 @@ from pymoo.algorithms.moo.nsga3 import ReferenceDirectionSurvival
 from pymoo.operators.sampling.lhs import LHS
 from pymoo.util.misc import has_feasible
 from pymoode.algorithms._nsde import NSDE
+from pymoode.operators.dex import _validate_deprecated_repair
 
 # =========================================================================================================
 # Implementation
@@ -77,6 +78,8 @@ class NSDER(NSDE):
             Pymoo's survival strategy.
             Defaults to ReferenceDirectionSurvival().
         """
+        
+        de_repair, kwargs["repair"] = _validate_deprecated_repair(de_repair, **kwargs)
         
         self.ref_dirs = ref_dirs
 

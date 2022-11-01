@@ -1,6 +1,8 @@
 import numpy as np
 from pymoo.core.crossover import Crossover
 from pymoo.core.population import Population
+from pymoo.core.repair import Repair
+import warnings
 
 
 # =========================================================================================================
@@ -237,6 +239,28 @@ def mut_exp(n_matings, n_var, prob, at_least_once=True):
         M = row_at_least_once_true(M)
 
     return M
+
+
+def _validate_deprecated_repair(de_repair, **kwargs):
+    
+    if "repair" in kwargs:
+        
+        repair = kwargs["repair"]
+        if (repair in REPAIRS) or (hasattr(repair, "__call__") and (not isinstance(repair, Repair))):
+            warnings.warn(
+                    "repair is deprecated; DE repair methods are now included in de_repair argument",
+                    DeprecationWarning, 2
+                )
+            de_repair = repair
+            repair = None
+            
+        else:
+            pass
+    
+    else:
+        repair = None
+
+    return de_repair, repair
 
 
 # =========================================================================================================

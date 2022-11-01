@@ -7,7 +7,7 @@ from pymoo.operators.sampling.lhs import LHS
 from pymoo.termination.default import DefaultSingleObjectiveTermination
 from pymoo.util.display.single import SingleObjectiveOutput
 from pymoode.operators.des import DES
-from pymoode.operators.dex import DEX
+from pymoode.operators.dex import DEX, _validate_deprecated_repair
 
 
 # =========================================================================================================
@@ -129,6 +129,8 @@ class DE(GeneticAlgorithm):
             If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for de_repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
             Defaults to 'bounce-back'.
         """
+        
+        de_repair, kwargs["repair"] = _validate_deprecated_repair(de_repair, **kwargs)
         
         mating = InfillDE(variant=variant,
                           CR=CR,

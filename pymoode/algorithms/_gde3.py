@@ -2,6 +2,7 @@ from pymoode.algorithms._nsde import NSDE
 from pymoo.core.population import Population
 from pymoo.util.dominator import get_relation
 from pymoode.survival import RankAndCrowding
+from pymoode.operators.dex import _validate_deprecated_repair
 
 
 # =========================================================================================================
@@ -81,6 +82,8 @@ class GDE3(NSDE):
             Defaults to RankAndCrowding() with crowding distances ('cd').
             In GDE3, the survival strategy is applied after a one-to-one comparison between child vector and corresponding parent when both are non-dominated by the other.
         """
+        
+        de_repair, kwargs["repair"] = _validate_deprecated_repair(de_repair, **kwargs)
         
         super().__init__(pop_size=pop_size,
                          variant=variant,
