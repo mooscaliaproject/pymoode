@@ -7,7 +7,7 @@ from pymoo.core.population import Population
 # Implementation
 # =========================================================================================================
 
-class DEM:
+class DEM(Crossover):
     
     def __init__(self,
                  F=None,
@@ -42,20 +42,26 @@ class DEM:
         self.gamma = gamma
         self.repair = repair
         
-    def do(self, problem, pop, parents, **kwargs):
-
-        #Get all X values for mutation parents
-        Xr = pop.get("X")[parents.T].copy()
-        assert len(Xr.shape) == 3, "Please provide a three-dimensional matrix n_parents x pop_size x n_vars."
+        super().__init__(1 + 2 * n_diffs, 1,  prob=1.0, **kwargs)
+    
         
-        #Create mutation vectors
+    def do(self, problem, pop, parents=None, **kwargs):
+        
+        # Convert pop if parents is not None
+        if not parents is None:
+            pop = pop[parents]
+        
+        # Get all X values for mutation parents
+        Xr = np.swapaxes(pop, 0, 1).get("X")
+        
+        # Create mutation vectors
         V, diffs = self.de_mutation(Xr, return_differentials=True)
 
-        #If the problem has boundaries to be considered
+        # If the problem has boundaries to be considered
         if problem.has_bounds():
             
-            #Do repair
-            V = self.repair(V, Xr[0], *problem.bounds())
+            # Do repair
+            V = self.de_repair(V, Xr[0], *problem.bounds())
                 
         return Population.new("X", V)
     
@@ -137,17 +143,22 @@ class DEX(Crossover):
         self.at_least_once = at_least_once
         
         super().__init__(2 + 2 * n_diffs, 1,  prob=1.0, **kwargs)
-    
-    def do(self, problem, pop, parents, **kwargs):
         
-        #Get target vectors
-        X = pop.get("X")[parents[:, 0]]
+    
+    def do(self, problem, pop, parents=None, **kwargs):
+        
+        # Convert pop if parents is not None
+        if not parents is None:
+            pop = pop[parents]
+        
+        # Get all X values for mutation parents
+        X = pop[:, 0].get("X")
         
         #About Xi
         n_matings, n_var = X.shape
         
         #Obtain mutants
-        mutants = self.dem.do(problem, pop, parents[:, 1:], **kwargs)
+        mutants = self.dem.do(problem, pop[:, 1:], **kwargs)
         
         #Obtain V
         V = mutants.get("X")

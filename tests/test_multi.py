@@ -4,6 +4,9 @@ from pymoo.optimize import minimize
 from pymoo.problems import get_problem
 from pymoo.indicators.igd import IGD
 from pymoode.algorithms import GDE3, NSDE
+from pymoode.operators.dex import DEX, DEM
+from pymoo.algorithms.moo.nsga2 import NSGA2
+from pymoo.operators.mutation.pm import PM
 from pymoode.survival import RankAndCrowding, ConstrRankAndCrowding
 
 
@@ -13,12 +16,54 @@ def test_multi_run(survival, crowding_func):
     
     problem = get_problem("truss2d")
 
-    NGEN = 250
+    NGEN = 100
     POPSIZE = 100
     SEED = 5
     
     gde3 = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), repair="bounce-back",
                 survival=survival(crowding_func=crowding_func))
+
+    res_gde3 = minimize(problem,
+                        gde3,
+                        ('n_gen', NGEN),
+                        seed=SEED,
+                        save_history=False,
+                        verbose=False)
+    
+    assert len(res_gde3.opt) > 0
+
+
+@pytest.mark.parametrize('crossover', [DEX(), DEM()])
+def test_multi_frankstein(crossover):
+    
+    problem = get_problem("truss2d")
+
+    NGEN = 100
+    POPSIZE = 100
+    SEED = 5
+    
+    frank = NSGA2(pop_size=POPSIZE, crossover=crossover)
+
+    res_frank = minimize(problem,
+                        frank,
+                        ('n_gen', NGEN),
+                        seed=SEED,
+                        save_history=False,
+                        verbose=False)
+    
+    assert len(res_frank.opt) > 0
+
+
+def test_gde3_pm_run():
+    
+    problem = get_problem("truss2d")
+
+    NGEN = 100
+    POPSIZE = 100
+    SEED = 5
+    
+    gde3 = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), repair="bounce-back",
+                survival=RankAndCrowding(crowding_func="pcd"), pm=PM())
 
     res_gde3 = minimize(problem,
                         gde3,

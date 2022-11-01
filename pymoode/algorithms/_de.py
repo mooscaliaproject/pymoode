@@ -24,22 +24,22 @@ class InfillDE:
                  pm=None,
                  repair="bounce-back"):
         
-        #Parse the information from the string
+        # Parse the information from the string
         _, selection_variant, n_diff, crossover_variant, = variant.split("/")
         n_diffs = int(n_diff)
         
-        #When "to" in variant there are more than 1 difference vectors
+        # When "to" in variant there are more than 1 difference vectors
         if "-to-" in variant:
             n_diffs += 1
         
-        #Define parent selection operator
+        # Define parent selection operator
         self.selection = DES(selection_variant)
         
-        #Default value for F
+        # Default value for F
         if F is None:
             F = (0.0, 1.0)
         
-        #Define crossover strategy
+        # Define crossover strategy
         self.crossover = DEX(variant=crossover_variant,
                              CR=CR,
                              F=F,
@@ -48,19 +48,18 @@ class InfillDE:
                              at_least_once=True,
                              repair=repair)
         
-        #Define posterior mutation strategy and repair
+        # Define posterior mutation strategy and repair
         self.pm = pm if pm is not None else NoMutation()
 
     def do(self, problem, pop, n_offsprings, **kwargs):
         
-        #Select parents including donor vector
-        parents = self.selection.do(problem, pop, n_offsprings, self.crossover.n_parents,
-                                    to_pop=False, **kwargs)
+        # Select parents including donor vector
+        parents = self.selection(problem, pop, n_offsprings, self.crossover.n_parents, to_pop=True, **kwargs)
         
-        #Perform mutation included in DEX and crossover
-        off = self.crossover.do(problem, pop, parents, **kwargs)
+        # Perform mutation included in DEX and crossover
+        off = self.crossover(problem, parents, **kwargs)
         
-        #Perform posterior mutation if passed
+        # Perform posterior mutation if passed
         off = self.pm.do(problem, off)
         
         return off
@@ -138,7 +137,7 @@ class DE(GeneticAlgorithm):
                           pm=pm,
                           repair=repair)
         
-        #Number of offsprings at each generation
+        # Number of offsprings at each generation
         n_offsprings = pop_size
 
         super().__init__(pop_size=pop_size,
@@ -164,11 +163,11 @@ class DE(GeneticAlgorithm):
         
         assert infills is not None, "This algorithms uses the AskAndTell interface thus infills must be provided."
 
-        #One-to-one replacement survival
+        # One-to-one replacement survival
         self.pop = ImprovementReplacement().do(self.problem, self.pop, infills)
 
-        #Sort the population by fitness to make the selection simpler for mating (not an actual survival, just sorting)
+        # Sort the population by fitness to make the selection simpler for mating (not an actual survival, just sorting)
         self.pop = FitnessSurvival().do(self.problem, self.pop)
         
-        #Set ranks
+        # Set ranks
         self.pop.set("rank", np.arange(self.pop_size))

@@ -93,34 +93,34 @@ class GDE3(NSDE):
         
         assert infills is not None, "This algorithms uses the AskAndTell interface thus 'infills' must to be provided."
 
-        #The individuals that are considered for the survival later and final survive
+        # The individuals that are considered for the survival later and final survive
         survivors = []
 
         # now for each of the infill solutions
         for k in range(len(self.pop)):
 
-            #Get the offspring an the parent it is coming from
+            # Get the offspring an the parent it is coming from
             off, parent = infills[k], self.pop[k]
 
-            #Check whether the new solution dominates the parent or not
+            # Check whether the new solution dominates the parent or not
             rel = get_relation(parent, off)
 
-            #If indifferent we add both
+            # If indifferent we add both
             if rel == 0:
                 survivors.extend([parent, off])
 
-            #If offspring dominates parent
+            # If offspring dominates parent
             elif rel == -1:
                 survivors.append(off)
 
-            #If parent dominates offspring
+            # If parent dominates offspring
             else:
                 survivors.append(parent)
 
-        #Create the population
+        # Create the population
         survivors = Population.create(*survivors)
 
-        #Perform a survival to reduce to pop size
+        # Perform a survival to reduce to pop size
         self.pop = self.survival.do(self.problem, survivors, n_survive=self.n_offsprings)
 
 

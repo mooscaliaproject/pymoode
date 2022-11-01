@@ -82,10 +82,10 @@ class NSDE(NSGA2):
             In GDE3, the survival strategy is applied after a one-to-one comparison between child vector and corresponding parent when both are non-dominated by the other.
         """
         
-        #Number of offsprings at each generation
+        # Number of offsprings at each generation
         n_offsprings = pop_size
         
-        #Mating
+        # Mating
         mating = InfillDE(variant=variant,
                           CR=CR,
                           F=F,
@@ -93,7 +93,7 @@ class NSDE(NSGA2):
                           pm=pm,
                           repair=repair)
         
-        #Init from pymoo's NSGA2
+        # Init from pymoo's NSGA2
         super().__init__(pop_size=pop_size,
                          sampling=sampling,
                          mating=mating,
