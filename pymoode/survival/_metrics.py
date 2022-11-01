@@ -54,11 +54,13 @@ def get_crowding_function(label):
     elif label == "ce":
         fun = FunctionalDiversity(calc_crowding_entropy, filter_out_duplicates=True)
     elif label == "mnn":
-        fun = FunctionalDiversity(calc_mnn_nds, filter_out_duplicates=True)
+        fun = FuncionalDiversityMNN(calc_mnn_nds, filter_out_duplicates=True)
     elif label == "2nn":
-        fun = FunctionalDiversity(calc_2nn_nds, filter_out_duplicates=True)
+        fun = FuncionalDiversityMNN(calc_2nn_nds, filter_out_duplicates=True)
     elif hasattr(label, "__call__"):
         fun = FunctionalDiversity(label, filter_out_duplicates=True)
+    elif isinstance(label, CrowdingDiversity):
+        fun = label
     else:
         raise KeyError("Crwoding function not defined")
     return fun
@@ -87,7 +89,7 @@ class FunctionalDiversity(CrowdingDiversity):
         
         n_points, n_obj = F.shape
 
-        if n_points <= F.shape[1]:
+        if n_points <= 2:
             return np.full(n_points, np.inf)
 
         else:
@@ -108,6 +110,19 @@ class FunctionalDiversity(CrowdingDiversity):
             d[is_unique] = _d
         
         return d
+
+
+class FuncionalDiversityMNN(FunctionalDiversity):
+    
+    def _do(self, F, **kwargs):
+        
+        n_points, n_obj = F.shape
+
+        if n_points <= n_obj:
+            return np.full(n_points, np.inf)
+        
+        else:
+            return super()._do(F, **kwargs)
             
 
 def calc_crowding_entropy(F, filter_out_duplicates=True, **kwargs):

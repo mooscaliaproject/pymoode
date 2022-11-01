@@ -5,6 +5,9 @@ def calc_mnn(X, n_remove=0, twonn=False):
 
     N = X.shape[0]
     M = X.shape[1]
+    
+    if N <= M:
+        return np.full(N, np.inf)
 
     if n_remove <= (N - M):
         if n_remove < 0:
