@@ -13,6 +13,7 @@ class DEM(Crossover):
                  F=None,
                  gamma=1e-4,
                  repair="bounce-back",
+                 n_diffs=1,
                  **kwargs):
 
         #Default value for F
@@ -136,7 +137,8 @@ class DEX(Crossover):
         #Create instace for mutation
         self.dem = DEM(F=F,
                        gamma=gamma,
-                       repair=repair)
+                       repair=repair,
+                       n_diffs=n_diffs)
     
         self.CR = CR
         self.variant = variant
