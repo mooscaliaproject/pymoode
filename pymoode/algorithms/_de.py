@@ -138,8 +138,10 @@ class DE(GeneticAlgorithm):
             Pymoo's repair operator after mutation. Defaults to NoRepair().
         """
         
+        # Reapir old argument
         de_repair, kwargs["repair"] = _validate_deprecated_repair(de_repair, **kwargs)
         
+        # Mating
         mating = VariantDE(variant=variant,
                            CR=CR,
                            F=F,

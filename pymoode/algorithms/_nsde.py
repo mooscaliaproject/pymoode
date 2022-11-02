@@ -62,19 +62,22 @@ class NSDE(NSGA2):
         gamma : float, optional
             Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
             
-        pm : Mutation, optional
-            Pymoo's mutation operators after crossover. Defaults to NoMutation().
-            
-        de_reapair : str or callable, optional
-            Repair of mutant vectors. Is either callable or one of:
+        de_repair : str, optional
+            Repair of DE mutant vectors. Is either callable or one of:
         
                 - 'bounce-back'
                 - 'midway'
                 - 'rand-init'
                 - 'to-bounds'
             
-            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for de_repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
+            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
             Defaults to 'bounce-back'.
+        
+        mutation : Mutation, optional
+            Pymoo's mutation operator after crossover. Defaults to NoMutation().
+        
+        repair : Repair, optional
+            Pymoo's repair operator after mutation. Defaults to NoRepair().
             
         survival : Survival, optional
             Pymoo's survival strategy.
@@ -82,6 +85,7 @@ class NSDE(NSGA2):
             In GDE3, the survival strategy is applied after a one-to-one comparison between child vector and corresponding parent when both are non-dominated by the other.
         """
         
+        # Reapir old argument
         de_repair, kwargs["repair"] = _validate_deprecated_repair(de_repair, **kwargs)
         
         # Number of offsprings at each generation

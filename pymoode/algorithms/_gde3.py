@@ -2,7 +2,6 @@ from pymoode.algorithms._nsde import NSDE
 from pymoo.core.population import Population
 from pymoo.util.dominator import get_relation
 from pymoode.survival import RankAndCrowding
-from pymoode.operators.dex import _validate_deprecated_repair
 
 
 # =========================================================================================================
@@ -18,7 +17,6 @@ class GDE3(NSDE):
                  CR=0.5,
                  F=None,
                  gamma=1e-4,
-                 de_repair="bounce-back",
                  **kwargs):
         """
         GDE3 is an extension of DE to multi-objective problems using a mixed type survival strategy.
@@ -64,19 +62,22 @@ class GDE3(NSDE):
         gamma : float, optional
             Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
             
-        pm : Mutation, optional
-            Pymoo's mutation operators after crossover. Defaults to NoMutation().
-            
-        de_reapair : str or callable, optional
-            Repair of mutant vectors. Is either callable or one of:
+        de_repair : str, optional
+            Repair of DE mutant vectors. Is either callable or one of:
         
                 - 'bounce-back'
                 - 'midway'
                 - 'rand-init'
                 - 'to-bounds'
             
-            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for de_repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
+            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
             Defaults to 'bounce-back'.
+        
+        mutation : Mutation, optional
+            Pymoo's mutation operator after crossover. Defaults to NoMutation().
+        
+        repair : Repair, optional
+            Pymoo's repair operator after mutation. Defaults to NoRepair().
             
         survival : Survival, optional
             Pymoo's survival strategy.
@@ -84,48 +85,45 @@ class GDE3(NSDE):
             In GDE3, the survival strategy is applied after a one-to-one comparison between child vector and corresponding parent when both are non-dominated by the other.
         """
         
-        de_repair, kwargs["repair"] = _validate_deprecated_repair(de_repair, **kwargs)
-        
         super().__init__(pop_size=pop_size,
                          variant=variant,
                          CR=CR,
                          F=F,
                          gamma=gamma,
-                         de_repair=de_repair,
                          **kwargs)
 
     def _advance(self, infills=None, **kwargs):
         
         assert infills is not None, "This algorithms uses the AskAndTell interface thus 'infills' must to be provided."
 
-        # The individuals that are considered for the survival later and final survive
+        #The individuals that are considered for the survival later and final survive
         survivors = []
 
         # now for each of the infill solutions
         for k in range(len(self.pop)):
 
-            # Get the offspring an the parent it is coming from
+            #Get the offspring an the parent it is coming from
             off, parent = infills[k], self.pop[k]
 
-            # Check whether the new solution dominates the parent or not
+            #Check whether the new solution dominates the parent or not
             rel = get_relation(parent, off)
 
-            # If indifferent we add both
+            #If indifferent we add both
             if rel == 0:
                 survivors.extend([parent, off])
 
-            # If offspring dominates parent
+            #If offspring dominates parent
             elif rel == -1:
                 survivors.append(off)
 
-            # If parent dominates offspring
+            #If parent dominates offspring
             else:
                 survivors.append(parent)
 
-        # Create the population
+        #Create the population
         survivors = Population.create(*survivors)
 
-        # Perform a survival to reduce to pop size
+        #Perform a survival to reduce to pop size
         self.pop = self.survival.do(self.problem, survivors, n_survive=self.n_offsprings)
 
 
@@ -140,4 +138,10 @@ class GDE32NN(GDE3):
     
     def __init__(self, pop_size=100, variant="DE/rand/1/bin", CR=0.5, F=None, gamma=0.0001, **kwargs):
         survival = RankAndCrowding(crowding_func="2nn")
+        super().__init__(pop_size, variant, CR, F, gamma, survival=survival, **kwargs)
+
+class GDE3PCD(GDE3):
+    
+    def __init__(self, pop_size=100, variant="DE/rand/1/bin", CR=0.5, F=None, gamma=0.0001, **kwargs):
+        survival = RankAndCrowding(crowding_func="pcd")
         super().__init__(pop_size, variant, CR, F, gamma, survival=survival, **kwargs)

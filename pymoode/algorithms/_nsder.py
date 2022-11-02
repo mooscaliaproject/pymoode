@@ -18,7 +18,6 @@ class NSDER(NSDE):
                  CR=0.7,
                  F=None,
                  gamma=1e-4,
-                 de_repair="bounce-back",
                  **kwargs):
         """
         NSDE-R is an extension of NSDE to many-objective problems (Reddy & Dulikravich, 2019) using NSGA-III survival.
@@ -60,26 +59,27 @@ class NSDER(NSDE):
         gamma : float, optional
             Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
             
-        pm : Mutation, optional
-            Pymoo's mutation operators after crossover. Defaults to NoMutation().
-            
-        de_reapair : str or callable, optional
-            Repair of mutant vectors. Is either callable or one of:
+        de_repair : str, optional
+            Repair of DE mutant vectors. Is either callable or one of:
         
                 - 'bounce-back'
                 - 'midway'
                 - 'rand-init'
                 - 'to-bounds'
             
-            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for de_repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
+            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
             Defaults to 'bounce-back'.
+        
+        mutation : Mutation, optional
+            Pymoo's mutation operator after crossover. Defaults to NoMutation().
+        
+        repair : Repair, optional
+            Pymoo's repair operator after mutation. Defaults to NoRepair().
             
         survival : Survival, optional
             Pymoo's survival strategy.
             Defaults to ReferenceDirectionSurvival().
         """
-        
-        de_repair, kwargs["repair"] = _validate_deprecated_repair(de_repair, **kwargs)
         
         self.ref_dirs = ref_dirs
 
@@ -105,7 +105,6 @@ class NSDER(NSDE):
                          CR=CR,
                          F=F,
                          gamma=gamma,
-                         de_repair=de_repair,
                          survival=survival,
                          **kwargs)
 
