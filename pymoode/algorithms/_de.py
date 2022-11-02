@@ -9,6 +9,7 @@ from pymoo.util.display.single import SingleObjectiveOutput
 from pymoo.core.infill import InfillCriterion
 from pymoode.operators.des import DES
 from pymoode.operators.dex import DEX, _validate_deprecated_repair
+import warnings
 
 
 # =========================================================================================================
@@ -25,6 +26,9 @@ class VariantDE(InfillCriterion):
                  de_repair="bounce-back",
                  mutation=None,
                  **kwargs):
+        
+        # Fix deprecated pm kwargs
+        kwargs, mutation = _fix_deprecated_pm_kwargs(kwargs, mutation)
         
         # Default initialization of InfillCriterion
         super().__init__(eliminate_duplicates=None, **kwargs)
@@ -183,3 +187,16 @@ class DE(GeneticAlgorithm):
         
         # Set ranks
         self.pop.set("rank", np.arange(self.pop_size))
+
+
+def _fix_deprecated_pm_kwargs(kwargs, mutation):
+    if "pm" in kwargs:
+        warnings.warn(
+                    "pm is deprecated; use 'mutation' for compatibility purposes with pymoo",
+                    DeprecationWarning, 2
+                )
+        if mutation is None:
+            mutation = kwargs["pm"]
+    
+    return kwargs, mutation
+        
