@@ -1,6 +1,6 @@
 from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.operators.sampling.lhs import LHS
-from pymoode.algorithms._de import InfillDE
+from pymoode.algorithms._de import VariantDE
 from pymoode.survival._classes import RankAndCrowding
 from pymoode.operators.dex import _validate_deprecated_repair
 
@@ -19,7 +19,6 @@ class NSDE(NSGA2):
                  CR=0.7,
                  F=None,
                  gamma=1e-4,
-                 pm=None,
                  de_repair="bounce-back",
                  survival=RankAndCrowding(),
                  **kwargs):
@@ -89,12 +88,12 @@ class NSDE(NSGA2):
         n_offsprings = pop_size
         
         # Mating
-        mating = InfillDE(variant=variant,
-                          CR=CR,
-                          F=F,
-                          gamma=gamma,
-                          pm=pm,
-                          de_repair=de_repair)
+        mating = VariantDE(variant=variant,
+                           CR=CR,
+                           F=F,
+                           gamma=gamma,
+                           de_repair=de_repair,
+                           **kwargs)
         
         # Init from pymoo's NSGA2
         super().__init__(pop_size=pop_size,

@@ -91,6 +91,7 @@ class GDE3(NSDE):
                          CR=CR,
                          F=F,
                          gamma=gamma,
+                         de_repair=de_repair,
                          **kwargs)
 
     def _advance(self, infills=None, **kwargs):
