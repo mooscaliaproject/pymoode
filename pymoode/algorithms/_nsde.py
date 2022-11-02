@@ -101,6 +101,6 @@ class NSDE(NSGA2):
                          sampling=sampling,
                          mating=mating,
                          survival=survival,
-                         eliminate_duplicates=False,
+                         eliminate_duplicates=None,
                          n_offsprings=n_offsprings,
                          **kwargs)

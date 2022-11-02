@@ -6,6 +6,7 @@ from pymoo.operators.mutation.nom import NoMutation
 from pymoo.operators.sampling.lhs import LHS
 from pymoo.termination.default import DefaultSingleObjectiveTermination
 from pymoo.util.display.single import SingleObjectiveOutput
+from pymoo.core.infill import InfillCriterion
 from pymoode.operators.des import DES
 from pymoode.operators.dex import DEX, _validate_deprecated_repair
 
@@ -14,15 +15,19 @@ from pymoode.operators.dex import DEX, _validate_deprecated_repair
 # Implementation
 # =========================================================================================================
 
-class InfillDE:
+class VariantDE(InfillCriterion):
     
     def __init__(self,
                  variant="DE/rand/1/bin",
                  CR=0.7,
                  F=(0.5, 1.0),
                  gamma=1e-4,
-                 pm=None,
-                 de_repair="bounce-back"):
+                 de_repair="bounce-back",
+                 mutation=None,
+                 **kwargs):
+        
+        # Default initialization of InfillCriterion
+        super().__init__(eliminate_duplicates=None, **kwargs)
         
         # Parse the information from the string
         _, selection_variant, n_diff, crossover_variant, = variant.split("/")
@@ -39,7 +44,7 @@ class InfillDE:
         if F is None:
             F = (0.0, 1.0)
         
-        # Define crossover strategy
+        # Define crossover strategy (DE mutation is included)
         self.crossover = DEX(variant=crossover_variant,
                              CR=CR,
                              F=F,
@@ -48,10 +53,11 @@ class InfillDE:
                              at_least_once=True,
                              de_repair=de_repair)
         
-        # Define posterior mutation strategy and de_repair
-        self.pm = pm if pm is not None else NoMutation()
+        # Define posterior mutation strategy and repair
+        self.mutation = mutation if mutation is not None else NoMutation()
+        
 
-    def do(self, problem, pop, n_offsprings, **kwargs):
+    def _do(self, problem, pop, n_offsprings, **kwargs):
         
         # Select parents including donor vector
         parents = self.selection(problem, pop, n_offsprings, self.crossover.n_parents, to_pop=True, **kwargs)
@@ -59,8 +65,8 @@ class InfillDE:
         # Perform mutation included in DEX and crossover
         off = self.crossover(problem, parents, **kwargs)
         
-        # Perform posterior mutation if passed
-        off = self.pm(problem, off)
+        # Perform posterior mutation and repair if passed
+        off = self.mutation(problem, off)
         
         return off
         
@@ -74,7 +80,6 @@ class DE(GeneticAlgorithm):
                  CR=0.7,
                  F=(0.5, 1.0),
                  gamma=1e-4,
-                 pm=None,
                  de_repair="bounce-back",
                  output=SingleObjectiveOutput(),
                  **kwargs):
@@ -115,29 +120,32 @@ class DE(GeneticAlgorithm):
         gamma : float, optional
             Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
             
-        pm : Mutation, optional
-            Pymoo's mutation operators after crossover. Defaults to NoMutation().
-            
-        de_reapair : str or callable, optional
-            Repair of mutant vectors. Is either callable or one of:
+        de_repair : str, optional
+            Repair of DE mutant vectors. Is either callable or one of:
         
                 - 'bounce-back'
                 - 'midway'
                 - 'rand-init'
                 - 'to-bounds'
             
-            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for de_repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
+            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
             Defaults to 'bounce-back'.
+        
+        mutation : Mutation, optional
+            Pymoo's mutation operator after crossover. Defaults to NoMutation().
+        
+        repair : Repair, optional
+            Pymoo's repair operator after mutation. Defaults to NoRepair().
         """
         
         de_repair, kwargs["repair"] = _validate_deprecated_repair(de_repair, **kwargs)
         
-        mating = InfillDE(variant=variant,
-                          CR=CR,
-                          F=F,
-                          gamma=gamma,
-                          pm=pm,
-                          de_repair=de_repair)
+        mating = VariantDE(variant=variant,
+                           CR=CR,
+                           F=F,
+                           gamma=gamma,
+                           de_repair=de_repair,
+                           **kwargs)
         
         # Number of offsprings at each generation
         n_offsprings = pop_size
@@ -146,7 +154,7 @@ class DE(GeneticAlgorithm):
                          sampling=sampling,
                          mating=mating,
                          n_offsprings=n_offsprings,
-                         eliminate_duplicates=False,
+                         eliminate_duplicates=None,
                          output=output,
                          **kwargs)
 
@@ -157,7 +165,7 @@ class DE(GeneticAlgorithm):
 
     def _infill(self):
         
-        infills = self.mating.do(self.problem, self.pop, self.n_offsprings, algorithm=self)
+        infills = self.mating(self.problem, self.pop, self.n_offsprings, algorithm=self)
 
         return infills
 
