@@ -16,8 +16,8 @@ def test_multi_run(survival, crowding_func):
     
     problem = get_problem("truss2d")
 
-    NGEN = 100
-    POPSIZE = 100
+    NGEN = 50
+    POPSIZE = 50
     SEED = 5
     
     gde3 = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), de_repair="bounce-back",
@@ -58,13 +58,25 @@ def test_gde3_pm_run():
     
     problem = get_problem("truss2d")
 
-    NGEN = 100
-    POPSIZE = 100
+    NGEN = 50
+    POPSIZE = 50
     SEED = 5
     
-    gde3 = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), de_repair="bounce-back",
-                survival=RankAndCrowding(crowding_func="pcd"), pm=PM())
+    gde3pm = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), de_repair="bounce-back",
+                survival=RankAndCrowding(crowding_func="pcd"), mutation=PM())
 
+    res_gde3pm = minimize(problem,
+                          gde3pm,
+                          ('n_gen', NGEN),
+                          seed=SEED,
+                          save_history=False,
+                          verbose=False)
+    
+    assert len(res_gde3pm.opt) > 0
+    
+    gde3 = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), de_repair="bounce-back",
+                survival=RankAndCrowding(crowding_func="pcd"))
+    
     res_gde3 = minimize(problem,
                         gde3,
                         ('n_gen', NGEN),
@@ -72,7 +84,7 @@ def test_gde3_pm_run():
                         save_history=False,
                         verbose=False)
     
-    assert len(res_gde3.opt) > 0
+    assert len(sum(res_gde3pm.F - res_gde3.F)) >= 1e-8 * sum(res_gde3.F)
     
 
 def test_multi_perf():

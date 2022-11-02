@@ -2,6 +2,7 @@ import pytest
 
 from pymoo.optimize import minimize
 from pymoo.problems import get_problem
+from pymoo.operators.mutation.pm import PM
 from pymoode.algorithms import GDE3
 from pymoode.algorithms import DE
 
@@ -12,7 +13,7 @@ from pymoode.algorithms import DE
 def test_de_run(selection, crossover, de_repair):
     problem = get_problem("rastrigin")
     
-    NGEN = 100
+    NGEN = 50
     POPSIZE = 20
     SEED = 3
     
@@ -30,6 +31,40 @@ def test_de_run(selection, crossover, de_repair):
                     verbose=False)
 
     assert len(res_de.opt) > 0
+
+
+def test_de_pm_run():
+    
+    problem = get_problem("rastrigin")
+    
+    NGEN = 50
+    POPSIZE = 20
+    SEED = 3
+    
+    #DE Parameters
+    CR = 0.5
+    F = (0.3, 1.0)
+
+    de = DE(pop_size=POPSIZE, variant=f"DE/rand/1/bin", CR=CR, F=F)
+
+    res_de = minimize(problem,
+                      de,
+                      ('n_gen', NGEN),
+                      seed=SEED,
+                      save_history=False,
+                      verbose=False)
+    
+    depm = DE(pop_size=POPSIZE, variant=f"DE/rand/1/bin", CR=CR, F=F, mutation=PM())
+
+    res_pm = minimize(problem,
+                      depm,
+                      ('n_gen', NGEN),
+                      seed=SEED,
+                      save_history=False,
+                      verbose=False)
+
+    assert len(res_pm.opt) > 0
+    assert len(sum(res_de.pop.get("F") - res_pm.pop.get("F"))) >= 1e-8 * sum(res_de.pop.get("F"))
 
 
 def test_de_perf():
