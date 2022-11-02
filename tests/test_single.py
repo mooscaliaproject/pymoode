@@ -64,8 +64,8 @@ def test_de_pm_run():
                       verbose=False)
 
     assert len(res_pm.opt) > 0
-    assert len(sum(res_de.pop.get("F") - res_pm.pop.get("F"))) >= 1e-8 * sum(res_de.pop.get("F"))
-
+    assert len(sum(res_de.pop.get("F") - res_pm.pop.get("F"))) >= 1e-6
+    
 
 def test_de_perf():
     problem = get_problem("rastrigin")

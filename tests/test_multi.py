@@ -84,7 +84,7 @@ def test_gde3_pm_run():
                         save_history=False,
                         verbose=False)
     
-    assert len(sum(res_gde3pm.F - res_gde3.F)) >= 1e-8 * sum(res_gde3.F)
+    assert len(sum(res_gde3pm.F - res_gde3.F)) >= 1e-3
     
 
 def test_multi_perf():
