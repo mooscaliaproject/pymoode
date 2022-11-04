@@ -1,10 +1,19 @@
+<p align="center">
+  <a href="https://github.com/mooscaliaproject/pymoode">
+  <img src="https://github.com/mooscaliaproject/pymoode/raw/main/images/logo_header_pymoode.png" alt="header"/>
+  </a>
+</p>
+
 # pymoode
+
 A Python framework for Differential Evolution using [pymoo](https://github.com/anyoptimization/pymoo) (Blank & Deb, 2020).
 
 ## Contents
+
 [Install](#install) / [Algorithms](#algorithms) / [Survival Operators](#survival-operators) / [Crowding Metrics](#crowding-metrics) / [Usage](#usage) / [Structure](#structure) / [Citation](#citation) / [References](#references) / [Contact](#contact) / [Acknowledgements](#acknowledgements)
 
 ## Install
+
 First, make sure you have a Python 3 environment installed.
 
 From PyPi:
@@ -24,10 +33,12 @@ pip install -e git+https://github.com/mooscalia/pymoode#egg=pymoode
 - **NSDE-R**: Non-dominated Sorting Differential Evolution based on Reference directions (Reddy & Dulikravich, 2019). It is an algorithm for many-objective problems that works as an extension of NSDE using NSGA-III (Deb & Jain, 2014) survival strategy.
 
 ## Survival Operators
+
 - **RandAndCrowding**: Flexible structure to implement NSGA-II rank and crowding survival with different options for crowding metric and elimination of individuals.
 - **ConstrRankAndCrowding**: A survival operator based on rank and crowding with a special constraint handling approach proposed by Kukkonen, S. & Lampinen, J. (2005).
 
 ## Crowding Metrics
+
 - **Crowding Distance** (*'cd'*): Proposed by Deb et al. (2002) in NSGA-II. Imported from *pymoo*.
 - **Pruning Crowding Distance** (*'pruning-cd'* or *'pcd'*): Proposed by Kukkonen & Deb (2006a), it recursively recalculates crowding distances as removes individuals from a population to improve diversity.
 - ***M*-Nearest Neighbors** (*'mnn'*): Proposed by Kukkonen & Deb (2006b) in an extension of GDE3 to many-objective problems.
@@ -119,28 +130,29 @@ pymoode
 ## Citation
 This package was developed as part of an academic optimization project. Please, if you use it for research purposes, cite it using the published article:
 
-Leite, B., Costa, A. O. S., Costa, E. F., 2023. Multi-objective optimization of adiabatic styrene reactors using Generalized Differential Evolution 3 (GDE3). Chem. Eng. Sci., 265, Article 118196. doi:10.1016/j.ces.2022.118196.
+[Leite, B., Costa, A. O. S., Costa, E. F., 2023. Multi-objective optimization of adiabatic styrene reactors using Generalized Differential Evolution 3 (GDE3). Chem. Eng. Sci., Volume 265, Article 118196. doi:10.1016/j.ces.2022.118196.](https://doi.org/10.1016/j.ces.2022.118196)
 
 ## References
-Blank, J. & Deb, K., 2020. pymoo: Multi-Objective Optimization in Python. IEEE Access, Volume 8, pp. 89497-89509.
 
-Deb, K. & Jain, H., 2014. An evolutionary many-objective optimization algorithm using reference-point-based nondominated sorting approach, part I: solving problems with box constraints. IEEE Transactions on Evolutionary Computation, 18(4), pp. 577–601.
+[Blank, J. & Deb, K., 2020. pymoo: Multi-Objective Optimization in Python. IEEE Access, Volume 8, pp. 89497-89509. doi:10.1109/ACCESS.2020.2990567.](https://doi.org/10.1109/ACCESS.2020.2990567)
 
-Deb, K., Pratap, A., Agarwal, S. & Meyarivan, T. A. M. T., 2002. A Fast and Elitist Multiobjective Genetic Algorithm: NSGA-II. IEEE transactions on evolutionary computation, 6(2), pp. 182-197.
+[Deb, K. & Jain, H., 2014. An evolutionary many-objective optimization algorithm using reference-point-based nondominated sorting approach, part I: solving problems with box constraints. IEEE Transactions on Evolutionary Computation, 18(4), pp. 577–601. doi:10.1109/TEVC.2013.2281535.](https://doi.org/10.1109/TEVC.2013.2281535)
 
-Kukkonen, S. & Deb, K., 2006a. Improved Pruning of Non-Dominated Solutions Based on Crowding Distance for Bi-Objective Optimization Problems. Vancouver, s.n., pp. 1179-1186.
+[Deb, K., Pratap, A., Agarwal, S. & Meyarivan, T. A. M. T., 2002. A Fast and Elitist Multiobjective Genetic Algorithm: NSGA-II. IEEE transactions on evolutionary computation, 6(2), pp. 182-197. doi:10.1109/4235.996017.](https://doi.org/10.1109/4235.996017)
 
-Kukkonen, S. & Deb, K., 2006b. A fast and effective method for pruning of non-dominated solutions in many-objective problems. In: Parallel problem solving from nature-PPSN IX. Berlin: Springer, pp. 553-562.
+[Kukkonen, S. & Deb, K., 2006a. Improved Pruning of Non-Dominated Solutions Based on Crowding Distance for Bi-Objective Optimization Problems. Vancouver, s.n., pp. 1179-1186. doi:10.1109/CEC.2006.1688443.](https://doi.org/10.1109/CEC.2006.1688443)
 
-Kukkonen, S. & Lampinen, J., 2005. GDE3: The third evolution step of generalized differential evolution. 2005 IEEE congress on evolutionary computation, Volume 1, pp. 443-450.
+[Kukkonen, S. & Deb, K., 2006b. A fast and effective method for pruning of non-dominated solutions in many-objective problems. In: Parallel problem solving from nature-PPSN IX. Berlin: Springer, pp. 553-562. doi:10.1007/11844297_56.](https://doi.org/10.1007/11844297_56)
 
-Reddy, S. R. & Dulikravich, G. S., 2019. Many-objective differential evolution optimization based on reference points: NSDE-R. Struct. Multidisc. Optim., Volume 60, pp. 1455-1473.
+[Kukkonen, S. & Lampinen, J., 2005. GDE3: The third evolution step of generalized differential evolution. 2005 IEEE congress on evolutionary computation, Volume 1, pp. 443-450. doi:10.1109/CEC.2005.1554717.](https://doi.org/10.1109/CEC.2005.1554717)
+
+[Reddy, S. R. & Dulikravich, G. S., 2019. Many-objective differential evolution optimization based on reference points: NSDE-R. Struct. Multidisc. Optim., Volume 60, pp. 1455-1473. doi:10.1007/s00158-019-02272-0.](https://doi.org/10.1007/s00158-019-02272-0)
 
 Price, K. V., Storn, R. M. & Lampinen, J. A., 2005. Differential Evolution: A Practical Approach to Global Optimization. 1st ed. Springer: Berlin.
 
-Storn, R. & Price, K., 1997. Differential evolution–a simple and efficient heuristic for global optimization over continuous spaces. J. Glob. Optim., 11(4), pp. 341-359.
+[Storn, R. & Price, K., 1997. Differential evolution–a simple and efficient heuristic for global optimization over continuous spaces. J. Glob. Optim., 11(4), pp. 341-359. doi:10.1023/A:1008202821328](https://doi.org/10.1023/A:1008202821328)
 
-Wang, Y.-N., Wu, L.-H. & Yuan, X.-F., 2010. Multi-objective self-adaptive differential evolution with elitist archive and crowding entropy-based diversity measure. Soft Comput., 14(3), pp. 193-209.
+[Wang, Y.-N., Wu, L.-H. & Yuan, X.-F., 2010. Multi-objective self-adaptive differential evolution with elitist archive and crowding entropy-based diversity measure. Soft Comput., 14(3), pp. 193-209. doi:10.1007/s00500-008-0394-9](https://doi.org/10.1007/s00500-008-0394-9)
 
 ## Contact
 e-mail: bruscalia12@gmail.com
