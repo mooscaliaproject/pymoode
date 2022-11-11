@@ -12,7 +12,7 @@ class SpacingIndicator(Indicator):
                  ideal=None,
                  nadir=None):
         """Spacing indicator
-        
+
         The smaller the value this indicator assumes, the most uniform is the distribution of elements on the pareto front.
         Parameters
         ----------

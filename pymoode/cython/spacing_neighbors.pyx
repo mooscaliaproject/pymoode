@@ -25,30 +25,30 @@ cdef c_calc_spacing_distances(double[:, :] X):
         double[:, :] D
         double[:] d
         double dij, _dijm
-    
+
     N = X.shape[0]
     M = X.shape[1]
-    
-    #Initialize neighbors and distances
+
+    # Initialize neighbors and distances
     _D = np.full((N, N), -1.0, dtype=np.double)
     dd = np.full((N,), HUGE_VAL, dtype=np.double)
 
     D = _D[:, :]
     d = dd[:]
 
-    #Iterate over items to calculate
+    # Iterate over items to calculate
     for i in range(N):
 
-        #Iterate over elements in X
+        # Iterate over elements in X
         for j in range(N):
-            
-            #Calculate distance if elements satisfy rule
+
+            # Calculate distance if elements satisfy rule
             if ((j != i) and (D[i, j] <= d[i])):
-                
-                #Calculate if different from -1
+
+                # Calculate if different from -1
                 if D[i, j] == -1.0:
 
-                    #Squared distance
+                    # Squared distance
                     dij = 0
                     for m in range(M):
                         _dijm = X[j, m] - X[i, m]
@@ -58,16 +58,16 @@ cdef c_calc_spacing_distances(double[:, :] X):
 
                         else:
                             dij = dij - _dijm
-                    
-                    #Fill values
+
+                    # Fill values
                     D[i, j] = dij
                     D[j, i] = D[i, j]
 
                 else:
                     dij = D[i, j]
-                
-                #Check is any should be replaced
+
+                # Check is any should be replaced
                 if (dij <= d[i]):
                     d[i] = dij
-                       
+
     return dd
