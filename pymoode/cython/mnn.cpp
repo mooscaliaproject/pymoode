@@ -3145,7 +3145,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
 
   /* "pymoode/cython/mnn.pyx":109
  * 
- *     #Define items to calculate distances
+ *     # Define items to calculate distances
  *     calc_items = cpp_set[int]()             # <<<<<<<<<<<<<<
  *     for n in range(N):
  *         calc_items.insert(n)
@@ -3159,7 +3159,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
   __pyx_v_calc_items = __pyx_t_1;
 
   /* "pymoode/cython/mnn.pyx":110
- *     #Define items to calculate distances
+ *     # Define items to calculate distances
  *     calc_items = cpp_set[int]()
  *     for n in range(N):             # <<<<<<<<<<<<<<
  *         calc_items.insert(n)
@@ -3204,7 +3204,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
  *     for n in extremes:
  *         calc_items.erase(n)             # <<<<<<<<<<<<<<
  * 
- *     #Define remaining items to evaluate
+ *     # Define remaining items to evaluate
  */
     (void)(__pyx_v_calc_items.erase(__pyx_v_n));
 
@@ -3219,7 +3219,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
 
   /* "pymoode/cython/mnn.pyx":116
  * 
- *     #Define remaining items to evaluate
+ *     # Define remaining items to evaluate
  *     H = cpp_set[int]()             # <<<<<<<<<<<<<<
  *     for n in range(N):
  *         H.insert(n)
@@ -3233,7 +3233,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
   __pyx_v_H = __pyx_t_1;
 
   /* "pymoode/cython/mnn.pyx":117
- *     #Define remaining items to evaluate
+ *     # Define remaining items to evaluate
  *     H = cpp_set[int]()
  *     for n in range(N):             # <<<<<<<<<<<<<<
  *         H.insert(n)
@@ -3249,7 +3249,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
  *     for n in range(N):
  *         H.insert(n)             # <<<<<<<<<<<<<<
  * 
- *     #Instantiate distances array
+ *     # Instantiate distances array
  */
     try {
       __pyx_v_H.insert(__pyx_v_n);
@@ -3261,7 +3261,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
 
   /* "pymoode/cython/mnn.pyx":121
  * 
- *     #Instantiate distances array
+ *     # Instantiate distances array
  *     _D = np.empty((N, N), dtype=np.double)             # <<<<<<<<<<<<<<
  *     D = _D[:, :]
  * 
@@ -3306,11 +3306,11 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
   __pyx_t_10 = 0;
 
   /* "pymoode/cython/mnn.pyx":122
- *     #Instantiate distances array
+ *     # Instantiate distances array
  *     _D = np.empty((N, N), dtype=np.double)
  *     D = _D[:, :]             # <<<<<<<<<<<<<<
  * 
- *     #Shape of X
+ *     # Shape of X
  */
   __pyx_t_10 = __Pyx_PyObject_GetItem(__pyx_v__D, __pyx_tuple__2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 122, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
@@ -3322,16 +3322,16 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
 
   /* "pymoode/cython/mnn.pyx":125
  * 
- *     #Shape of X
+ *     # Shape of X
  *     MM = X.shape[1]             # <<<<<<<<<<<<<<
  * 
- *     #Fill values on D
+ *     # Fill values on D
  */
   __pyx_v_MM = (__pyx_v_X.shape[1]);
 
   /* "pymoode/cython/mnn.pyx":128
  * 
- *     #Fill values on D
+ *     # Fill values on D
  *     for i in range(N - 1):             # <<<<<<<<<<<<<<
  *         D[i, i] = 0.0
  * 
@@ -3342,7 +3342,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
     __pyx_v_i = __pyx_t_2;
 
     /* "pymoode/cython/mnn.pyx":129
- *     #Fill values on D
+ *     # Fill values on D
  *     for i in range(N - 1):
  *         D[i, i] = 0.0             # <<<<<<<<<<<<<<
  * 
@@ -3434,7 +3434,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
  * 
  *     D[N-1, N-1] = 0.0             # <<<<<<<<<<<<<<
  * 
- *     #Initialize
+ *     # Initialize
  */
   __pyx_t_25 = (__pyx_v_N - 1);
   __pyx_t_24 = (__pyx_v_N - 1);
@@ -3442,15 +3442,15 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
 
   /* "pymoode/cython/mnn.pyx":143
  * 
- *     #Initialize
+ *     # Initialize
  *     n_removed = 0             # <<<<<<<<<<<<<<
  * 
- *     #Initialize neighbors and distances
+ *     # Initialize neighbors and distances
  */
   __pyx_v_n_removed = 0;
 
   /* "pymoode/cython/mnn.pyx":147
- *     #Initialize neighbors and distances
+ *     # Initialize neighbors and distances
  *     # _Mnn = np.full((N, M), -1, dtype=np.intc)
  *     _Mnn = np.argpartition(D, range(1, M+1), axis=1)[:, 1:M+1].astype(np.intc)             # <<<<<<<<<<<<<<
  *     dd = np.full((N,), HUGE_VAL, dtype=np.double)
@@ -3602,7 +3602,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
  *     Mnn = _Mnn[:, :]
  *     d = dd[:]             # <<<<<<<<<<<<<<
  * 
- *     #Obtain distance metrics
+ *     # Obtain distance metrics
  */
   __pyx_t_8 = __Pyx_PyObject_GetSlice(__pyx_v_dd, 0, 0, NULL, NULL, &__pyx_slice_, 0, 0, 0); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 151, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
@@ -3614,10 +3614,10 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
 
   /* "pymoode/cython/mnn.pyx":154
  * 
- *     #Obtain distance metrics
+ *     # Obtain distance metrics
  *     c_calc_d(d, Mnn, D, calc_items, M)             # <<<<<<<<<<<<<<
  * 
- *     #While n_remove not acheived (no need to recalculate if only one item should be removed)
+ *     # While n_remove not acheived (no need to recalculate if only one item should be removed)
  */
   __pyx_t_8 = __pyx_f_7pymoode_6cython_3mnn_c_calc_d(__pyx_v_d, __pyx_v_Mnn, __pyx_v_D, __pyx_v_calc_items, __pyx_v_M); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
@@ -3625,10 +3625,10 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
 
   /* "pymoode/cython/mnn.pyx":157
  * 
- *     #While n_remove not acheived (no need to recalculate if only one item should be removed)
+ *     # While n_remove not acheived (no need to recalculate if only one item should be removed)
  *     while n_removed < (n_remove - 1):             # <<<<<<<<<<<<<<
  * 
- *         #Obtain element to drop
+ *         # Obtain element to drop
  */
   while (1) {
     __pyx_t_28 = ((__pyx_v_n_removed < (__pyx_v_n_remove - 1)) != 0);
@@ -3636,7 +3636,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
 
     /* "pymoode/cython/mnn.pyx":160
  * 
- *         #Obtain element to drop
+ *         # Obtain element to drop
  *         k = c_get_drop(d, H)             # <<<<<<<<<<<<<<
  *         H.erase(k)
  * 
@@ -3644,26 +3644,26 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
     __pyx_v_k = __pyx_f_7pymoode_6cython_5utils_c_get_drop(__pyx_v_d, __pyx_v_H);
 
     /* "pymoode/cython/mnn.pyx":161
- *         #Obtain element to drop
+ *         # Obtain element to drop
  *         k = c_get_drop(d, H)
  *         H.erase(k)             # <<<<<<<<<<<<<<
  * 
- *         #Update index
+ *         # Update index
  */
     (void)(__pyx_v_H.erase(__pyx_v_k));
 
     /* "pymoode/cython/mnn.pyx":164
  * 
- *         #Update index
+ *         # Update index
  *         n_removed = n_removed + 1             # <<<<<<<<<<<<<<
  * 
- *         #Get items to be recalculated
+ *         # Get items to be recalculated
  */
     __pyx_v_n_removed = (__pyx_v_n_removed + 1);
 
     /* "pymoode/cython/mnn.pyx":167
  * 
- *         #Get items to be recalculated
+ *         # Get items to be recalculated
  *         calc_items = c_get_calc_items(Mnn, H, k, M)             # <<<<<<<<<<<<<<
  *         for n in extremes:
  *             calc_items.erase(n)
@@ -3671,7 +3671,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
     __pyx_v_calc_items = __pyx_f_7pymoode_6cython_3mnn_c_get_calc_items(__pyx_v_Mnn, __pyx_v_H, __pyx_v_k, __pyx_v_M);
 
     /* "pymoode/cython/mnn.pyx":168
- *         #Get items to be recalculated
+ *         # Get items to be recalculated
  *         calc_items = c_get_calc_items(Mnn, H, k, M)
  *         for n in extremes:             # <<<<<<<<<<<<<<
  *             calc_items.erase(n)
@@ -3689,12 +3689,12 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
  *         for n in extremes:
  *             calc_items.erase(n)             # <<<<<<<<<<<<<<
  * 
- *         #Fill in neighbors and distance matrix
+ *         # Fill in neighbors and distance matrix
  */
       (void)(__pyx_v_calc_items.erase(__pyx_v_n));
 
       /* "pymoode/cython/mnn.pyx":168
- *         #Get items to be recalculated
+ *         # Get items to be recalculated
  *         calc_items = c_get_calc_items(Mnn, H, k, M)
  *         for n in extremes:             # <<<<<<<<<<<<<<
  *             calc_items.erase(n)
@@ -3704,7 +3704,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
 
     /* "pymoode/cython/mnn.pyx":172
  * 
- *         #Fill in neighbors and distance matrix
+ *         # Fill in neighbors and distance matrix
  *         c_calc_mnn_iter(             # <<<<<<<<<<<<<<
  *                 X,
  *                 Mnn,
@@ -3715,7 +3715,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn(__Pyx_memviewslice __p
 
     /* "pymoode/cython/mnn.pyx":182
  * 
- *         #Obtain distance metrics
+ *         # Obtain distance metrics
  *         c_calc_d(d, Mnn, D, calc_items, M)             # <<<<<<<<<<<<<<
  * 
  *     return dd
@@ -3806,10 +3806,10 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn_iter(CYTHON_UNUSED __P
 
   /* "pymoode/cython/mnn.pyx":200
  * 
- *     #Iterate over items to calculate
+ *     # Iterate over items to calculate
  *     for i in calc_items:             # <<<<<<<<<<<<<<
  * 
- *         #Iterate over elements in X
+ *         # Iterate over elements in X
  */
   __pyx_t_1 = __pyx_v_calc_items.begin();
   for (;;) {
@@ -3820,10 +3820,10 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn_iter(CYTHON_UNUSED __P
 
     /* "pymoode/cython/mnn.pyx":203
  * 
- *         #Iterate over elements in X
+ *         # Iterate over elements in X
  *         for j in H:             # <<<<<<<<<<<<<<
  * 
- *             #Go to next if same element
+ *             # Go to next if same element
  */
     __pyx_t_3 = __pyx_v_H.begin();
     for (;;) {
@@ -3834,7 +3834,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn_iter(CYTHON_UNUSED __P
 
       /* "pymoode/cython/mnn.pyx":206
  * 
- *             #Go to next if same element
+ *             # Go to next if same element
  *             if (j == i):             # <<<<<<<<<<<<<<
  *                 continue
  * 
@@ -3843,17 +3843,17 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn_iter(CYTHON_UNUSED __P
       if (__pyx_t_4) {
 
         /* "pymoode/cython/mnn.pyx":207
- *             #Go to next if same element
+ *             # Go to next if same element
  *             if (j == i):
  *                 continue             # <<<<<<<<<<<<<<
  * 
- *             #Replace at least the last neighbor
+ *             # Replace at least the last neighbor
  */
         goto __pyx_L5_continue;
 
         /* "pymoode/cython/mnn.pyx":206
  * 
- *             #Go to next if same element
+ *             # Go to next if same element
  *             if (j == i):             # <<<<<<<<<<<<<<
  *                 continue
  * 
@@ -3862,10 +3862,10 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn_iter(CYTHON_UNUSED __P
 
       /* "pymoode/cython/mnn.pyx":210
  * 
- *             #Replace at least the last neighbor
+ *             # Replace at least the last neighbor
  *             elif (D[i, j] <= D[i, Mnn[i, M-1]]) or (Mnn[i, M-1] == -1):             # <<<<<<<<<<<<<<
  * 
- *                 #Iterate over current values
+ *                 # Iterate over current values
  */
       __pyx_t_5 = __pyx_v_i;
       __pyx_t_6 = __pyx_v_j;
@@ -3888,10 +3888,10 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn_iter(CYTHON_UNUSED __P
 
         /* "pymoode/cython/mnn.pyx":213
  * 
- *                 #Iterate over current values
+ *                 # Iterate over current values
  *                 for m in range(M):             # <<<<<<<<<<<<<<
  * 
- *                     #Set to current if unassigned
+ *                     # Set to current if unassigned
  */
         __pyx_t_2 = __pyx_v_M;
         __pyx_t_12 = __pyx_t_2;
@@ -3900,10 +3900,10 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn_iter(CYTHON_UNUSED __P
 
           /* "pymoode/cython/mnn.pyx":216
  * 
- *                     #Set to current if unassigned
+ *                     # Set to current if unassigned
  *                     if (Mnn[i, m] == -1):             # <<<<<<<<<<<<<<
  * 
- *                         #Set last neighbor to index
+ *                         # Set last neighbor to index
  */
           __pyx_t_7 = __pyx_v_i;
           __pyx_t_8 = __pyx_v_m;
@@ -3912,7 +3912,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn_iter(CYTHON_UNUSED __P
 
             /* "pymoode/cython/mnn.pyx":219
  * 
- *                         #Set last neighbor to index
+ *                         # Set last neighbor to index
  *                         Mnn[i, m] = j             # <<<<<<<<<<<<<<
  *                         break
  * 
@@ -3922,26 +3922,26 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn_iter(CYTHON_UNUSED __P
             *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Mnn.data + __pyx_t_8 * __pyx_v_Mnn.strides[0]) ) + __pyx_t_7 * __pyx_v_Mnn.strides[1]) )) = __pyx_v_j;
 
             /* "pymoode/cython/mnn.pyx":220
- *                         #Set last neighbor to index
+ *                         # Set last neighbor to index
  *                         Mnn[i, m] = j
  *                         break             # <<<<<<<<<<<<<<
  * 
- *                     #Break if checking already corresponding index
+ *                     # Break if checking already corresponding index
  */
             goto __pyx_L11_break;
 
             /* "pymoode/cython/mnn.pyx":216
  * 
- *                     #Set to current if unassigned
+ *                     # Set to current if unassigned
  *                     if (Mnn[i, m] == -1):             # <<<<<<<<<<<<<<
  * 
- *                         #Set last neighbor to index
+ *                         # Set last neighbor to index
  */
           }
 
           /* "pymoode/cython/mnn.pyx":223
  * 
- *                     #Break if checking already corresponding index
+ *                     # Break if checking already corresponding index
  *                     elif (j == Mnn[i, m]):             # <<<<<<<<<<<<<<
  *                         break
  * 
@@ -3952,17 +3952,17 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn_iter(CYTHON_UNUSED __P
           if (__pyx_t_4) {
 
             /* "pymoode/cython/mnn.pyx":224
- *                     #Break if checking already corresponding index
+ *                     # Break if checking already corresponding index
  *                     elif (j == Mnn[i, m]):
  *                         break             # <<<<<<<<<<<<<<
  * 
- *                     #Distance satisfies condition
+ *                     # Distance satisfies condition
  */
             goto __pyx_L11_break;
 
             /* "pymoode/cython/mnn.pyx":223
  * 
- *                     #Break if checking already corresponding index
+ *                     # Break if checking already corresponding index
  *                     elif (j == Mnn[i, m]):             # <<<<<<<<<<<<<<
  *                         break
  * 
@@ -3971,10 +3971,10 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn_iter(CYTHON_UNUSED __P
 
           /* "pymoode/cython/mnn.pyx":227
  * 
- *                     #Distance satisfies condition
+ *                     # Distance satisfies condition
  *                     elif (D[i, j] <= D[i, Mnn[i, m]]):             # <<<<<<<<<<<<<<
  * 
- *                         #Replace higher values
+ *                         # Replace higher values
  */
           __pyx_t_8 = __pyx_v_i;
           __pyx_t_7 = __pyx_v_j;
@@ -3987,10 +3987,10 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_mnn_iter(CYTHON_UNUSED __P
 
             /* "pymoode/cython/mnn.pyx":230
  * 
- *                         #Replace higher values
+ *                         # Replace higher values
  *                         Mnn[i, m + 1:] = Mnn[i, m:-1]             # <<<<<<<<<<<<<<
  * 
- *                         #Replace current value
+ *                         # Replace current value
  */
             __pyx_t_14.data = __pyx_v_Mnn.data;
             __pyx_t_14.memview = __pyx_v_Mnn.memview;
@@ -4056,7 +4056,7 @@ if (unlikely(__pyx_memoryview_copy_contents(__pyx_t_14, __pyx_t_16, 1, 1, 0) < 0
 
             /* "pymoode/cython/mnn.pyx":233
  * 
- *                         #Replace current value
+ *                         # Replace current value
  *                         Mnn[i, m] = j             # <<<<<<<<<<<<<<
  *                         break
  * 
@@ -4066,7 +4066,7 @@ if (unlikely(__pyx_memoryview_copy_contents(__pyx_t_14, __pyx_t_16, 1, 1, 0) < 0
             *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Mnn.data + __pyx_t_9 * __pyx_v_Mnn.strides[0]) ) + __pyx_t_10 * __pyx_v_Mnn.strides[1]) )) = __pyx_v_j;
 
             /* "pymoode/cython/mnn.pyx":234
- *                         #Replace current value
+ *                         # Replace current value
  *                         Mnn[i, m] = j
  *                         break             # <<<<<<<<<<<<<<
  * 
@@ -4076,10 +4076,10 @@ if (unlikely(__pyx_memoryview_copy_contents(__pyx_t_14, __pyx_t_16, 1, 1, 0) < 0
 
             /* "pymoode/cython/mnn.pyx":227
  * 
- *                     #Distance satisfies condition
+ *                     # Distance satisfies condition
  *                     elif (D[i, j] <= D[i, Mnn[i, m]]):             # <<<<<<<<<<<<<<
  * 
- *                         #Replace higher values
+ *                         # Replace higher values
  */
           }
         }
@@ -4087,29 +4087,29 @@ if (unlikely(__pyx_memoryview_copy_contents(__pyx_t_14, __pyx_t_16, 1, 1, 0) < 0
 
         /* "pymoode/cython/mnn.pyx":210
  * 
- *             #Replace at least the last neighbor
+ *             # Replace at least the last neighbor
  *             elif (D[i, j] <= D[i, Mnn[i, M-1]]) or (Mnn[i, M-1] == -1):             # <<<<<<<<<<<<<<
  * 
- *                 #Iterate over current values
+ *                 # Iterate over current values
  */
       }
 
       /* "pymoode/cython/mnn.pyx":203
  * 
- *         #Iterate over elements in X
+ *         # Iterate over elements in X
  *         for j in H:             # <<<<<<<<<<<<<<
  * 
- *             #Go to next if same element
+ *             # Go to next if same element
  */
       __pyx_L5_continue:;
     }
 
     /* "pymoode/cython/mnn.pyx":200
  * 
- *     #Iterate over items to calculate
+ *     # Iterate over items to calculate
  *     for i in calc_items:             # <<<<<<<<<<<<<<
  * 
- *         #Iterate over elements in X
+ *         # Iterate over elements in X
  */
   }
 
@@ -4137,7 +4137,7 @@ if (unlikely(__pyx_memoryview_copy_contents(__pyx_t_14, __pyx_t_16, 1, 1, 0) < 0
 
 /* "pymoode/cython/mnn.pyx":238
  * 
- * #Calculate crowding metric
+ * # Calculate crowding metric
  * cdef c_calc_d(double[:] d, int[:, :] Mnn, double[:, :] D, cpp_set[int] calc_items, int M):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -4223,7 +4223,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_d(__Pyx_memviewslice __pyx
 
   /* "pymoode/cython/mnn.pyx":238
  * 
- * #Calculate crowding metric
+ * # Calculate crowding metric
  * cdef c_calc_d(double[:] d, int[:, :] Mnn, double[:, :] D, cpp_set[int] calc_items, int M):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -4238,7 +4238,7 @@ static PyObject *__pyx_f_7pymoode_6cython_3mnn_c_calc_d(__Pyx_memviewslice __pyx
 
 /* "pymoode/cython/mnn.pyx":251
  * 
- * #Returns indexes of items to be recalculated after removal
+ * # Returns indexes of items to be recalculated after removal
  * cdef cpp_set[int] c_get_calc_items(             # <<<<<<<<<<<<<<
  *     int[:, :] Mnn,
  *     cpp_set[int] H,
@@ -4442,7 +4442,7 @@ if (unlikely(__pyx_memoryview_copy_contents(__pyx_t_9, __pyx_t_11, 1, 1, 0) < 0)
 
   /* "pymoode/cython/mnn.pyx":251
  * 
- * #Returns indexes of items to be recalculated after removal
+ * # Returns indexes of items to be recalculated after removal
  * cdef cpp_set[int] c_get_calc_items(             # <<<<<<<<<<<<<<
  *     int[:, :] Mnn,
  *     cpp_set[int] H,
@@ -4461,7 +4461,7 @@ if (unlikely(__pyx_memoryview_copy_contents(__pyx_t_9, __pyx_t_11, 1, 1, 0) < 0)
 
 /* "pymoode/cython/utils.pxd":16
  * 
- * #Returns elements to remove based on crowding metric d and heap of remaining elements H
+ * # Returns elements to remove based on crowding metric d and heap of remaining elements H
  * cdef inline int c_get_drop(double[:] d, cpp_set[int] H):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -4571,7 +4571,7 @@ static CYTHON_INLINE int __pyx_f_7pymoode_6cython_5utils_c_get_drop(__Pyx_memvie
 
   /* "pymoode/cython/utils.pxd":16
  * 
- * #Returns elements to remove based on crowding metric d and heap of remaining elements H
+ * # Returns elements to remove based on crowding metric d and heap of remaining elements H
  * cdef inline int c_get_drop(double[:] d, cpp_set[int] H):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -4585,7 +4585,7 @@ static CYTHON_INLINE int __pyx_f_7pymoode_6cython_5utils_c_get_drop(__Pyx_memvie
 
 /* "pymoode/cython/utils.pxd":35
  * 
- * #Returns vector of positions of minimum values along axis 0 of a 2d memoryview
+ * # Returns vector of positions of minimum values along axis 0 of a 2d memoryview
  * cdef inline vector[int] c_get_argmin(double[:, :] X):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -4762,7 +4762,7 @@ static CYTHON_INLINE std::vector<int>  __pyx_f_7pymoode_6cython_5utils_c_get_arg
 
   /* "pymoode/cython/utils.pxd":35
  * 
- * #Returns vector of positions of minimum values along axis 0 of a 2d memoryview
+ * # Returns vector of positions of minimum values along axis 0 of a 2d memoryview
  * cdef inline vector[int] c_get_argmin(double[:, :] X):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -4779,7 +4779,7 @@ static CYTHON_INLINE std::vector<int>  __pyx_f_7pymoode_6cython_5utils_c_get_arg
 
 /* "pymoode/cython/utils.pxd":65
  * 
- * #Returns vector of positions of maximum values along axis 0 of a 2d memoryview
+ * # Returns vector of positions of maximum values along axis 0 of a 2d memoryview
  * cdef inline vector[int] c_get_argmax(double[:, :] X):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -4956,7 +4956,7 @@ static CYTHON_INLINE std::vector<int>  __pyx_f_7pymoode_6cython_5utils_c_get_arg
 
   /* "pymoode/cython/utils.pxd":65
  * 
- * #Returns vector of positions of maximum values along axis 0 of a 2d memoryview
+ * # Returns vector of positions of maximum values along axis 0 of a 2d memoryview
  * cdef inline vector[int] c_get_argmax(double[:, :] X):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -4973,7 +4973,7 @@ static CYTHON_INLINE std::vector<int>  __pyx_f_7pymoode_6cython_5utils_c_get_arg
 
 /* "pymoode/cython/utils.pxd":95
  * 
- * #Performs normalization of a 2d memoryview
+ * # Performs normalization of a 2d memoryview
  * cdef inline double[:, :] c_normalize_array(double[:, :] X, vector[int] extremes_max, vector[int] extremes_min):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -5278,7 +5278,7 @@ static CYTHON_INLINE __Pyx_memviewslice __pyx_f_7pymoode_6cython_5utils_c_normal
 
   /* "pymoode/cython/utils.pxd":95
  * 
- * #Performs normalization of a 2d memoryview
+ * # Performs normalization of a 2d memoryview
  * cdef inline double[:, :] c_normalize_array(double[:, :] X, vector[int] extremes_max, vector[int] extremes_min):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -19242,11 +19242,11 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
   /* "pymoode/cython/mnn.pyx":122
- *     #Instantiate distances array
+ *     # Instantiate distances array
  *     _D = np.empty((N, N), dtype=np.double)
  *     D = _D[:, :]             # <<<<<<<<<<<<<<
  * 
- *     #Shape of X
+ *     # Shape of X
  */
   __pyx_slice_ = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice_)) __PYX_ERR(0, 122, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_slice_);
