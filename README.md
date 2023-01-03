@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/mooscaliaproject/pymoode">
+  <a href="https://pymoode.readthedocs.io">
   <img src="https://github.com/mooscaliaproject/pymoode/raw/main/images/logo_header_pymoode.png" alt="header"/>
   </a>
 </p>
