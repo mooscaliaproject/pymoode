@@ -1,0 +1,8 @@
+ipykernel
+pymoode
+sphinx
+sphinx_rtd_theme
+pandoc
+numpydoc
+nbsphinx
+matplotlib

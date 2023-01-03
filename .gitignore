@@ -3,6 +3,7 @@ dist
 experimental
 pymoode.egg-info
 /venv
+*/venv
 cythonize_files.py
 /pymoode/cython/*.html
 /pymoode/cython/*.pyd
