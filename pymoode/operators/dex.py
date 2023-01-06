@@ -191,14 +191,20 @@ class DEX(Crossover):
         CR : float, optional
             Crossover parameter. Defined in the range [0, 1]
             To reinforce mutation, use higher values. To control convergence speed, use lower values.
-
+        
         F : iterable of float or float, optional
             Scale factor or mutation parameter. Defined in the range (0, 2]
             To reinforce exploration, use higher values; for exploitation, use lower values.
 
         gamma : float, optional
             Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
-
+        
+        n_diffs : int, optional
+            Number of difference vectors in DEM, by default 1
+        
+        at_least_once : bool, optional
+            Either or not offsprings must inherit at least one attribute from mutant vectors, by default True
+        
         de_repair : str, optional
             Repair of DE mutant vectors. Is either callable or one of:
 
