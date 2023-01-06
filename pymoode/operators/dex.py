@@ -17,6 +17,37 @@ class DEM(Crossover):
                  de_repair="bounce-back",
                  n_diffs=1,
                  **kwargs):
+        """Differential Evolution mutation
+        (Implemented as pymoo crossover)
+
+        Parameters
+        ----------
+        F : iterable of float or float, optional
+            Scale factor or mutation parameter. Defined in the range (0, 2]
+            To reinforce exploration, use higher values; for exploitation, use lower values.
+
+        gamma : float, optional
+            Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
+
+        de_repair : str, optional
+            Repair of DE mutant vectors. Is either callable or one of:
+
+                - 'bounce-back'
+                - 'midway'
+                - 'rand-init'
+                - 'to-bounds'
+
+            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
+            Defaults to 'bounce-back'.
+        
+        n_diffs : int, optional
+            Number of difference vectors in operation, by default 1
+
+        Raises
+        ------
+        KeyError
+            Bad de_repair input
+        """
 
         # Crossover basic structure
         super().__init__(1 + 2 * n_diffs, 1,  prob=1.0, **kwargs)
@@ -49,6 +80,24 @@ class DEM(Crossover):
         self.de_repair = de_repair
 
     def do(self, problem, pop, parents=None, **kwargs):
+        """Perform Differential Evolution mutation
+
+        Parameters
+        ----------
+        problem : Problem
+            Optimization problem
+        
+        pop : Population
+            Original parent population at a given generation
+        
+        parents : numpy.array (n_offsprings, n_select) of dtype int, optional
+            Parent (indexes) to crossover, by default None
+
+        Returns
+        -------
+        Population
+            Offspring mutants V
+        """
 
         # Convert pop if parents is not None
         if parents is not None:
@@ -131,6 +180,36 @@ class DEX(Crossover):
                  at_least_once=True,
                  de_repair="bounce-back",
                  **kwargs):
+        """Differential evolution crossover
+        (DE mutation is considered a part of this operator)
+
+        Parameters
+        ----------
+        variant : str, optional
+            Crossover variant. Must be either "bin" or "exp". By default "bin"
+        
+        CR : float, optional
+            Crossover parameter. Defined in the range [0, 1]
+            To reinforce mutation, use higher values. To control convergence speed, use lower values.
+
+        F : iterable of float or float, optional
+            Scale factor or mutation parameter. Defined in the range (0, 2]
+            To reinforce exploration, use higher values; for exploitation, use lower values.
+
+        gamma : float, optional
+            Jitter deviation parameter. Should be in the range (0, 2). Defaults to 1e-4.
+
+        de_repair : str, optional
+            Repair of DE mutant vectors. Is either callable or one of:
+
+                - 'bounce-back'
+                - 'midway'
+                - 'rand-init'
+                - 'to-bounds'
+
+            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
+            Defaults to 'bounce-back'.
+        """
 
         # Crossover basic structure
         super().__init__(2 + 2 * n_diffs, 1,  prob=1.0, **kwargs)
@@ -150,6 +229,29 @@ class DEX(Crossover):
         self.at_least_once = at_least_once
 
     def do(self, problem, pop, parents=None, **kwargs):
+        """Do Differential Evolution crossover
+
+        Parameters
+        ----------
+        problem : Problem
+            Optimization problem
+        
+        pop : Population
+            Original parent population at a given generation
+        
+        parents : numpy.array (n_offsprings, n_select) of dtype int, optional
+            Parent (indexes) to crossover, by default None
+
+        Returns
+        -------
+        Population
+            Offspring population
+
+        Raises
+        ------
+        Exception
+            Unknown variant
+        """
 
         # Convert pop if parents is not None
         if parents is not None:
@@ -267,16 +369,26 @@ def _validate_deprecated_repair(de_repair, **kwargs):
 
 
 def bounce_back(X, Xb, xl, xu):
-    """Repair strategy
+    """Repair strategy that radomly re-initializes violated elements between reference points and bounds
 
-    Args:
-        X (2d array like): Mutated vectors including violations.
-        Xb (2d array like): Reference vectors for de_repair in feasible space.
-        xl (1d array like): Lower-bounds.
-        xu (1d array like): Upper-bounds.
+    Parameters
+    ----------
+    X : numpy.array (n_samples, n_var)
+        Original population in decision space (including violations)
+    
+    Xb : numpy.array (n_samples, n_var)
+        Feasible reference points in decision space
+    
+    xl : numpy.array (n_var,)
+        Lower bounds for decision variables
+    
+    xu : numpy.array (n_var,)
+        Upper bounds for decision variables
 
-    Returns:
-        2d array like: Repaired vectors.
+    Returns
+    -------
+    numpy.array (n_samples, n_var)
+        Repaired population
     """
 
     XL = xl[None, :].repeat(len(X), axis=0)
@@ -294,16 +406,26 @@ def bounce_back(X, Xb, xl, xu):
 
 
 def midway(X, Xb, xl, xu):
-    """Repair strategy
+    """Repair strategy that sets violated elements to midpoint between reference points and bounds
 
-    Args:
-        X (2d array like): Mutated vectors including violations.
-        Xb (2d array like): Reference vectors for de_repair in feasible space.
-        xl (1d array like): Lower-bounds.
-        xu (1d array like): Upper-bounds.
+    Parameters
+    ----------
+    X : numpy.array (n_samples, n_var)
+        Original population in decision space (including violations)
+    
+    Xb : numpy.array (n_samples, n_var)
+        Feasible reference points in decision space
+    
+    xl : numpy.array (n_var,)
+        Lower bounds for decision variables
+    
+    xu : numpy.array (n_var,)
+        Upper bounds for decision variables
 
-    Returns:
-        2d array like: Repaired vectors.
+    Returns
+    -------
+    numpy.array (n_samples, n_var)
+        Repaired population
     """
 
     XL = xl[None, :].repeat(len(X), axis=0)
@@ -321,16 +443,26 @@ def midway(X, Xb, xl, xu):
 
 
 def to_bounds(X, Xb, xl, xu):
-    """Repair strategy
+    """Repair strategy that forces violated elements to problem bounds
 
-    Args:
-        X (2d array like): Mutated vectors including violations.
-        Xb (2d array like): Reference vectors for de_repair in feasible space.
-        xl (1d array like): Lower-bounds.
-        xu (1d array like): Upper-bounds.
+    Parameters
+    ----------
+    X : numpy.array (n_samples, n_var)
+        Original population in decision space (including violations)
+    
+    Xb : numpy.array (n_samples, n_var)
+        Feasible reference points in decision space
+    
+    xl : numpy.array (n_var,)
+        Lower bounds for decision variables
+    
+    xu : numpy.array (n_var,)
+        Upper bounds for decision variables
 
-    Returns:
-        2d array like: Repaired vectors.
+    Returns
+    -------
+    numpy.array (n_samples, n_var)
+        Repaired population
     """
 
     xl = np.array(xl)
@@ -351,16 +483,26 @@ def to_bounds(X, Xb, xl, xu):
 
 
 def rand_init(X, Xb, xl, xu):
-    """Repair strategy
+    """Repair strategy that radomly re-initializes violated elements to problem domain
 
-    Args:
-        X (2d array like): Mutated vectors including violations.
-        Xb (2d array like): Reference vectors for de_repair in feasible space.
-        xl (1d array like): Lower-bounds.
-        xu (1d array like): Upper-bounds.
+    Parameters
+    ----------
+    X : numpy.array (n_samples, n_var)
+        Original population in decision space (including violations)
+    
+    Xb : numpy.array (n_samples, n_var)
+        Feasible reference points in decision space
+    
+    xl : numpy.array (n_var,)
+        Lower bounds for decision variables
+    
+    xu : numpy.array (n_var,)
+        Upper bounds for decision variables
 
-    Returns:
-        2d array like: Repaired vectors.
+    Returns
+    -------
+    numpy.array (n_samples, n_var)
+        Repaired population
     """
 
     XL = xl[None, :].repeat(len(X), axis=0)
@@ -378,16 +520,27 @@ def rand_init(X, Xb, xl, xu):
 
 
 def squared_bounce_back(X, Xb, xl, xu):
-    """Repair strategy
+    """Repair strategy that radomly re-initializes violated elements between reference points and bounds
+    closer to bounds
 
-    Args:
-        X (2d array like): Mutated vectors including violations.
-        Xb (2d array like): Reference vectors for de_repair in feasible space.
-        xl (1d array like): Lower-bounds.
-        xu (1d array like): Upper-bounds.
+    Parameters
+    ----------
+    X : numpy.array (n_samples, n_var)
+        Original population in decision space (including violations)
+    
+    Xb : numpy.array (n_samples, n_var)
+        Feasible reference points in decision space
+    
+    xl : numpy.array (n_var,)
+        Lower bounds for decision variables
+    
+    xu : numpy.array (n_var,)
+        Upper bounds for decision variables
 
-    Returns:
-        2d array like: Repaired vectors.
+    Returns
+    -------
+    numpy.array (n_samples, n_var)
+        Repaired population
     """
 
     XL = xl[None, :].repeat(len(X), axis=0)

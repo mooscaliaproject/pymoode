@@ -10,9 +10,22 @@ from pymoo.core.selection import Selection
 # This is the core differential evolution selection class
 class DES(Selection):
 
-    def __init__(self,
-                 variant,
-                 **kwargs):
+    def __init__(self, variant, **kwargs):
+        """Differential Evolution parent selection class
+
+        Parameters
+        ----------
+        variant : str, optional
+            Differential evolution strategy. Must be a string in the format: "DE/selection/n/crossover", in which, n in an integer of number of difference vectors, and crossover is either 'bin' or 'exp'. Selection variants are:
+
+                - 'ranked'
+                - 'rand'
+                - 'best'
+                - 'current-to-best'
+                - 'current-to-best'
+                - 'current-to-rand'
+                - 'rand-to-best'
+        """
 
         super().__init__()
         self.variant = variant

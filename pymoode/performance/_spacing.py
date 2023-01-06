@@ -12,11 +12,11 @@ class SpacingIndicator(Indicator):
                  ideal=None,
                  nadir=None):
         """Spacing indicator
-
         The smaller the value this indicator assumes, the most uniform is the distribution of elements on the pareto front.
         
         Parameters
         ----------
+        
         pf : 2d array, optional
             Pareto front, by default None
         
@@ -40,6 +40,18 @@ class SpacingIndicator(Indicator):
                          nadir=nadir)
 
     def _do(self, F, *args, **kwargs):
+        """Obtain the spacing indicator given a Pareto front
+
+        Parameters
+        ----------
+        F : numpy.array
+            Pareto front
+
+        Returns
+        -------
+        float
+            Spacing indicator
+        """
 
         # Get F dimensions
         n_points, n_obj = F.shape

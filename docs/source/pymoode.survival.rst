@@ -7,16 +7,6 @@ pymoode.survival
 Classes
 ~~~~~~~
 
-.. automodule:: pymoode.survival
-   :members: RankSurvival, ConstrRankAndCrowding
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: pymoode.survival.RankAndCrowding
+.. autoclass:: pymoode.survival.ConstrRankAndCrowding
 
-
-Metrics
-~~~~~~~
-
-.. automodule:: pymoode.survival._metrics
-   :members:
-   :undoc-members:
-   :show-inheritance:

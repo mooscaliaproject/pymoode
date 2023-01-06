@@ -5,6 +5,6 @@ pymoode.algorithms
 ------------------
 
 .. automodule:: pymoode.algorithms
-   :members: GDE3, NSDE, NSDER
+   :members: DE, GDE3, NSDE, NSDER
    :undoc-members:
    :show-inheritance:

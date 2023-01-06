@@ -7,19 +7,15 @@ Parent selection
 pymoode.operators.des
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: pymoode.operators.des
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: pymoode.operators.des.DES
+
 
 Crossover
-----------------
+---------
 
 pymoode.operators.dex
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: pymoode.operators.dex
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: pymoode.operators.dex.DEX
+.. autoclass:: pymoode.operators.dex.DEM
 
