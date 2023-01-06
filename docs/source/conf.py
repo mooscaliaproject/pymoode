@@ -9,7 +9,7 @@
 project = 'pymoode'
 copyright = '2023, Bruno Scalia C. F. Leite'
 author = 'Bruno Scalia C. F. Leite'
-release = '0.2.4'
+release = '0.2.4.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
