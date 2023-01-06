@@ -8,7 +8,7 @@
 
 A Python framework for Differential Evolution using [pymoo](https://github.com/anyoptimization/pymoo) (Blank & Deb, 2020).
 
-You can find the package documentation [here](https://pymoode.readthedocs.io/en/latest/)
+You can find the package documentation [here](https://pymoode.readthedocs.io/en/latest/).
 
 ## Contents
 
