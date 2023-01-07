@@ -16,7 +16,6 @@ class SpacingIndicator(Indicator):
         
         Parameters
         ----------
-        
         pf : 2d array, optional
             Pareto front, by default None
         
