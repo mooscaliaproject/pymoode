@@ -24,7 +24,11 @@ extensions = [
     'sphinx.ext.coverage',
     'matplotlib.sphinxext.plot_directive',
     'IPython.sphinxext.ipython_console_highlighting',
+    'sphinxcontrib.bibtex',
 ]
+
+bibtex_bibfiles = ['references.bib']
+bibtex_reference_style = 'label'
 
 templates_path = ['_templates']
 exclude_patterns = []

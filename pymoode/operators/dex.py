@@ -90,8 +90,10 @@ class DEM(Crossover):
         pop : Population
             Original parent population at a given generation
         
-        parents : numpy.array (n_offsprings, n_select) of dtype int, optional
-            Parent (indexes) to crossover, by default None
+        parents : numpy.array (n_offsprings, n_select) of dtype int | None, optional
+            Parent (indexes) to crossover. 
+            If None, the argument pop should already be sampled as parents to crossover. 
+            By default None
 
         Returns
         -------
@@ -118,6 +120,21 @@ class DEM(Crossover):
         return Population.new("X", V)
 
     def de_mutation(self, Xr, return_differentials=True):
+        """Perform DE mutation operator
+
+        Parameters
+        ----------
+        Xr : numpy.array (n_parents, n_matings, n_var)
+            Three dimensional array of parents selected to take part in DE mutation
+        
+        return_differentials : bool, optional
+            Either or not to return a tuple of ``(V, diffs)``, by default True
+
+        Returns
+        -------
+        np.array (n_matings, n_var) | tuple
+            Mutant vectors created or pair of both mutant vectors and perturbation vectors
+        """
 
         n_parents, n_matings, n_var = Xr.shape
         assert n_parents % 2 == 1, "For the differential an odd number of values need to be provided"
@@ -245,8 +262,10 @@ class DEX(Crossover):
         pop : Population
             Original parent population at a given generation
         
-        parents : numpy.array (n_offsprings, n_select) of dtype int, optional
-            Parent (indexes) to crossover, by default None
+        parents : numpy.array (n_offsprings, n_select) of dtype int | None, optional
+            Parent (indexes) to crossover. 
+            If None, the argument pop should already be sampled as parents to crossover. 
+            By default None
 
         Returns
         -------
@@ -295,6 +314,7 @@ class DEX(Crossover):
 # =========================================================================================================
 # Crossovers
 # =========================================================================================================
+
 
 # From version 0.5.0 of pymoo
 def row_at_least_once_true(M):

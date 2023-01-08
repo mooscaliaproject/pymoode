@@ -2,6 +2,7 @@ ipykernel
 pymoode
 sphinx
 sphinx_rtd_theme
+sphinxcontrib-bibtex
 pandoc
 numpydoc
 nbsphinx

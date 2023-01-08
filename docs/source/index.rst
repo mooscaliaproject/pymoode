@@ -45,6 +45,13 @@ From the current version on github:
 
 
 .. toctree::
+   :maxdepth: 1
+   :caption: Theory:
+
+   Theory/DE.ipynb
+
+
+.. toctree::
    :maxdepth: 3
    :caption: Package:
 
