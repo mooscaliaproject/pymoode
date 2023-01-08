@@ -129,6 +129,8 @@ class DE(GeneticAlgorithm):
                  F=(0.5, 1.0),
                  gamma=1e-4,
                  de_repair="bounce-back",
+                 survival=ImprovementReplacement(),
+                 fitness=FitnessSurvival(),
                  output=SingleObjectiveOutput(),
                  **kwargs):
         """
@@ -181,6 +183,12 @@ class DE(GeneticAlgorithm):
 
         mutation : Mutation, optional
             Pymoo's mutation operator after crossover. Defaults to NoMutation().
+        
+        survival : Survival, optional
+            Replacement survival operator. Defaults to ImprovementReplacement().
+        
+        fitness : Survival, optional
+            Fitness assignment survival operator. Defaults to FitnessSurvival().
 
         repair : Repair, optional
             Pymoo's repair operator after mutation. Defaults to NoRepair().
@@ -205,18 +213,18 @@ class DE(GeneticAlgorithm):
                          mating=mating,
                          n_offsprings=n_offsprings,
                          eliminate_duplicates=None,
+                         survival=survival,
                          output=output,
                          **kwargs)
 
+        self.fitness = fitness
         self.termination = DefaultSingleObjectiveTermination()
 
     def _initialize_advance(self, infills=None, **kwargs):
-        self.pop = FitnessSurvival().do(self.problem, infills, n_survive=self.pop_size)
+        self.pop = self.fitness.do(self.problem, infills, n_survive=self.pop_size)
 
     def _infill(self):
-
         infills = self.mating(self.problem, self.pop, self.n_offsprings, algorithm=self)
-
         return infills
 
     def _advance(self, infills=None, **kwargs):
@@ -224,10 +232,10 @@ class DE(GeneticAlgorithm):
         assert infills is not None, "This algorithms uses the AskAndTell interface thus infills must be provided."
 
         # One-to-one replacement survival
-        self.pop = ImprovementReplacement().do(self.problem, self.pop, infills)
+        self.pop = self.survival.do(self.problem, self.pop, infills)
 
         # Sort the population by fitness to make the selection simpler for mating (not an actual survival, just sorting)
-        self.pop = FitnessSurvival().do(self.problem, self.pop)
+        self.pop = self.fitness.do(self.problem, self.pop)
 
         # Set ranks
         self.pop.set("rank", np.arange(self.pop_size))
