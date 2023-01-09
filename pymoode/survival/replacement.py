@@ -96,7 +96,8 @@ class BaseReplacement(Survival):
 class ImprovementReplacement(BaseReplacement):
     
     def do(self, problem, pop, off, return_indices=False, inplace=False, **kwargs):
-        """Given a problem a parent population and offspring canditates return next generation.
+        """Given a problem a parent population and offspring canditates return next generation,
+        it selects those that proceed into the next generation via one-to-one comparison.
         Feasible solutions are always preferred to infeasible and infeasible solutions are compared by
         overall constraint violation.
 
