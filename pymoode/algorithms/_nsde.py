@@ -1,7 +1,7 @@
 from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.operators.sampling.lhs import LHS
 from pymoode.algorithms._de import VariantDE
-from pymoode.survival._classes import RankAndCrowding
+from pymoode.survival import RankAndCrowding
 from pymoode.operators.dex import _validate_deprecated_repair
 
 

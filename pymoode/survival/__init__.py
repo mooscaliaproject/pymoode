@@ -1,1 +1,1 @@
-from pymoode.survival._classes import RankAndCrowding, ConstrRankAndCrowding
+from pymoode.survival.rank_and_crowding.classes import RankAndCrowding, ConstrRankAndCrowding

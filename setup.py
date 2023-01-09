@@ -17,7 +17,7 @@ BASE_PACKAGE = 'pymoode'
 base_kwargs = dict(
     name = 'pymoode',
     packages = [BASE_PACKAGE] + [f"{BASE_PACKAGE}." + e for e in find_packages(where=BASE_PACKAGE)],
-    version = '0.2.4.1',
+    version = '0.2.5dev1',
     license='Apache License 2.0',
     description = 'A Python optimization package using Differential Evolution.',
     long_description=long_description,
@@ -144,7 +144,7 @@ if not params.nolibs:
         print('*' * 75)
         print("External cython modules found.")
         print("To verify compilation success run:")
-        print("from pymoode.survival._metrics import IS_COMPILED")
+        print("from pymoode.survival.rank_and_crowding.metrics import IS_COMPILED")
         print("This variable will be True to mark compilation success;")
         print("If no compilation occurs, .py files will be used instead, which provide the same results but with worse computational time.")
         print('*' * 75)
@@ -161,7 +161,7 @@ try:
     print('*' * 75)
     print("Installation successful at the first attempt.")
     print("To verify compilation success run:")
-    print("from pymoode.survival._metrics import IS_COMPILED")
+    print("from pymoode.survival.rank_and_crowding.metrics import IS_COMPILED")
     print('*' * 75)
 except:
     print('*' * 75)

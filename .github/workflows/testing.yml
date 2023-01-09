@@ -29,7 +29,7 @@ jobs:
           rm -rf pymoode
       - name: Check Compilation
         run: |
-          python -c "from pymoode.survival._metrics import IS_COMPILED;print('Compiled Extensions: ', IS_COMPILED)"
+          python -c "from pymoode.survival.rank_and_crowding.metrics import IS_COMPILED;print('Compiled Extensions: ', IS_COMPILED)"
       - name: Run Tests
         run: |
           pytest -v --maxfail 1 --no-header -m "not long"

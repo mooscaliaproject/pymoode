@@ -1,12 +1,10 @@
-import numpy as np
-from pymoo.algorithms.base.genetic import GeneticAlgorithm
-from pymoo.algorithms.soo.nonconvex.ga import FitnessSurvival
-from pymoo.core.replacement import ImprovementReplacement
 from pymoo.operators.mutation.nom import NoMutation
 from pymoo.operators.sampling.lhs import LHS
 from pymoo.termination.default import DefaultSingleObjectiveTermination
 from pymoo.util.display.single import SingleObjectiveOutput
 from pymoo.core.infill import InfillCriterion
+from pymoode.algorithms.base.evolutionary import EvolutionaryAlgorithm
+from pymoode.survival.replacement import ImprovementReplacement
 from pymoode.operators.des import DES
 from pymoode.operators.dex import DEX, _validate_deprecated_repair
 import warnings
@@ -119,7 +117,7 @@ class VariantDE(InfillCriterion):
         return off
 
 
-class DE(GeneticAlgorithm):
+class DifferentialEvolution(EvolutionaryAlgorithm):
 
     def __init__(self,
                  pop_size=100,
@@ -130,7 +128,6 @@ class DE(GeneticAlgorithm):
                  gamma=1e-4,
                  de_repair="bounce-back",
                  survival=ImprovementReplacement(),
-                 fitness=FitnessSurvival(),
                  output=SingleObjectiveOutput(),
                  **kwargs):
         """
@@ -186,9 +183,6 @@ class DE(GeneticAlgorithm):
         
         survival : Survival, optional
             Replacement survival operator. Defaults to ImprovementReplacement().
-        
-        fitness : Survival, optional
-            Fitness assignment survival operator. Defaults to FitnessSurvival().
 
         repair : Repair, optional
             Pymoo's repair operator after mutation. Defaults to NoRepair().
@@ -217,11 +211,10 @@ class DE(GeneticAlgorithm):
                          output=output,
                          **kwargs)
 
-        self.fitness = fitness
         self.termination = DefaultSingleObjectiveTermination()
 
     def _initialize_advance(self, infills=None, **kwargs):
-        self.pop = self.fitness.do(self.problem, infills, n_survive=self.pop_size)
+        self.pop = self.survival.do(self.problem, infills, None, n_survive=self.pop_size)
 
     def _infill(self):
         infills = self.mating(self.problem, self.pop, self.n_offsprings, algorithm=self)
@@ -234,11 +227,9 @@ class DE(GeneticAlgorithm):
         # One-to-one replacement survival
         self.pop = self.survival.do(self.problem, self.pop, infills)
 
-        # Sort the population by fitness to make the selection simpler for mating (not an actual survival, just sorting)
-        self.pop = self.fitness.do(self.problem, self.pop)
 
-        # Set ranks
-        self.pop.set("rank", np.arange(self.pop_size))
+class DE(DifferentialEvolution):
+    pass
 
 
 def _fix_deprecated_pm_kwargs(kwargs, mutation):

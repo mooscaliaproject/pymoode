@@ -4,7 +4,7 @@ from pymoo.util.randomized_argsort import randomized_argsort
 from pymoo.util.nds.non_dominated_sorting import NonDominatedSorting
 from pymoo.core.survival import Survival, split_by_feasibility
 from pymoo.core.population import Population
-from pymoode.survival._metrics import get_crowding_function
+from pymoode.survival.rank_and_crowding.metrics import get_crowding_function
 
 
 class RankAndCrowding(Survival):
@@ -58,12 +58,7 @@ class RankAndCrowding(Survival):
         self.nds = nds if nds is not None else NonDominatedSorting()
         self.crowding_func = crowding_func_
 
-    def _do(self,
-            problem,
-            pop,
-            *args,
-            n_survive=None,
-            **kwargs):
+    def _do(self, problem, pop, *args, n_survive=None, **kwargs):
 
         # get the objective space values and objects
         F = pop.get("F").astype(float, copy=False)
@@ -154,12 +149,7 @@ class ConstrRankAndCrowding(Survival):
         self.nds = nds if nds is not None else NonDominatedSorting()
         self.ranking = RankAndCrowding(nds=nds, crowding_func=crowding_func)
 
-    def _do(self,
-            problem,
-            pop,
-            *args,
-            n_survive=None,
-            **kwargs):
+    def _do(self, problem, pop, *args, n_survive=None, **kwargs):
 
         if n_survive is None:
             n_survive = len(pop)
