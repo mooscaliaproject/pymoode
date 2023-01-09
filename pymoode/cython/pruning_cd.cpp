@@ -2317,7 +2317,7 @@ static PyObject *__pyx_codeobj__29;
 
 /* "pymoode/cython/pruning_cd.pyx":18
  * 
- * #Python definition
+ * # Python definition
  * def calc_pcd(double[:, :] X, int n_remove=0):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -2718,7 +2718,7 @@ static PyObject *__pyx_pf_7pymoode_6cython_10pruning_cd_calc_pcd(CYTHON_UNUSED P
 
   /* "pymoode/cython/pruning_cd.pyx":18
  * 
- * #Python definition
+ * # Python definition
  * def calc_pcd(double[:, :] X, int n_remove=0):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -2746,7 +2746,7 @@ static PyObject *__pyx_pf_7pymoode_6cython_10pruning_cd_calc_pcd(CYTHON_UNUSED P
 
 /* "pymoode/cython/pruning_cd.pyx":57
  * 
- * #Returns crowding metrics with recursive elimination
+ * # Returns crowding metrics with recursive elimination
  * cdef c_calc_pcd(double[:, :] X, int[:, :] I, int n_remove, int N, int M, cpp_set[int] extremes):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -2784,7 +2784,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
 
   /* "pymoode/cython/pruning_cd.pyx":67
  * 
- *     #Define items to calculate distances
+ *     # Define items to calculate distances
  *     calc_items = cpp_set[int]()             # <<<<<<<<<<<<<<
  *     for n in range(N):
  *         calc_items.insert(n)
@@ -2798,7 +2798,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
   __pyx_v_calc_items = __pyx_t_1;
 
   /* "pymoode/cython/pruning_cd.pyx":68
- *     #Define items to calculate distances
+ *     # Define items to calculate distances
  *     calc_items = cpp_set[int]()
  *     for n in range(N):             # <<<<<<<<<<<<<<
  *         calc_items.insert(n)
@@ -2843,7 +2843,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
  *     for n in extremes:
  *         calc_items.erase(n)             # <<<<<<<<<<<<<<
  * 
- *     #Define remaining items to evaluate
+ *     # Define remaining items to evaluate
  */
     (void)(__pyx_v_calc_items.erase(__pyx_v_n));
 
@@ -2858,7 +2858,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
 
   /* "pymoode/cython/pruning_cd.pyx":74
  * 
- *     #Define remaining items to evaluate
+ *     # Define remaining items to evaluate
  *     H = cpp_set[int]()             # <<<<<<<<<<<<<<
  *     for n in range(N):
  *         H.insert(n)
@@ -2872,7 +2872,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
   __pyx_v_H = __pyx_t_1;
 
   /* "pymoode/cython/pruning_cd.pyx":75
- *     #Define remaining items to evaluate
+ *     # Define remaining items to evaluate
  *     H = cpp_set[int]()
  *     for n in range(N):             # <<<<<<<<<<<<<<
  *         H.insert(n)
@@ -2888,7 +2888,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
  *     for n in range(N):
  *         H.insert(n)             # <<<<<<<<<<<<<<
  * 
- *     #Initialize
+ *     # Initialize
  */
     try {
       __pyx_v_H.insert(__pyx_v_n);
@@ -2900,16 +2900,16 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
 
   /* "pymoode/cython/pruning_cd.pyx":79
  * 
- *     #Initialize
+ *     # Initialize
  *     n_removed = 0             # <<<<<<<<<<<<<<
  * 
- *     #Initialize neighbors and distances
+ *     # Initialize neighbors and distances
  */
   __pyx_v_n_removed = 0;
 
   /* "pymoode/cython/pruning_cd.pyx":82
  * 
- *     #Initialize neighbors and distances
+ *     # Initialize neighbors and distances
  *     _D = np.full((N, M), HUGE_VAL, dtype=np.double)             # <<<<<<<<<<<<<<
  *     dd = np.full((N,), HUGE_VAL, dtype=np.double)
  * 
@@ -2959,7 +2959,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
   __pyx_t_10 = 0;
 
   /* "pymoode/cython/pruning_cd.pyx":83
- *     #Initialize neighbors and distances
+ *     # Initialize neighbors and distances
  *     _D = np.full((N, M), HUGE_VAL, dtype=np.double)
  *     dd = np.full((N,), HUGE_VAL, dtype=np.double)             # <<<<<<<<<<<<<<
  * 
@@ -3024,7 +3024,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
  *     D = _D[:, :]
  *     d = dd[:]             # <<<<<<<<<<<<<<
  * 
- *     #Fill in neighbors and distance matrix
+ *     # Fill in neighbors and distance matrix
  */
   __pyx_t_9 = __Pyx_PyObject_GetSlice(__pyx_v_dd, 0, 0, NULL, NULL, &__pyx_slice_, 0, 0, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 86, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
@@ -3036,7 +3036,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
 
   /* "pymoode/cython/pruning_cd.pyx":89
  * 
- *     #Fill in neighbors and distance matrix
+ *     # Fill in neighbors and distance matrix
  *     c_calc_pcd_iter(             # <<<<<<<<<<<<<<
  *             X,
  *             I,
@@ -3047,10 +3047,10 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
 
   /* "pymoode/cython/pruning_cd.pyx":98
  * 
- *     #Obtain distance metrics
+ *     # Obtain distance metrics
  *     c_calc_d(d, D, calc_items, M)             # <<<<<<<<<<<<<<
  * 
- *     #While n_remove not acheived
+ *     # While n_remove not acheived
  */
   __pyx_t_9 = __pyx_f_7pymoode_6cython_10pruning_cd_c_calc_d(__pyx_v_d, __pyx_v_D, __pyx_v_calc_items, __pyx_v_M); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 98, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
@@ -3058,10 +3058,10 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
 
   /* "pymoode/cython/pruning_cd.pyx":101
  * 
- *     #While n_remove not acheived
+ *     # While n_remove not acheived
  *     while n_removed < (n_remove - 1):             # <<<<<<<<<<<<<<
  * 
- *         #Obtain element to drop
+ *         # Obtain element to drop
  */
   while (1) {
     __pyx_t_13 = ((__pyx_v_n_removed < (__pyx_v_n_remove - 1)) != 0);
@@ -3069,7 +3069,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
 
     /* "pymoode/cython/pruning_cd.pyx":104
  * 
- *         #Obtain element to drop
+ *         # Obtain element to drop
  *         k = c_get_drop(d, H)             # <<<<<<<<<<<<<<
  *         H.erase(k)
  * 
@@ -3077,26 +3077,26 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
     __pyx_v_k = __pyx_f_7pymoode_6cython_5utils_c_get_drop(__pyx_v_d, __pyx_v_H);
 
     /* "pymoode/cython/pruning_cd.pyx":105
- *         #Obtain element to drop
+ *         # Obtain element to drop
  *         k = c_get_drop(d, H)
  *         H.erase(k)             # <<<<<<<<<<<<<<
  * 
- *         #Update index
+ *         # Update index
  */
     (void)(__pyx_v_H.erase(__pyx_v_k));
 
     /* "pymoode/cython/pruning_cd.pyx":108
  * 
- *         #Update index
+ *         # Update index
  *         n_removed = n_removed + 1             # <<<<<<<<<<<<<<
  * 
- *         #Get items to be recalculated
+ *         # Get items to be recalculated
  */
     __pyx_v_n_removed = (__pyx_v_n_removed + 1);
 
     /* "pymoode/cython/pruning_cd.pyx":111
  * 
- *         #Get items to be recalculated
+ *         # Get items to be recalculated
  *         calc_items = c_get_calc_items(I, k, M, N)             # <<<<<<<<<<<<<<
  *         for n in extremes:
  *             calc_items.erase(n)
@@ -3104,7 +3104,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
     __pyx_v_calc_items = __pyx_f_7pymoode_6cython_10pruning_cd_c_get_calc_items(__pyx_v_I, __pyx_v_k, __pyx_v_M, __pyx_v_N);
 
     /* "pymoode/cython/pruning_cd.pyx":112
- *         #Get items to be recalculated
+ *         # Get items to be recalculated
  *         calc_items = c_get_calc_items(I, k, M, N)
  *         for n in extremes:             # <<<<<<<<<<<<<<
  *             calc_items.erase(n)
@@ -3122,12 +3122,12 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
  *         for n in extremes:
  *             calc_items.erase(n)             # <<<<<<<<<<<<<<
  * 
- *         #Fill in neighbors and distance matrix
+ *         # Fill in neighbors and distance matrix
  */
       (void)(__pyx_v_calc_items.erase(__pyx_v_n));
 
       /* "pymoode/cython/pruning_cd.pyx":112
- *         #Get items to be recalculated
+ *         # Get items to be recalculated
  *         calc_items = c_get_calc_items(I, k, M, N)
  *         for n in extremes:             # <<<<<<<<<<<<<<
  *             calc_items.erase(n)
@@ -3137,7 +3137,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
 
     /* "pymoode/cython/pruning_cd.pyx":116
  * 
- *         #Fill in neighbors and distance matrix
+ *         # Fill in neighbors and distance matrix
  *         c_calc_pcd_iter(             # <<<<<<<<<<<<<<
  *                 X,
  *                 I,
@@ -3148,7 +3148,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
 
     /* "pymoode/cython/pruning_cd.pyx":125
  * 
- *         #Obtain distance metrics
+ *         # Obtain distance metrics
  *         c_calc_d(d, D, calc_items, M)             # <<<<<<<<<<<<<<
  * 
  *     return dd
@@ -3172,7 +3172,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
 
   /* "pymoode/cython/pruning_cd.pyx":57
  * 
- * #Returns crowding metrics with recursive elimination
+ * # Returns crowding metrics with recursive elimination
  * cdef c_calc_pcd(double[:, :] X, int[:, :] I, int n_remove, int N, int M, cpp_set[int] extremes):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -3201,7 +3201,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd(__Pyx_memviews
 
 /* "pymoode/cython/pruning_cd.pyx":131
  * 
- * #Iterate
+ * # Iterate
  * cdef c_calc_pcd_iter(             # <<<<<<<<<<<<<<
  *     double[:, :] X,
  *     int[:, :] I,
@@ -3233,10 +3233,10 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd_iter(__Pyx_mem
 
   /* "pymoode/cython/pruning_cd.pyx":143
  * 
- *     #Iterate over items to calculate
+ *     # Iterate over items to calculate
  *     for i in calc_items:             # <<<<<<<<<<<<<<
  * 
- *         #Iterate over elements in X
+ *         # Iterate over elements in X
  */
   __pyx_t_1 = __pyx_v_calc_items.begin();
   for (;;) {
@@ -3247,7 +3247,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd_iter(__Pyx_mem
 
     /* "pymoode/cython/pruning_cd.pyx":146
  * 
- *         #Iterate over elements in X
+ *         # Iterate over elements in X
  *         for m in range(M):             # <<<<<<<<<<<<<<
  * 
  *             for n in range(N):
@@ -3331,16 +3331,16 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd_iter(__Pyx_mem
 
     /* "pymoode/cython/pruning_cd.pyx":143
  * 
- *     #Iterate over items to calculate
+ *     # Iterate over items to calculate
  *     for i in calc_items:             # <<<<<<<<<<<<<<
  * 
- *         #Iterate over elements in X
+ *         # Iterate over elements in X
  */
   }
 
   /* "pymoode/cython/pruning_cd.pyx":131
  * 
- * #Iterate
+ * # Iterate
  * cdef c_calc_pcd_iter(             # <<<<<<<<<<<<<<
  *     double[:, :] X,
  *     int[:, :] I,
@@ -3355,7 +3355,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_pcd_iter(__Pyx_mem
 
 /* "pymoode/cython/pruning_cd.pyx":159
  * 
- * #Calculate crowding metric
+ * # Calculate crowding metric
  * cdef c_calc_d(double[:] d, double[:, :] D, cpp_set[int] calc_items, int M):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -3437,7 +3437,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_d(__Pyx_memviewsli
 
   /* "pymoode/cython/pruning_cd.pyx":159
  * 
- * #Calculate crowding metric
+ * # Calculate crowding metric
  * cdef c_calc_d(double[:] d, double[:, :] D, cpp_set[int] calc_items, int M):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -3452,7 +3452,7 @@ static PyObject *__pyx_f_7pymoode_6cython_10pruning_cd_c_calc_d(__Pyx_memviewsli
 
 /* "pymoode/cython/pruning_cd.pyx":172
  * 
- * #Returns indexes of items to be recalculated after removal
+ * # Returns indexes of items to be recalculated after removal
  * cdef cpp_set[int] c_get_calc_items(             # <<<<<<<<<<<<<<
  *     int[:, :] I,
  *     int k, int M, int N
@@ -3487,7 +3487,7 @@ static std::set<int>  __pyx_f_7pymoode_6cython_10pruning_cd_c_get_calc_items(__P
  * 
  *     calc_items = cpp_set[int]()             # <<<<<<<<<<<<<<
  * 
- *     #Iterate over all elements in I
+ *     # Iterate over all elements in I
  */
   try {
     __pyx_t_1 = std::set<int> ();
@@ -3499,7 +3499,7 @@ static std::set<int>  __pyx_f_7pymoode_6cython_10pruning_cd_c_get_calc_items(__P
 
   /* "pymoode/cython/pruning_cd.pyx":184
  * 
- *     #Iterate over all elements in I
+ *     # Iterate over all elements in I
  *     for m in range(M):             # <<<<<<<<<<<<<<
  * 
  *         for n in range(N):
@@ -3526,7 +3526,7 @@ static std::set<int>  __pyx_f_7pymoode_6cython_10pruning_cd_c_get_calc_items(__P
  * 
  *             if I[n, m] == k:             # <<<<<<<<<<<<<<
  * 
- *                 #Add to set of items to be recalculated
+ *                 # Add to set of items to be recalculated
  */
       __pyx_t_8 = __pyx_v_n;
       __pyx_t_9 = __pyx_v_m;
@@ -3535,7 +3535,7 @@ static std::set<int>  __pyx_f_7pymoode_6cython_10pruning_cd_c_get_calc_items(__P
 
         /* "pymoode/cython/pruning_cd.pyx":191
  * 
- *                 #Add to set of items to be recalculated
+ *                 # Add to set of items to be recalculated
  *                 calc_items.insert(I[n - 1, m])             # <<<<<<<<<<<<<<
  *                 calc_items.insert(I[n + 1, m])
  * 
@@ -3550,11 +3550,11 @@ static std::set<int>  __pyx_f_7pymoode_6cython_10pruning_cd_c_get_calc_items(__P
         }
 
         /* "pymoode/cython/pruning_cd.pyx":192
- *                 #Add to set of items to be recalculated
+ *                 # Add to set of items to be recalculated
  *                 calc_items.insert(I[n - 1, m])
  *                 calc_items.insert(I[n + 1, m])             # <<<<<<<<<<<<<<
  * 
- *                 #Remove element from sorted array
+ *                 # Remove element from sorted array
  */
         __pyx_t_8 = (__pyx_v_n + 1);
         __pyx_t_9 = __pyx_v_m;
@@ -3567,7 +3567,7 @@ static std::set<int>  __pyx_f_7pymoode_6cython_10pruning_cd_c_get_calc_items(__P
 
         /* "pymoode/cython/pruning_cd.pyx":195
  * 
- *                 #Remove element from sorted array
+ *                 # Remove element from sorted array
  *                 I[n:-1, m] = I[n + 1:, m]             # <<<<<<<<<<<<<<
  * 
  *     return calc_items
@@ -3639,7 +3639,7 @@ if (unlikely(__pyx_memoryview_copy_contents(__pyx_t_11, __pyx_t_13, 1, 1, 0) < 0
  * 
  *             if I[n, m] == k:             # <<<<<<<<<<<<<<
  * 
- *                 #Add to set of items to be recalculated
+ *                 # Add to set of items to be recalculated
  */
       }
     }
@@ -3655,7 +3655,7 @@ if (unlikely(__pyx_memoryview_copy_contents(__pyx_t_11, __pyx_t_13, 1, 1, 0) < 0
 
   /* "pymoode/cython/pruning_cd.pyx":172
  * 
- * #Returns indexes of items to be recalculated after removal
+ * # Returns indexes of items to be recalculated after removal
  * cdef cpp_set[int] c_get_calc_items(             # <<<<<<<<<<<<<<
  *     int[:, :] I,
  *     int k, int M, int N
@@ -3674,7 +3674,7 @@ if (unlikely(__pyx_memoryview_copy_contents(__pyx_t_11, __pyx_t_13, 1, 1, 0) < 0
 
 /* "pymoode/cython/utils.pxd":16
  * 
- * #Returns elements to remove based on crowding metric d and heap of remaining elements H
+ * # Returns elements to remove based on crowding metric d and heap of remaining elements H
  * cdef inline int c_get_drop(double[:] d, cpp_set[int] H):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -3784,7 +3784,7 @@ static CYTHON_INLINE int __pyx_f_7pymoode_6cython_5utils_c_get_drop(__Pyx_memvie
 
   /* "pymoode/cython/utils.pxd":16
  * 
- * #Returns elements to remove based on crowding metric d and heap of remaining elements H
+ * # Returns elements to remove based on crowding metric d and heap of remaining elements H
  * cdef inline int c_get_drop(double[:] d, cpp_set[int] H):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -3798,7 +3798,7 @@ static CYTHON_INLINE int __pyx_f_7pymoode_6cython_5utils_c_get_drop(__Pyx_memvie
 
 /* "pymoode/cython/utils.pxd":35
  * 
- * #Returns vector of positions of minimum values along axis 0 of a 2d memoryview
+ * # Returns vector of positions of minimum values along axis 0 of a 2d memoryview
  * cdef inline vector[int] c_get_argmin(double[:, :] X):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -3975,7 +3975,7 @@ static CYTHON_INLINE std::vector<int>  __pyx_f_7pymoode_6cython_5utils_c_get_arg
 
   /* "pymoode/cython/utils.pxd":35
  * 
- * #Returns vector of positions of minimum values along axis 0 of a 2d memoryview
+ * # Returns vector of positions of minimum values along axis 0 of a 2d memoryview
  * cdef inline vector[int] c_get_argmin(double[:, :] X):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -3992,7 +3992,7 @@ static CYTHON_INLINE std::vector<int>  __pyx_f_7pymoode_6cython_5utils_c_get_arg
 
 /* "pymoode/cython/utils.pxd":65
  * 
- * #Returns vector of positions of maximum values along axis 0 of a 2d memoryview
+ * # Returns vector of positions of maximum values along axis 0 of a 2d memoryview
  * cdef inline vector[int] c_get_argmax(double[:, :] X):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -4169,7 +4169,7 @@ static CYTHON_INLINE std::vector<int>  __pyx_f_7pymoode_6cython_5utils_c_get_arg
 
   /* "pymoode/cython/utils.pxd":65
  * 
- * #Returns vector of positions of maximum values along axis 0 of a 2d memoryview
+ * # Returns vector of positions of maximum values along axis 0 of a 2d memoryview
  * cdef inline vector[int] c_get_argmax(double[:, :] X):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -4186,7 +4186,7 @@ static CYTHON_INLINE std::vector<int>  __pyx_f_7pymoode_6cython_5utils_c_get_arg
 
 /* "pymoode/cython/utils.pxd":95
  * 
- * #Performs normalization of a 2d memoryview
+ * # Performs normalization of a 2d memoryview
  * cdef inline double[:, :] c_normalize_array(double[:, :] X, vector[int] extremes_max, vector[int] extremes_min):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -4491,7 +4491,7 @@ static CYTHON_INLINE __Pyx_memviewslice __pyx_f_7pymoode_6cython_5utils_c_normal
 
   /* "pymoode/cython/utils.pxd":95
  * 
- * #Performs normalization of a 2d memoryview
+ * # Performs normalization of a 2d memoryview
  * cdef inline double[:, :] c_normalize_array(double[:, :] X, vector[int] extremes_max, vector[int] extremes_min):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -18656,7 +18656,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
 
   /* "pymoode/cython/pruning_cd.pyx":18
  * 
- * #Python definition
+ * # Python definition
  * def calc_pcd(double[:, :] X, int n_remove=0):             # <<<<<<<<<<<<<<
  * 
  *     cdef:
@@ -19091,7 +19091,7 @@ if (!__Pyx_RefNanny) {
 
   /* "pymoode/cython/pruning_cd.pyx":18
  * 
- * #Python definition
+ * # Python definition
  * def calc_pcd(double[:, :] X, int n_remove=0):             # <<<<<<<<<<<<<<
  * 
  *     cdef:

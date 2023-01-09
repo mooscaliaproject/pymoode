@@ -2,7 +2,7 @@ References
 ==========
 
 
-.. only:: html or text
+.. only:: html
 
 .. bibliography::
     :style: unsrt

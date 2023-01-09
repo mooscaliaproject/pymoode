@@ -12,7 +12,7 @@
 pymoode: Differential Evolution in Python
 =========================================
 
-A Python framework for Differential Evolution using `pymoo <https://pymoo.org/>`_ (Blank & Deb, 2020).
+A Python framework for Differential Evolution using `pymoo <https://pymoo.org/>`_ [:cite:label:`pymoo`].
 
 
 Install
@@ -34,26 +34,51 @@ From the current version on github:
     pip install -e git+https://github.com/mooscalia/pymoode#egg=pymoode
 
 
+New features
+------------
+
+This package was written as an extension of pymoo, providing some additional
+features for DE algorithms and survival operators. One might refer to the sections
+:doc:`Algorithms <algorithms>`, `Survival <Theory/Survival.ipynb>`_ and 
+`Rank and Crowding <Theory/Rank-and-Crowding.ipynb>`_ for more details.
+
+For instance, these solutions for the DTLZ2 problem were obtained using GDE3 with the M-Nearest Neighbors crowding metric.
+
+.. image:: https://github.com/mooscaliaproject/pymoode/raw/main/images/gde3mnn_example.gif
+    :alt: header
+    :align: center
+    :target: https://github.com/mooscaliaproject/pymoode
+
+
 .. toctree::
    :maxdepth: 1
-   :caption: Usage:
+   :caption: Usage
 
-   Usage/Complete tutorial.ipynb
+   Usage/Complete-tutorial.ipynb
    Usage/Single-objective.ipynb
    Usage/Multi-objective.ipynb
    Usage/Many-objective.ipynb
 
 
 .. toctree::
+   :maxdepth: 2
+   :caption: Agorithms
+
+   algorithms
+
+
+.. toctree::
    :maxdepth: 1
-   :caption: Theory:
+   :caption: Theory
 
    Theory/DE.ipynb
+   Theory/Survival.ipynb
+   Theory/Rank-and-Crowding.ipynb
 
 
 .. toctree::
    :maxdepth: 3
-   :caption: Package:
+   :caption: Package
 
    modules
 
@@ -61,8 +86,15 @@ From the current version on github:
 Citation
 ========
 
-This package was developed as part of an academic optimization project, as well as pymoo (Blank & Deb, 2020). Please, if you use it for research purposes, cite it accordingly:
+This package was developed as part of an academic optimization project [:cite:label:`pymoodestyrene`], as well as pymoo [:cite:label:`pymoo`].
+Please, if you use it for research purposes, cite it accordingly:
 
 `Blank, J. & Deb, K., 2020. pymoo: Multi-Objective Optimization in Python. IEEE Access, Volume 8, pp. 89497-89509. doi:10.1109/ACCESS.2020.2990567. <https://doi.org/10.1109/ACCESS.2020.2990567>`_
 
 `Leite, B., Costa, A. O. S., Costa, E. F., 2023. Multi-objective optimization of adiabatic styrene reactors using Generalized Differential Evolution 3 (GDE3). Chem. Eng. Sci., Volume 265, Article 118196. doi:10.1016/j.ces.2022.118196. <https://doi.org/10.1016/j.ces.2022.118196>`_
+
+
+References
+==========
+
+To the complete reference list, please refer to :doc:`this page <references>`. 

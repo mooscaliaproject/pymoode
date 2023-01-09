@@ -2362,13 +2362,13 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
  *     N = X.shape[0]
  *     M = X.shape[1]             # <<<<<<<<<<<<<<
  * 
- *     #Initialize neighbors and distances
+ *     # Initialize neighbors and distances
  */
   __pyx_v_M = (__pyx_v_X.shape[1]);
 
   /* "pymoode/cython/spacing_neighbors.pyx":33
  * 
- *     #Initialize neighbors and distances
+ *     # Initialize neighbors and distances
  *     _D = np.full((N, N), -1.0, dtype=np.double)             # <<<<<<<<<<<<<<
  *     dd = np.full((N,), HUGE_VAL, dtype=np.double)
  * 
@@ -2416,7 +2416,7 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
   __pyx_t_5 = 0;
 
   /* "pymoode/cython/spacing_neighbors.pyx":34
- *     #Initialize neighbors and distances
+ *     # Initialize neighbors and distances
  *     _D = np.full((N, N), -1.0, dtype=np.double)
  *     dd = np.full((N,), HUGE_VAL, dtype=np.double)             # <<<<<<<<<<<<<<
  * 
@@ -2481,7 +2481,7 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
  *     D = _D[:, :]
  *     d = dd[:]             # <<<<<<<<<<<<<<
  * 
- *     #Iterate over items to calculate
+ *     # Iterate over items to calculate
  */
   __pyx_t_1 = __Pyx_PyObject_GetSlice(__pyx_v_dd, 0, 0, NULL, NULL, &__pyx_slice_, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 37, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -2493,10 +2493,10 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
 
   /* "pymoode/cython/spacing_neighbors.pyx":40
  * 
- *     #Iterate over items to calculate
+ *     # Iterate over items to calculate
  *     for i in range(N):             # <<<<<<<<<<<<<<
  * 
- *         #Iterate over elements in X
+ *         # Iterate over elements in X
  */
   __pyx_t_8 = __pyx_v_N;
   __pyx_t_9 = __pyx_t_8;
@@ -2505,10 +2505,10 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
 
     /* "pymoode/cython/spacing_neighbors.pyx":43
  * 
- *         #Iterate over elements in X
+ *         # Iterate over elements in X
  *         for j in range(N):             # <<<<<<<<<<<<<<
  * 
- *             #Calculate distance if elements satisfy rule
+ *             # Calculate distance if elements satisfy rule
  */
     __pyx_t_11 = __pyx_v_N;
     __pyx_t_12 = __pyx_t_11;
@@ -2517,10 +2517,10 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
 
       /* "pymoode/cython/spacing_neighbors.pyx":46
  * 
- *             #Calculate distance if elements satisfy rule
+ *             # Calculate distance if elements satisfy rule
  *             if ((j != i) and (D[i, j] <= d[i])):             # <<<<<<<<<<<<<<
  * 
- *                 #Calculate if different from -1
+ *                 # Calculate if different from -1
  */
       __pyx_t_15 = ((__pyx_v_j != __pyx_v_i) != 0);
       if (__pyx_t_15) {
@@ -2538,10 +2538,10 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
 
         /* "pymoode/cython/spacing_neighbors.pyx":49
  * 
- *                 #Calculate if different from -1
+ *                 # Calculate if different from -1
  *                 if D[i, j] == -1.0:             # <<<<<<<<<<<<<<
  * 
- *                     #Squared distance
+ *                     # Squared distance
  */
         __pyx_t_18 = __pyx_v_i;
         __pyx_t_17 = __pyx_v_j;
@@ -2550,7 +2550,7 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
 
           /* "pymoode/cython/spacing_neighbors.pyx":52
  * 
- *                     #Squared distance
+ *                     # Squared distance
  *                     dij = 0             # <<<<<<<<<<<<<<
  *                     for m in range(M):
  *                         _dijm = X[j, m] - X[i, m]
@@ -2558,7 +2558,7 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
           __pyx_v_dij = 0.0;
 
           /* "pymoode/cython/spacing_neighbors.pyx":53
- *                     #Squared distance
+ *                     # Squared distance
  *                     dij = 0
  *                     for m in range(M):             # <<<<<<<<<<<<<<
  *                         _dijm = X[j, m] - X[i, m]
@@ -2616,7 +2616,7 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
  *                         else:
  *                             dij = dij - _dijm             # <<<<<<<<<<<<<<
  * 
- *                     #Fill values
+ *                     # Fill values
  */
             /*else*/ {
               __pyx_v_dij = (__pyx_v_dij - __pyx_v__dijm);
@@ -2626,7 +2626,7 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
 
           /* "pymoode/cython/spacing_neighbors.pyx":63
  * 
- *                     #Fill values
+ *                     # Fill values
  *                     D[i, j] = dij             # <<<<<<<<<<<<<<
  *                     D[j, i] = D[i, j]
  * 
@@ -2636,7 +2636,7 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
           *((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_D.data + __pyx_t_22 * __pyx_v_D.strides[0]) ) + __pyx_t_16 * __pyx_v_D.strides[1]) )) = __pyx_v_dij;
 
           /* "pymoode/cython/spacing_neighbors.pyx":64
- *                     #Fill values
+ *                     # Fill values
  *                     D[i, j] = dij
  *                     D[j, i] = D[i, j]             # <<<<<<<<<<<<<<
  * 
@@ -2650,10 +2650,10 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
 
           /* "pymoode/cython/spacing_neighbors.pyx":49
  * 
- *                 #Calculate if different from -1
+ *                 # Calculate if different from -1
  *                 if D[i, j] == -1.0:             # <<<<<<<<<<<<<<
  * 
- *                     #Squared distance
+ *                     # Squared distance
  */
           goto __pyx_L10;
         }
@@ -2663,7 +2663,7 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
  *                 else:
  *                     dij = D[i, j]             # <<<<<<<<<<<<<<
  * 
- *                 #Check is any should be replaced
+ *                 # Check is any should be replaced
  */
         /*else*/ {
           __pyx_t_22 = __pyx_v_i;
@@ -2674,7 +2674,7 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
 
         /* "pymoode/cython/spacing_neighbors.pyx":70
  * 
- *                 #Check is any should be replaced
+ *                 # Check is any should be replaced
  *                 if (dij <= d[i]):             # <<<<<<<<<<<<<<
  *                     d[i] = dij
  * 
@@ -2684,7 +2684,7 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
         if (__pyx_t_14) {
 
           /* "pymoode/cython/spacing_neighbors.pyx":71
- *                 #Check is any should be replaced
+ *                 # Check is any should be replaced
  *                 if (dij <= d[i]):
  *                     d[i] = dij             # <<<<<<<<<<<<<<
  * 
@@ -2695,7 +2695,7 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
 
           /* "pymoode/cython/spacing_neighbors.pyx":70
  * 
- *                 #Check is any should be replaced
+ *                 # Check is any should be replaced
  *                 if (dij <= d[i]):             # <<<<<<<<<<<<<<
  *                     d[i] = dij
  * 
@@ -2704,10 +2704,10 @@ static PyObject *__pyx_f_7pymoode_6cython_17spacing_neighbors_c_calc_spacing_dis
 
         /* "pymoode/cython/spacing_neighbors.pyx":46
  * 
- *             #Calculate distance if elements satisfy rule
+ *             # Calculate distance if elements satisfy rule
  *             if ((j != i) and (D[i, j] <= d[i])):             # <<<<<<<<<<<<<<
  * 
- *                 #Calculate if different from -1
+ *                 # Calculate if different from -1
  */
       }
     }
