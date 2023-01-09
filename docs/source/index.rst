@@ -62,7 +62,7 @@ For instance, these solutions for the DTLZ2 problem were obtained using GDE3 wit
 
 .. toctree::
    :maxdepth: 2
-   :caption: Agorithms
+   :caption: Algorithms
 
    algorithms
 
