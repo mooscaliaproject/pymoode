@@ -57,7 +57,7 @@ class SpacingIndicator(Indicator):
         float
             Spacing indicator
         """
-        super().do(F, *args, **kwargs)
+        return super().do(F, *args, **kwargs)
 
     def _do(self, F, *args, **kwargs):
 
