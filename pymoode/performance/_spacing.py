@@ -7,6 +7,7 @@ from scipy.spatial.distance import pdist, squareform
 class SpacingIndicator(Indicator):
 
     def __init__(self,
+                 metric="cityblock",
                  pf=None,
                  zero_to_one=False,
                  ideal=None,
@@ -16,6 +17,9 @@ class SpacingIndicator(Indicator):
         
         Parameters
         ----------
+        metric : str, optional
+            Distance metric parsed to scipy.spatial.distance.pdist, by default "cityblock"
+        
         pf : 2d array, optional
             Pareto front, by default None
         
@@ -37,13 +41,15 @@ class SpacingIndicator(Indicator):
                          zero_to_one=zero_to_one,
                          ideal=ideal,
                          nadir=nadir)
-
-    def _do(self, F, *args, **kwargs):
+        
+        self.metric = metric
+    
+    def do(self, F, *args, **kwargs):
         """Obtain the spacing indicator given a Pareto front
 
         Parameters
         ----------
-        F : numpy.array
+        F : numpy.array (n_samples, n_obj)
             Pareto front
 
         Returns
@@ -51,12 +57,15 @@ class SpacingIndicator(Indicator):
         float
             Spacing indicator
         """
+        super().do(F, *args, **kwargs)
+
+    def _do(self, F, *args, **kwargs):
 
         # Get F dimensions
         n_points, n_obj = F.shape
 
         # knn
-        D = squareform(pdist(F, metric="cityblock"))
+        D = squareform(pdist(F, metric=self.metric))
         d = np.partition(D, 1, axis=1)[:, 1]
         dm = np.mean(d)
 
