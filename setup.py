@@ -5,6 +5,7 @@ import sys
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 
+
 # ---------------------------------------------------------------------------------------------------------
 # BASE CONFIGURATION
 # ---------------------------------------------------------------------------------------------------------
@@ -17,7 +18,7 @@ BASE_PACKAGE = 'pymoode'
 base_kwargs = dict(
     name = 'pymoode',
     packages = [BASE_PACKAGE] + [f"{BASE_PACKAGE}." + e for e in find_packages(where=BASE_PACKAGE)],
-    version = '0.2.5rc1',
+    version = '0.2.5dev4',
     license='Apache License 2.0',
     description = 'A Python optimization package using Differential Evolution.',
     long_description=long_description,

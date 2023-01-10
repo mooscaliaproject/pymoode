@@ -47,6 +47,7 @@ For instance, these solutions for the DTLZ2 problem were obtained using GDE3 wit
 .. image:: https://github.com/mooscaliaproject/pymoode/raw/main/images/gde3mnn_example.gif
     :alt: header
     :align: center
+    :width: 500
     :target: https://github.com/mooscaliaproject/pymoode
 
 
