@@ -52,6 +52,13 @@ For instance, these solutions for the DTLZ2 problem were obtained using GDE3 wit
 
 
 .. toctree::
+   :maxdepth: 2
+   :caption: Algorithms
+
+   algorithms
+
+
+.. toctree::
    :maxdepth: 1
    :caption: Usage
 
@@ -59,13 +66,6 @@ For instance, these solutions for the DTLZ2 problem were obtained using GDE3 wit
    Usage/Single-objective.ipynb
    Usage/Multi-objective.ipynb
    Usage/Many-objective.ipynb
-
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Algorithms
-
-   algorithms
 
 
 .. toctree::
