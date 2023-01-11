@@ -10,4 +10,3 @@ cythonize_files.py
 __pycache__/
 cheat_codes.txt
 notebooks/validate_runtime.ipynb
-notebooks/portfolio.ipynb
