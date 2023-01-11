@@ -1,16 +1,26 @@
+# External
+import numpy as np
+
 # pymoo imports
 from pymoo.operators.sampling.lhs import LHS
+from pymoo.termination.default import DefaultSingleObjectiveTermination, DefaultMultiObjectiveTermination
+from pymoo.util.display.single import SingleObjectiveOutput
+from pymoo.util.display.multi import MultiObjectiveOutput
+from pymoo.util.misc import has_feasible
 
 # pymoode imports
+from pymoode.operators.variant import Variant
+from pymoode.algorithms.base.evolutionary import EvolutionaryAlgorithm
 from pymoode.survival.replacement import ImprovementReplacement
-from pymoode.algorithms.base.differential import DifferentialEvolution
+from pymoode.survival import RankAndCrowding
+from pymoode.operators.dex import _validate_deprecated_repair
 
 
 # =========================================================================================================
 # Implementation
 # =========================================================================================================
 
-class DE(DifferentialEvolution):
+class DifferentialEvolution(EvolutionaryAlgorithm):
 
     def __init__(self,
                  pop_size=100,
@@ -21,12 +31,12 @@ class DE(DifferentialEvolution):
                  gamma=1e-4,
                  de_repair="bounce-back",
                  survival=ImprovementReplacement(),
+                 advance_after_initial_infill=True,
+                 output=SingleObjectiveOutput(),
                  **kwargs):
         """
-        Single-objective Differential Evolution proposed by Storn and Price (1997).
-
-        Storn, R. & Price, K., 1997. Differential evolution-a simple and efficient heuristic for global optimization over continuous spaces. J. Glob. Optim., 11(4), pp. 341-359.
-
+        Base class for Differential Evolution algorithms
+        
         Parameters
         ----------
         pop_size : int, optional
@@ -72,13 +82,74 @@ class DE(DifferentialEvolution):
 
         mutation : Mutation, optional
             Pymoo's mutation operator after crossover. Defaults to NoMutation().
-
+        
         survival : Survival, optional
             Replacement survival operator. Defaults to ImprovementReplacement().
 
         repair : Repair, optional
             Pymoo's repair operator after mutation. Defaults to NoRepair().
         """
+
+        # Reapir old argument
+        de_repair, kwargs["repair"] = _validate_deprecated_repair(de_repair, **kwargs)
+
+        # Mating
+        mating = Variant(
+            variant=variant, CR=CR, F=F, gamma=gamma,
+            de_repair=de_repair, **kwargs,
+        )
+
+        # Number of offsprings at each generation
+        n_offsprings = pop_size
+
+        super().__init__(
+            pop_size=pop_size,
+            sampling=sampling,
+            mating=mating,
+            n_offsprings=n_offsprings,
+            eliminate_duplicates=None,
+            survival=survival,
+            output=output,
+            advance_after_initial_infill=advance_after_initial_infill,
+            **kwargs,
+        )
+        
+        self.termination = DefaultSingleObjectiveTermination()
+
+    def _initialize_advance(self, infills=None, **kwargs):
+        self.pop = self.survival.do(self.problem, infills, None, n_survive=self.pop_size)
+
+    def _infill(self):
+        infills = self.mating(self.problem, self.pop, self.n_offsprings, algorithm=self)
+        return infills
+
+    def _advance(self, infills=None, **kwargs):
+
+        assert infills is not None, "This algorithms uses the AskAndTell interface thus infills must be provided."
+
+        # One-to-one replacement survival
+        self.pop = self.survival.do(self.problem, self.pop, infills)
+    
+    def _set_optimum(self, **kwargs):
+        if not has_feasible(self.pop):
+            self.opt = self.pop[[np.argmin(self.pop.get("CV"))]]
+        else:
+            self.opt = self.pop[self.pop.get("rank") == 0]
+
+
+class MODE(DifferentialEvolution):
+    
+    def __init__(self,
+                 pop_size=100,
+                 sampling=LHS(),
+                 variant="DE/rand/1/bin",
+                 CR=0.5,
+                 F=None,
+                 gamma=0.0001,
+                 de_repair="bounce-back",
+                 survival=RankAndCrowding(),
+                 output=MultiObjectiveOutput(),
+                 **kwargs):
         
         super().__init__(
             pop_size=pop_size,
@@ -89,6 +160,11 @@ class DE(DifferentialEvolution):
             gamma=gamma,
             de_repair=de_repair,
             survival=survival,
+            output=output,
             **kwargs,
         )
-
+        
+        self.termination = DefaultMultiObjectiveTermination()
+    
+    def _initialize_advance(self, infills=None, **kwargs):
+        self.pop = self.survival.do(self.problem, infills, None, n_survive=self.pop_size)

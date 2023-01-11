@@ -1,8 +1,15 @@
+# External
 import numpy as np
-from pymoo.algorithms.moo.nsga2 import calc_crowding_distance as _calc_crowding_distance
-from pymoo.util.misc import find_duplicates
 from scipy.spatial.distance import pdist, squareform
 
+# pymoo imports
+from pymoo.algorithms.moo.nsga2 import calc_crowding_distance as _calc_crowding_distance
+from pymoo.util.misc import find_duplicates
+
+
+# =========================================================================================================
+# Checks compilation
+# =========================================================================================================
 
 try:
     from pymoode.cython.info import info
@@ -12,6 +19,11 @@ try:
         IS_COMPILED = False
 except:
     IS_COMPILED = False
+
+
+# =========================================================================================================
+# pymoode imports and definitions
+# =========================================================================================================
 
 
 # Redefine function to be able to support more kwargs
@@ -68,6 +80,11 @@ def get_crowding_function(label):
     else:
         raise KeyError("Crwoding function not defined")
     return fun
+
+
+# =========================================================================================================
+# Implementation
+# =========================================================================================================
 
 
 class CrowdingDiversity:

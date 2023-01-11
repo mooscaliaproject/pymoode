@@ -1,8 +1,12 @@
 import numpy as np
+from scipy.spatial.distance import pdist, squareform
 from pymoo.core.indicator import Indicator
 from pymoo.indicators.distance_indicator import at_least_2d_array, derive_ideal_and_nadir_from_pf
-from scipy.spatial.distance import pdist, squareform
 
+
+# =========================================================================================================
+# Implementation
+# =========================================================================================================
 
 class SpacingIndicator(Indicator):
 

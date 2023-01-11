@@ -1,6 +1,13 @@
+# External
 import numpy as np
+
+# pymoo imports
 from pymoo.core.survival import Survival
 
+
+# =========================================================================================================
+# Implementation
+# =========================================================================================================
 
 class BaseFitnessSurvival(Survival):
     

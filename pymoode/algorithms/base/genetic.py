@@ -1,5 +1,11 @@
+# pymoo imports
 from pymoode.algorithms.base.evolutionary import EvolutionaryAlgorithm
 from pymoo.core.mating import Mating
+
+
+# =========================================================================================================
+# Implementation
+# =========================================================================================================
 
 class GeneticAlgorithm(EvolutionaryAlgorithm):
     

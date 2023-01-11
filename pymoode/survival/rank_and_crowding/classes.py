@@ -1,11 +1,20 @@
+# External
 import numpy as np
 import warnings
+
+# pymoo imports
 from pymoo.util.randomized_argsort import randomized_argsort
 from pymoo.util.nds.non_dominated_sorting import NonDominatedSorting
 from pymoo.core.survival import Survival, split_by_feasibility
 from pymoo.core.population import Population
+
+# pymoode imports
 from pymoode.survival.rank_and_crowding.metrics import get_crowding_function
 
+
+# =========================================================================================================
+# Implementation
+# =========================================================================================================
 
 class RankAndCrowding(Survival):
 

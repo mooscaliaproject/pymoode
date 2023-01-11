@@ -1,17 +1,19 @@
-from pymoo.algorithms.moo.nsga2 import NSGA2
+# pymoo imports
+from pymoo.core.population import Population
+from pymoo.util.dominator import get_relation
 from pymoo.operators.sampling.lhs import LHS
-from pymoode.algorithms._de import VariantDE
+
+# pymoode imports
+from pymoode.algorithms.base.differential import MODE
 from pymoode.survival import RankAndCrowding
-from pymoode.operators.dex import _validate_deprecated_repair
 
 
 # =========================================================================================================
 # Implementation
 # =========================================================================================================
 
-
-class NSDE(NSGA2):
-
+class NSDE(MODE):
+    
     def __init__(self,
                  pop_size=100,
                  sampling=LHS(),
@@ -84,26 +86,24 @@ class NSDE(NSGA2):
             Defaults to RankAndCrowding() with crowding distances ('cd').
             In GDE3, the survival strategy is applied after a one-to-one comparison between child vector and corresponding parent when both are non-dominated by the other.
         """
+        super().__init__(
+            pop_size=pop_size,
+            sampling=sampling,
+            variant=variant,
+            CR=CR,
+            F=F,
+            gamma=gamma,
+            de_repair=de_repair,
+            survival=survival,
+            **kwargs,
+        )
+        
+    def _advance(self, infills=None, **kwargs):
 
-        # Reapir old argument
-        de_repair, kwargs["repair"] = _validate_deprecated_repair(de_repair, **kwargs)
+        assert infills is not None, "This algorithms uses the AskAndTell interface thus 'infills' must to be provided."
 
-        # Number of offsprings at each generation
-        n_offsprings = pop_size
+        # Merge in mu + lambda style
+        pop = Population.merge(self.pop, infills)
 
-        # Mating
-        mating = VariantDE(variant=variant,
-                           CR=CR,
-                           F=F,
-                           gamma=gamma,
-                           de_repair=de_repair,
-                           **kwargs)
-
-        # Init from pymoo's NSGA2
-        super().__init__(pop_size=pop_size,
-                         sampling=sampling,
-                         mating=mating,
-                         survival=survival,
-                         eliminate_duplicates=None,
-                         n_offsprings=n_offsprings,
-                         **kwargs)
+        # Perform a survival to reduce to pop size
+        self.pop = self.survival.do(self.problem, pop, n_survive=self.n_offsprings)

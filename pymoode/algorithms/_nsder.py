@@ -1,14 +1,17 @@
+# External
 import numpy as np
+
+# pymoo imports
 from pymoo.algorithms.moo.nsga3 import ReferenceDirectionSurvival
-from pymoo.operators.sampling.lhs import LHS
 from pymoo.util.misc import has_feasible
+
+# pymoode imports
 from pymoode.algorithms._nsde import NSDE
-from pymoode.operators.dex import _validate_deprecated_repair
+
 
 # =========================================================================================================
 # Implementation
 # =========================================================================================================
-
 
 class NSDER(NSDE):
 
@@ -99,7 +102,7 @@ class NSDER(NSDE):
             survival = kwargs['survival']
             del kwargs['survival']
         else:
-            survival = ReferenceDirectionSurvival(ref_dirs)
+            survival = DERSurvival(ref_dirs)
 
         super().__init__(pop_size=pop_size,
                          variant=variant,
@@ -116,9 +119,15 @@ class NSDER(NSDE):
                 raise Exception(
                     "Dimensionality of reference points must be equal to the number of objectives: %s != %s" %
                     (self.ref_dirs.shape[1], problem.n_obj))
-
+    
     def _set_optimum(self, **kwargs):
         if not has_feasible(self.pop):
             self.opt = self.pop[[np.argmin(self.pop.get("CV"))]]
         else:
             self.opt = self.survival.opt
+
+
+class DERSurvival(ReferenceDirectionSurvival):
+    
+    def _do(self, problem, pop, *args, n_survive=None, D=None, **kwargs):
+        return super()._do(problem, pop, n_survive, D, **kwargs)

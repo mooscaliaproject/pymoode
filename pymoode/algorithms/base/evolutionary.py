@@ -1,3 +1,4 @@
+# pymoo imports
 from pymoo.core.algorithm import Algorithm
 from pymoo.core.duplicate import DefaultDuplicateElimination, NoDuplicateElimination
 from pymoo.core.initialization import Initialization
@@ -5,6 +6,10 @@ from pymoo.core.infill import InfillCriterion
 from pymoo.core.population import Population
 from pymoo.core.repair import NoRepair
 
+
+# =========================================================================================================
+# Implementation
+# =========================================================================================================
 
 class EvolutionaryAlgorithm(Algorithm):
 

@@ -1,40 +1,33 @@
+# External
+import warnings
+
 # pymoo imports
-from pymoo.operators.sampling.lhs import LHS
+from pymoo.operators.mutation.nom import NoMutation
+from pymoo.core.infill import InfillCriterion
 
 # pymoode imports
-from pymoode.survival.replacement import ImprovementReplacement
-from pymoode.algorithms.base.differential import DifferentialEvolution
+from pymoode.operators.des import DES
+from pymoode.operators.dex import DEX
 
 
 # =========================================================================================================
 # Implementation
 # =========================================================================================================
 
-class DE(DifferentialEvolution):
+class Variant(InfillCriterion):
 
     def __init__(self,
-                 pop_size=100,
-                 sampling=LHS(),
                  variant="DE/rand/1/bin",
                  CR=0.7,
                  F=(0.5, 1.0),
                  gamma=1e-4,
                  de_repair="bounce-back",
-                 survival=ImprovementReplacement(),
+                 mutation=None,
                  **kwargs):
-        """
-        Single-objective Differential Evolution proposed by Storn and Price (1997).
-
-        Storn, R. & Price, K., 1997. Differential evolution-a simple and efficient heuristic for global optimization over continuous spaces. J. Glob. Optim., 11(4), pp. 341-359.
+        """InfillCriterion class for Differential Evolution
 
         Parameters
         ----------
-        pop_size : int, optional
-            Population size. Defaults to 100.
-
-        sampling : Sampling, optional
-            Sampling strategy of pymoo. Defaults to LHS().
-
         variant : str, optional
             Differential evolution strategy. Must be a string in the format: "DE/selection/n/crossover", in which, n in an integer of number of difference vectors, and crossover is either 'bin' or 'exp'. Selection variants are:
 
@@ -72,23 +65,65 @@ class DE(DifferentialEvolution):
 
         mutation : Mutation, optional
             Pymoo's mutation operator after crossover. Defaults to NoMutation().
-
-        survival : Survival, optional
-            Replacement survival operator. Defaults to ImprovementReplacement().
-
+        
         repair : Repair, optional
             Pymoo's repair operator after mutation. Defaults to NoRepair().
         """
-        
-        super().__init__(
-            pop_size=pop_size,
-            sampling=sampling,
-            variant=variant,
-            CR=CR,
-            F=F,
-            gamma=gamma,
-            de_repair=de_repair,
-            survival=survival,
-            **kwargs,
-        )
 
+        # Fix deprecated pm kwargs
+        kwargs, mutation = _fix_deprecated_pm_kwargs(kwargs, mutation)
+
+        # Default initialization of InfillCriterion
+        super().__init__(eliminate_duplicates=None, **kwargs)
+
+        # Parse the information from the string
+        _, selection_variant, n_diff, crossover_variant, = variant.split("/")
+        n_diffs = int(n_diff)
+
+        # When "to" in variant there are more than 1 difference vectors
+        if "-to-" in variant:
+            n_diffs += 1
+
+        # Define parent selection operator
+        self.selection = DES(selection_variant)
+
+        # Default value for F
+        if F is None:
+            F = (0.0, 1.0)
+
+        # Define crossover strategy (DE mutation is included)
+        self.crossover = DEX(variant=crossover_variant,
+                             CR=CR,
+                             F=F,
+                             gamma=gamma,
+                             n_diffs=n_diffs,
+                             at_least_once=True,
+                             de_repair=de_repair)
+
+        # Define posterior mutation strategy and repair
+        self.mutation = mutation if mutation is not None else NoMutation()
+
+    def _do(self, problem, pop, n_offsprings, **kwargs):
+
+        # Select parents including donor vector
+        parents = self.selection(problem, pop, n_offsprings, self.crossover.n_parents, to_pop=True, **kwargs)
+
+        # Perform mutation included in DEX and crossover
+        off = self.crossover(problem, parents, **kwargs)
+
+        # Perform posterior mutation and repair if passed
+        off = self.mutation(problem, off)
+
+        return off
+
+
+def _fix_deprecated_pm_kwargs(kwargs, mutation):
+    if "pm" in kwargs:
+        warnings.warn(
+            "pm is deprecated; use 'mutation' for compatibility purposes with pymoo",
+            DeprecationWarning, 2
+        )
+        if mutation is None:
+            mutation = kwargs["pm"]
+
+    return kwargs, mutation
