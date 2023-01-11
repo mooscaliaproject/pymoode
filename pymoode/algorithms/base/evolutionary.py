@@ -18,6 +18,35 @@ class EvolutionaryAlgorithm(Algorithm):
                  repair=None,
                  advance_after_initial_infill=False,
                  **kwargs):
+        """Base class for Evolutionary Algorithms
+
+        Parameters
+        ----------
+        pop_size : int, optional
+            Population size, by default None
+        
+        sampling : Sampling, optional
+            pymoo Sampling instance, by default None
+        
+        mating : InfillCriterion, optional
+            pymoo mating operator, by default None
+        
+        survival : Survival, optional
+            pymoo survival operator, by default None
+        
+        n_offsprings : int, optional
+            Number of offspring individuals created at each generation, by default None
+        
+        eliminate_duplicates : DuplicateElimination | bool | None, optional
+            Eliminate duplicates in mating, by default True
+        
+        repair : Repair, optional
+            pymoo repair operator. In the algorithm level it should be called when sampling.
+            It is recommended that mating operators also have some repair associated with. By default None
+        
+        advance_after_initial_infill : bool, optional
+            Either or not apply survival after initialization, by default False
+        """
 
         super().__init__(**kwargs)
 
