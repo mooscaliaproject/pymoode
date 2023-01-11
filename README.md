@@ -8,7 +8,7 @@
 
 A Python framework for Differential Evolution using [pymoo](https://github.com/anyoptimization/pymoo) (Blank & Deb, 2020).
 
-You can find the package documentation [here](https://pymoode.readthedocs.io/en/latest/).
+[Read the Docs](https://pymoode.readthedocs.io/en/latest/)
 
 ## Contents
 
@@ -50,7 +50,7 @@ pip install -e git+https://github.com/mooscalia/pymoode#egg=pymoode
 Metrics *'pcd'*, *'mnn'*, and *'2nn'* are recursively recalculated as individuals are removed, to improve the population diversity. Therefore, they are implemented using cython to reduce computational time. If compilation fails, .py files are used instead, which makes it slightly slower.
 
 ## Usage
-For more examples, see the example notebooks [single](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_SOO.ipynb), [multi](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_MULTI.ipynb), [many](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/EXAMPLE_MANY.ipynb) objective problems, and a [complete tutorial](https://github.com/mooscaliaproject/pymoode/blob/main/notebooks/tutorial.ipynb)
+For more examples, [read the docs](https://pymoode.readthedocs.io/en/latest/Usage/index.html)
 
 ```python
 import matplotlib.pyplot as plt
@@ -87,7 +87,7 @@ plt.show()
   <img src="https://github.com/mooscaliaproject/pymoode/raw/main/images/tnk_gde3.png" alt="tnk_gde3"/>
 </p>
 
-Alternatively, on the many-objective problem DTLZ2, it would produce amazing results.
+Alternatively, on the three-objective problem DTLZ2, it would produce amazing results.
 
 ```python
 problem = get_problem("dtlz2")
