@@ -1,20 +1,23 @@
 # External
+import numpy as np
 import warnings
 
 # pymoo imports
 from pymoo.operators.mutation.nom import NoMutation
 from pymoo.core.infill import InfillCriterion
+from pymoo.core.population import Population
 
 # pymoode imports
 from pymoode.operators.des import DES
 from pymoode.operators.dex import DEX
+from pymoode.operators.dem import DEM
 
 
 # =========================================================================================================
 # Implementation
 # =========================================================================================================
 
-class Variant(InfillCriterion):
+class DifferentialVariant(InfillCriterion):
 
     def __init__(self,
                  variant="DE/rand/1/bin",
@@ -22,7 +25,7 @@ class Variant(InfillCriterion):
                  F=(0.5, 1.0),
                  gamma=1e-4,
                  de_repair="bounce-back",
-                 mutation=None,
+                 genetic_mutation=None,
                  **kwargs):
         """InfillCriterion class for Differential Evolution
 
@@ -34,7 +37,6 @@ class Variant(InfillCriterion):
                 - 'ranked'
                 - 'rand'
                 - 'best'
-                - 'current-to-best'
                 - 'current-to-best'
                 - 'current-to-rand'
                 - 'rand-to-best'
@@ -63,15 +65,15 @@ class Variant(InfillCriterion):
             If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
             Defaults to 'bounce-back'.
 
-        mutation : Mutation, optional
-            Pymoo's mutation operator after crossover. Defaults to NoMutation().
+        genetic_mutation : Mutation, optional
+            Pymoo's genetic algorithm's mutation operator after crossover. Defaults to NoMutation().
         
         repair : Repair, optional
             Pymoo's repair operator after mutation. Defaults to NoRepair().
         """
 
         # Fix deprecated pm kwargs
-        kwargs, mutation = _fix_deprecated_pm_kwargs(kwargs, mutation)
+        kwargs, genetic_mutation = _fix_deprecated_pm_kwargs(kwargs, genetic_mutation)
 
         # Default initialization of InfillCriterion
         super().__init__(eliminate_duplicates=None, **kwargs)
@@ -82,48 +84,63 @@ class Variant(InfillCriterion):
 
         # When "to" in variant there are more than 1 difference vectors
         if "-to-" in variant:
-            n_diffs += 1
+            n_diffs =  n_diffs + 1
 
         # Define parent selection operator
         self.selection = DES(selection_variant)
-
-        # Default value for F
-        if F is None:
-            F = (0.0, 1.0)
+        
+        # Define differential evolution mutation
+        self.de_mutation = DEM(F=F, gamma=gamma, de_repair=de_repair, n_diffs=n_diffs)
 
         # Define crossover strategy (DE mutation is included)
-        self.crossover = DEX(variant=crossover_variant,
-                             CR=CR,
-                             F=F,
-                             gamma=gamma,
-                             n_diffs=n_diffs,
-                             at_least_once=True,
-                             de_repair=de_repair)
+        self.crossover = DEX(variant=crossover_variant, CR=CR, at_least_once=True)
 
         # Define posterior mutation strategy and repair
-        self.mutation = mutation if mutation is not None else NoMutation()
+        self.genetic_mutation = genetic_mutation if genetic_mutation is not None else NoMutation()
 
     def _do(self, problem, pop, n_offsprings, **kwargs):
 
         # Select parents including donor vector
-        parents = self.selection(problem, pop, n_offsprings, self.crossover.n_parents, to_pop=True, **kwargs)
+        parents = self.selection(problem, pop, n_offsprings, self.de_mutation.n_parents, to_pop=True, **kwargs)
 
+        # Mutant vectors from DE
+        mutants = self.de_mutation(problem, parents, **kwargs)
+        
         # Perform mutation included in DEX and crossover
-        off = self.crossover(problem, parents, **kwargs)
+        matings = merge_columnwise(pop, mutants)
+        off = self.crossover(problem, matings, **kwargs)
 
         # Perform posterior mutation and repair if passed
-        off = self.mutation(problem, off)
+        off = self.genetic_mutation(problem, off, **kwargs)
 
         return off
 
 
-def _fix_deprecated_pm_kwargs(kwargs, mutation):
+def merge_columnwise(parents, off):
+    
+    n = len(parents)
+    assert n == len(off), "Parents and mutant vectors must have same lenght for DE crossover"
+    
+    pop = Population.merge(parents, off)
+    I = np.arange(2 * n).reshape((2, -1)).T
+    
+    return pop[I]
+
+
+def _fix_deprecated_pm_kwargs(kwargs, genetic_mutation):
     if "pm" in kwargs:
         warnings.warn(
-            "pm is deprecated; use 'mutation' for compatibility purposes with pymoo",
+            "pm is deprecated; use 'genetic_mutation'",
             DeprecationWarning, 2
         )
-        if mutation is None:
-            mutation = kwargs["pm"]
+        if genetic_mutation is None:
+            genetic_mutation = kwargs["pm"]
+    elif "mutation" in kwargs:
+        warnings.warn(
+            "mutation is deprecated; use 'genetic_mutation'",
+            DeprecationWarning, 2
+        )
+        if genetic_mutation is None:
+            genetic_mutation = kwargs["mutation"]
 
-    return kwargs, mutation
+    return kwargs, genetic_mutation

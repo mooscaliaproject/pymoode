@@ -9,11 +9,10 @@ from pymoo.util.display.multi import MultiObjectiveOutput
 from pymoo.util.misc import has_feasible
 
 # pymoode imports
-from pymoode.operators.variant import Variant
+from pymoode.operators.variant import DifferentialVariant
 from pymoode.algorithms.base.evolutionary import EvolutionaryAlgorithm
 from pymoode.survival.replacement import ImprovementReplacement
 from pymoode.survival import RankAndCrowding
-from pymoode.operators.dex import _validate_deprecated_repair
 
 
 # =========================================================================================================
@@ -80,8 +79,8 @@ class DifferentialEvolution(EvolutionaryAlgorithm):
             If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
             Defaults to 'bounce-back'.
 
-        mutation : Mutation, optional
-            Pymoo's mutation operator after crossover. Defaults to NoMutation().
+        genetic_mutation, optional
+            Pymoo's genetic mutation operator after crossover. Defaults to NoMutation().
         
         survival : Survival, optional
             Replacement survival operator. Defaults to ImprovementReplacement().
@@ -90,11 +89,8 @@ class DifferentialEvolution(EvolutionaryAlgorithm):
             Pymoo's repair operator after mutation. Defaults to NoRepair().
         """
 
-        # Reapir old argument
-        de_repair, kwargs["repair"] = _validate_deprecated_repair(de_repair, **kwargs)
-
         # Mating
-        mating = Variant(
+        mating = DifferentialVariant(
             variant=variant, CR=CR, F=F, gamma=gamma,
             de_repair=de_repair, **kwargs,
         )

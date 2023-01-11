@@ -4,7 +4,8 @@ from pymoo.optimize import minimize
 from pymoo.problems import get_problem
 from pymoo.indicators.igd import IGD
 from pymoode.algorithms import GDE3, NSDE
-from pymoode.operators.dex import DEX, DEM
+from pymoode.operators.dex import DEX
+from pymoode.operators.dem import DEM
 from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.operators.mutation.pm import PM
 from pymoode.survival import RankAndCrowding, ConstrRankAndCrowding
@@ -63,7 +64,7 @@ def test_gde3_pm_run():
     SEED = 5
     
     gde3pm = GDE3(pop_size=POPSIZE, variant="DE/rand/1/bin", CR=0.5, F=(0.0, 0.9), de_repair="bounce-back",
-                survival=RankAndCrowding(crowding_func="pcd"), mutation=PM())
+                survival=RankAndCrowding(crowding_func="pcd"), genetic_mutation=PM())
 
     res_gde3pm = minimize(problem,
                           gde3pm,

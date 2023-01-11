@@ -79,8 +79,8 @@ class GDE3(MODE):
             If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
             Defaults to 'bounce-back'.
 
-        mutation : Mutation, optional
-            Pymoo's mutation operator after crossover. Defaults to NoMutation().
+        genetic_mutation, optional
+            Pymoo's genetic mutation operator after crossover. Defaults to NoMutation().
 
         repair : Repair, optional
             Pymoo's repair operator after mutation. Defaults to NoRepair().

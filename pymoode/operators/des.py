@@ -22,7 +22,6 @@ class DES(Selection):
                 - 'rand'
                 - 'best'
                 - 'current-to-best'
-                - 'current-to-best'
                 - 'current-to-rand'
                 - 'rand-to-best'
         """
@@ -50,6 +49,9 @@ class DES(Selection):
 
         elif variant == "current-to-rand":
             P = self._current_to_rand(pop, n_select, n_parents)
+        
+        elif variant == "rand-to-best":
+            P = self._rand_to_best(pop, n_select, n_parents)
 
         else:
             P = self._rand(pop, n_select, n_parents)
@@ -64,18 +66,18 @@ class DES(Selection):
         # Base form
         P = np.empty([n_select, n_parents], dtype=int)
 
-        # Fill first column with corresponding parent
-        P[:, 0] = np.arange(n_pop)
+        # Fill base vector with corresponding parent
+        base = np.arange(n_pop)[:n_select]
 
         # Fill next columns in loop
-        for j in range(1, n_parents):
+        for j in range(n_parents):
 
             P[:, j] = np.random.choice(n_pop, n_select)
-            reselect = (P[:, j].reshape([-1, 1]) == P[:, :j]).any(axis=1)
+            reselect = get_reselect(P, base, j)
 
             while np.any(reselect):
                 P[reselect, j] = np.random.choice(n_pop, reselect.sum())
-                reselect = (P[:, j].reshape([-1, 1]) == P[:, :j]).any(axis=1)
+                reselect = get_reselect(P, base, j)
 
         return P
 
@@ -87,21 +89,21 @@ class DES(Selection):
         # Base form
         P = np.empty([n_select, n_parents], dtype=int)
 
-        # Fill first column with corresponding parent
-        P[:, 0] = np.arange(n_pop)
+        # Fill base vector with corresponding parent
+        base = np.arange(n_pop)[:n_select]
 
         # Fill first column with best candidate
-        P[:, 1] = 0
+        P[:, 0] = 0
 
         # Fill next columns in loop
-        for j in range(2, n_parents):
+        for j in range(1, n_parents):
 
             P[:, j] = np.random.choice(n_pop, n_select)
-            reselect = (P[:, j].reshape([-1, 1]) == P[:, :j]).any(axis=1)
+            reselect = get_reselect(P, base, j)
 
             while np.any(reselect):
                 P[reselect, j] = np.random.choice(n_pop, reselect.sum())
-                reselect = (P[:, j].reshape([-1, 1]) == P[:, :j]).any(axis=1)
+                reselect = get_reselect(P, base, j)
 
         return P
 
@@ -113,27 +115,27 @@ class DES(Selection):
         # Base form
         P = np.empty([n_select, n_parents], dtype=int)
 
-        # Fill first column with corresponding parent
-        P[:, 0] = np.arange(n_pop)
+        # Fill base vector with corresponding parent
+        base = np.arange(n_pop)[:n_select]
 
         # Fill first column with current candidate
-        P[:, 1] = np.arange(n_pop)
+        P[:, 0] = np.arange(n_pop)
 
         # Fill first direction from current
-        P[:, 3] = np.arange(n_pop)
+        P[:, 2] = np.arange(n_pop)
 
         # Towards best
-        P[:, 2] = 0
+        P[:, 1] = 0
 
         # Fill next columns in loop
-        for j in range(4, n_parents):
+        for j in range(3, n_parents):
 
             P[:, j] = np.random.choice(n_pop, n_select)
-            reselect = (P[:, j].reshape([-1, 1]) == P[:, :j]).any(axis=1)
+            reselect = get_reselect(P, base, j)
 
             while np.any(reselect):
                 P[reselect, j] = np.random.choice(n_pop, reselect.sum())
-                reselect = (P[:, j].reshape([-1, 1]) == P[:, :j]).any(axis=1)
+                reselect = get_reselect(P, base, j)
 
         return P
 
@@ -145,33 +147,43 @@ class DES(Selection):
         # Base form
         P = np.empty([n_select, n_parents], dtype=int)
 
-        # Fill first column with corresponding parent
-        P[:, 0] = np.arange(n_pop)
+        # Fill base vector with corresponding parent
+        base = np.arange(n_pop)[:n_select]
 
         # Fill first column with current candidate
-        P[:, 1] = np.arange(n_pop)
+        P[:, 0] = np.arange(n_pop)
 
         # Fill first direction from current
-        P[:, 3] = np.arange(n_pop)
+        P[:, 2] = np.arange(n_pop)
 
         # Towards random
-        P[:, 2] = np.random.choice(n_pop, n_select)
-        reselect = (P[:, 2].reshape([-1, 1]) == P[:, [0, 1, 3]]).any(axis=1)
+        P[:, 1] = np.random.choice(n_pop, n_select)
+        reselect = get_reselect(P, base, 1)
 
         while np.any(reselect):
-            P[reselect, 2] = np.random.choice(n_pop, reselect.sum())
-            reselect = (P[:, 2].reshape([-1, 1]) == P[:, [0, 1, 3]]).any(axis=1)
+            P[reselect, 1] = np.random.choice(n_pop, reselect.sum())
+            reselect = get_reselect(P, base, 1)
 
         # Fill next columns in loop
-        for j in range(4, n_parents):
+        for j in range(3, n_parents):
 
             P[:, j] = np.random.choice(n_pop, n_select)
-            reselect = (P[:, j].reshape([-1, 1]) == P[:, :j]).any(axis=1)
+            reselect = get_reselect(P, base, j)
 
             while np.any(reselect):
                 P[reselect, j] = np.random.choice(n_pop, reselect.sum())
-                reselect = (P[:, j].reshape([-1, 1]) == P[:, :j]).any(axis=1)
+                reselect = get_reselect(P, base, j)
 
+        return P
+    
+    def _rand_to_best(self, pop, n_select, n_parents, **kwargs):
+        
+        PB = self._best(pop, n_select, n_parents, **kwargs)
+        P = PB.copy()
+        
+        P[:, 0] = PB[:, 1]
+        P[:, 1] = PB[:, 0]
+        
         return P
 
     def _ranked(self, pop, n_select, n_parents, **kwargs):
@@ -180,6 +192,10 @@ class DES(Selection):
         P[:, 1:] = rank_sort(P[:, 1:], pop)
 
         return P
+
+
+def get_reselect(P, base, j):
+    return (P[:, j] == base) | (P[:, j].reshape([-1, 1]) == P[:, :j]).any(axis=1)
 
 
 def ranks_from_cv(pop):
