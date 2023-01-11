@@ -6,7 +6,7 @@ from pymoo.algorithms.moo.nsga3 import ReferenceDirectionSurvival
 from pymoo.util.misc import has_feasible
 
 # pymoode imports
-from pymoode.algorithms._nsde import NSDE
+from pymoode.algorithms.nsde import NSDE
 
 
 # =========================================================================================================
