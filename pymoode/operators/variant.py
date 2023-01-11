@@ -101,30 +101,33 @@ class DifferentialVariant(InfillCriterion):
     def _do(self, problem, pop, n_offsprings, **kwargs):
 
         # Select parents including donor vector
-        parents = self.selection(problem, pop, n_offsprings, self.de_mutation.n_parents, to_pop=True, **kwargs)
+        parents = self.selection(
+            problem, pop,
+            n_offsprings, self.n_parents,
+            to_pop=False, **kwargs,
+        )
 
         # Mutant vectors from DE
-        mutants = self.de_mutation(problem, parents, **kwargs)
+        mutants = self.de_mutation(problem, pop, parents, **kwargs)
         
-        # Perform mutation included in DEX and crossover
-        matings = merge_columnwise(pop, mutants)
-        off = self.crossover(problem, matings, **kwargs)
+        # Crossover between mutant vector and target
+        matings = self.merge_columnwise(pop, mutants)
+        trials = self.crossover(problem, matings, **kwargs)
 
         # Perform posterior mutation and repair if passed
-        off = self.genetic_mutation(problem, off, **kwargs)
+        off = self.genetic_mutation(problem, trials, **kwargs)
 
         return off
+    
+    @property
+    def n_parents(self):
+        return self.de_mutation.n_parents
+    
+    @staticmethod
+    def merge_columnwise(*populations):
+        matings = np.column_stack(populations).view(Population)
+        return matings
 
-
-def merge_columnwise(parents, off):
-    
-    n = len(parents)
-    assert n == len(off), "Parents and mutant vectors must have same lenght for DE crossover"
-    
-    pop = Population.merge(parents, off)
-    I = np.arange(2 * n).reshape((2, -1)).T
-    
-    return pop[I]
 
 
 def _fix_deprecated_pm_kwargs(kwargs, genetic_mutation):
