@@ -1,4 +1,8 @@
+# External
 import numpy as np
+import warnings
+
+# pymoo imports
 from pymoo.core.selection import Selection
 
 
@@ -33,27 +37,30 @@ class DES(Selection):
 
         # Obtain number of elements in population
         n_pop = len(pop)
+        if n_pop != n_select:
+            _warn_n_select()
 
-        # For most variants n_select must be equal to len(pop)
-        variant = self.variant
-
-        if variant == "ranked":
+        if self.variant == "ranked":
             """Proposed by Zhang et al. (2021). doi.org/10.1016/j.asoc.2021.107317"""
             P = self._ranked(pop, n_select, n_parents)
 
-        elif variant == "best":
+        elif self.variant == "best":
             P = self._best(pop, n_select, n_parents)
 
-        elif variant == "current-to-best":
+        elif self.variant == "current-to-best":
             P = self._current_to_best(pop, n_select, n_parents)
 
-        elif variant == "current-to-rand":
+        elif self.variant == "current-to-rand":
             P = self._current_to_rand(pop, n_select, n_parents)
         
-        elif variant == "rand-to-best":
+        elif self.variant == "rand-to-best":
             P = self._rand_to_best(pop, n_select, n_parents)
 
+        elif self.variant == "rand":
+            P = self._rand(pop, n_select, n_parents)
+            
         else:
+            _warn_variant()
             P = self._rand(pop, n_select, n_parents)
 
         return P
@@ -66,18 +73,18 @@ class DES(Selection):
         # Base form
         P = np.empty([n_select, n_parents], dtype=int)
 
-        # Fill base vector with corresponding parent
-        base = np.arange(n_pop)[:n_select]
+        # Fill target vector with corresponding parent
+        target = np.arange(n_pop)[:n_select]
 
         # Fill next columns in loop
         for j in range(n_parents):
 
             P[:, j] = np.random.choice(n_pop, n_select)
-            reselect = get_reselect(P, base, j)
+            reselect = get_reselect(P, target, j)
 
             while np.any(reselect):
                 P[reselect, j] = np.random.choice(n_pop, reselect.sum())
-                reselect = get_reselect(P, base, j)
+                reselect = get_reselect(P, target, j)
 
         return P
 
@@ -89,8 +96,8 @@ class DES(Selection):
         # Base form
         P = np.empty([n_select, n_parents], dtype=int)
 
-        # Fill base vector with corresponding parent
-        base = np.arange(n_pop)[:n_select]
+        # Fill target vector with corresponding parent
+        target = np.arange(n_pop)[:n_select]
 
         # Fill first column with best candidate
         P[:, 0] = 0
@@ -99,11 +106,11 @@ class DES(Selection):
         for j in range(1, n_parents):
 
             P[:, j] = np.random.choice(n_pop, n_select)
-            reselect = get_reselect(P, base, j)
+            reselect = get_reselect(P, target, j)
 
             while np.any(reselect):
                 P[reselect, j] = np.random.choice(n_pop, reselect.sum())
-                reselect = get_reselect(P, base, j)
+                reselect = get_reselect(P, target, j)
 
         return P
 
@@ -115,8 +122,8 @@ class DES(Selection):
         # Base form
         P = np.empty([n_select, n_parents], dtype=int)
 
-        # Fill base vector with corresponding parent
-        base = np.arange(n_pop)[:n_select]
+        # Fill target vector with corresponding parent
+        target = np.arange(n_pop)[:n_select]
 
         # Fill first column with current candidate
         P[:, 0] = np.arange(n_pop)
@@ -131,11 +138,11 @@ class DES(Selection):
         for j in range(3, n_parents):
 
             P[:, j] = np.random.choice(n_pop, n_select)
-            reselect = get_reselect(P, base, j)
+            reselect = get_reselect(P, target, j)
 
             while np.any(reselect):
                 P[reselect, j] = np.random.choice(n_pop, reselect.sum())
-                reselect = get_reselect(P, base, j)
+                reselect = get_reselect(P, target, j)
 
         return P
 
@@ -147,8 +154,8 @@ class DES(Selection):
         # Base form
         P = np.empty([n_select, n_parents], dtype=int)
 
-        # Fill base vector with corresponding parent
-        base = np.arange(n_pop)[:n_select]
+        # Fill target vector with corresponding parent
+        target = np.arange(n_pop)[:n_select]
 
         # Fill first column with current candidate
         P[:, 0] = np.arange(n_pop)
@@ -158,21 +165,21 @@ class DES(Selection):
 
         # Towards random
         P[:, 1] = np.random.choice(n_pop, n_select)
-        reselect = get_reselect(P, base, 1)
+        reselect = get_reselect(P, target, 1)
 
         while np.any(reselect):
             P[reselect, 1] = np.random.choice(n_pop, reselect.sum())
-            reselect = get_reselect(P, base, 1)
+            reselect = get_reselect(P, target, 1)
 
         # Fill next columns in loop
         for j in range(3, n_parents):
 
             P[:, j] = np.random.choice(n_pop, n_select)
-            reselect = get_reselect(P, base, j)
+            reselect = get_reselect(P, target, j)
 
             while np.any(reselect):
                 P[reselect, j] = np.random.choice(n_pop, reselect.sum())
-                reselect = get_reselect(P, base, j)
+                reselect = get_reselect(P, target, j)
 
         return P
     
@@ -194,8 +201,22 @@ class DES(Selection):
         return P
 
 
-def get_reselect(P, base, j):
-    return (P[:, j] == base) | (P[:, j].reshape([-1, 1]) == P[:, :j]).any(axis=1)
+def _warn_n_select():
+    warnings.warn(
+        "DE parent selection is supposed to work with n_select as the population size",
+        UserWarning
+    )
+
+
+def _warn_variant():
+    warnings.warn(
+        "Unknown selection variant; using 'rand' instead",
+        UserWarning
+    )
+
+
+def get_reselect(P, target, j):
+    return (P[:, j] == target) | (P[:, j].reshape([-1, 1]) == P[:, :j]).any(axis=1)
 
 
 def ranks_from_cv(pop):
