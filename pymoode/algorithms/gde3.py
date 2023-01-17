@@ -1,6 +1,10 @@
-from pymoode.algorithms._nsde import NSDE
+# pymoo imports
 from pymoo.core.population import Population
 from pymoo.util.dominator import get_relation
+from pymoo.operators.sampling.lhs import LHS
+
+# pymoode imports
+from pymoode.algorithms.base.differential import MODE
 from pymoode.survival import RankAndCrowding
 
 
@@ -8,15 +12,17 @@ from pymoode.survival import RankAndCrowding
 # Implementation
 # =========================================================================================================
 
-
-class GDE3(NSDE):
-
+class GDE3(MODE):
+    
     def __init__(self,
                  pop_size=100,
+                 sampling=LHS(),
                  variant="DE/rand/1/bin",
                  CR=0.5,
                  F=None,
                  gamma=1e-4,
+                 de_repair="bounce-back",
+                 survival=RankAndCrowding(),
                  **kwargs):
         """
         GDE3 is an extension of DE to multi-objective problems using a mixed type survival strategy.
@@ -73,8 +79,8 @@ class GDE3(NSDE):
             If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
             Defaults to 'bounce-back'.
 
-        mutation : Mutation, optional
-            Pymoo's mutation operator after crossover. Defaults to NoMutation().
+        genetic_mutation, optional
+            Pymoo's genetic mutation operator after crossover. Defaults to NoMutation().
 
         repair : Repair, optional
             Pymoo's repair operator after mutation. Defaults to NoRepair().
@@ -84,13 +90,18 @@ class GDE3(NSDE):
             Defaults to RankAndCrowding() with crowding distances ('cd').
             In GDE3, the survival strategy is applied after a one-to-one comparison between child vector and corresponding parent when both are non-dominated by the other.
         """
-
-        super().__init__(pop_size=pop_size,
-                         variant=variant,
-                         CR=CR,
-                         F=F,
-                         gamma=gamma,
-                         **kwargs)
+        
+        super().__init__(
+            pop_size=pop_size,
+            sampling=sampling,
+            variant=variant,
+            CR=CR,
+            F=F,
+            gamma=gamma,
+            de_repair=de_repair,
+            survival=survival,
+            **kwargs,
+        )
 
     def _advance(self, infills=None, **kwargs):
 

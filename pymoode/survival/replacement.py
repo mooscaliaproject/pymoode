@@ -1,11 +1,19 @@
+# External
 import numpy as np
 
+# pymoo imports
 from pymoo.core.duplicate import DefaultDuplicateElimination
 from pymoo.core.individual import Individual
 from pymoo.core.population import Population
 from pymoo.core.survival import Survival
+
+# pymoode imports
 from pymoode.survival.fitness import FitnessSurvival
 
+
+# =========================================================================================================
+# Implementation
+# =========================================================================================================
 
 def is_better(_new, _old, eps=0.0):
     both_infeasible = not _old.feasible[0] and not _new.feasible[0]

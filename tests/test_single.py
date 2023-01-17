@@ -54,7 +54,7 @@ def test_de_pm_run():
                       save_history=False,
                       verbose=False)
     
-    depm = DE(pop_size=POPSIZE, variant=f"DE/rand/1/bin", CR=CR, F=F, mutation=PM())
+    depm = DE(pop_size=POPSIZE, variant=f"DE/rand/1/bin", CR=CR, F=F, genetic_mutation=PM())
 
     res_pm = minimize(problem,
                       depm,

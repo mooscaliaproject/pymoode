@@ -18,7 +18,7 @@ BASE_PACKAGE = 'pymoode'
 base_kwargs = dict(
     name = 'pymoode',
     packages = [BASE_PACKAGE] + [f"{BASE_PACKAGE}." + e for e in find_packages(where=BASE_PACKAGE)],
-    version = '0.2.6',
+    version = '0.3.0rc1',
     license='Apache License 2.0',
     description = 'A Python optimization package using Differential Evolution.',
     long_description=long_description,
@@ -28,16 +28,17 @@ base_kwargs = dict(
     url = 'https://github.com/mooscaliaproject/pymoode',
     download_url = 'https://github.com/mooscaliaproject/pymoode',
     keywords = [
+            'Differential Evolution',
             'Multi-objective optimization',
             'GDE3',
             'NSDE',
             'NSDE-R',
             'NSGA-II',
-            'Differential Evolution',
             'Genetic Algorithm',
             'Crowding Distances',
             'Evolutionary Algorithms',
             'Evolutionary Optimization',
+            'Metaheuristics',
         ],
     install_requires=[
             'numpy>=1.19.*',
