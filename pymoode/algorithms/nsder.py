@@ -1,14 +1,17 @@
+# External
 import numpy as np
+
+# pymoo imports
 from pymoo.algorithms.moo.nsga3 import ReferenceDirectionSurvival
-from pymoo.operators.sampling.lhs import LHS
 from pymoo.util.misc import has_feasible
-from pymoode.algorithms._nsde import NSDE
-from pymoode.operators.dex import _validate_deprecated_repair
+
+# pymoode imports
+from pymoode.algorithms.nsde import NSDE
+
 
 # =========================================================================================================
 # Implementation
 # =========================================================================================================
-
 
 class NSDER(NSDE):
 
@@ -71,8 +74,8 @@ class NSDER(NSDE):
             If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
             Defaults to 'bounce-back'.
 
-        mutation : Mutation, optional
-            Pymoo's mutation operator after crossover. Defaults to NoMutation().
+        genetic_mutation, optional
+            Pymoo's genetic mutation operator after crossover. Defaults to NoMutation().
 
         repair : Repair, optional
             Pymoo's repair operator after mutation. Defaults to NoRepair().
@@ -99,7 +102,7 @@ class NSDER(NSDE):
             survival = kwargs['survival']
             del kwargs['survival']
         else:
-            survival = ReferenceDirectionSurvival(ref_dirs)
+            survival = DERSurvival(ref_dirs)
 
         super().__init__(pop_size=pop_size,
                          variant=variant,
@@ -116,9 +119,15 @@ class NSDER(NSDE):
                 raise Exception(
                     "Dimensionality of reference points must be equal to the number of objectives: %s != %s" %
                     (self.ref_dirs.shape[1], problem.n_obj))
-
+    
     def _set_optimum(self, **kwargs):
         if not has_feasible(self.pop):
             self.opt = self.pop[[np.argmin(self.pop.get("CV"))]]
         else:
             self.opt = self.survival.opt
+
+
+class DERSurvival(ReferenceDirectionSurvival):
+    
+    def _do(self, problem, pop, *args, n_survive=None, D=None, **kwargs):
+        return super()._do(problem, pop, n_survive, D, **kwargs)

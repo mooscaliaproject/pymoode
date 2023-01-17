@@ -12,7 +12,7 @@ A Python framework for Differential Evolution using [pymoo](https://github.com/a
 
 ## Contents
 
-[Install](#install) / [Algorithms](#algorithms) / [Survival Operators](#survival-operators) / [Crowding Metrics](#crowding-metrics) / [Usage](#usage) / [Structure](#structure) / [Citation](#citation) / [References](#references) / [Contact](#contact) / [Acknowledgements](#acknowledgements)
+[Install](#install) | [Algorithms](#algorithms) | [Survival Operators](#survival-operators) | [Crowding Metrics](#crowding-metrics) | [Usage](#usage) | [Structure](#structure) | [Citation](#citation) | [References](#references) | [Contact](#contact) | [Acknowledgements](#acknowledgements)
 
 ## Install
 
@@ -84,7 +84,10 @@ plt.show()
 ```
 
 <p align="center">
-  <img src="https://github.com/mooscaliaproject/pymoode/raw/main/images/tnk_gde3.png" alt="tnk_gde3"/>
+  <img
+    src="https://github.com/mooscaliaproject/pymoode/raw/main/images/tnk_gde3.png"
+    alt="tnk_gde3" width=500
+  />
 </p>
 
 Alternatively, on the three-objective problem DTLZ2, it would produce amazing results.
@@ -103,7 +106,10 @@ res = minimize(problem, gde3mnn, ('n_gen', 250), seed=12)
 ```
 
 <p align="center">
-  <img src="https://github.com/mooscaliaproject/pymoode/raw/main/images/gde3mnn_example.gif" alt="gde3_dtlz2"/>
+  <img
+    src="https://github.com/mooscaliaproject/pymoode/raw/main/images/gde3mnn_example.gif"
+    alt="gde3_dtlz2" width=500
+  />
 </p>
 
 ## Structure

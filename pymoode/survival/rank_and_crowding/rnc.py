@@ -1,11 +1,20 @@
+# External
 import numpy as np
 import warnings
+
+# pymoo imports
 from pymoo.util.randomized_argsort import randomized_argsort
 from pymoo.util.nds.non_dominated_sorting import NonDominatedSorting
 from pymoo.core.survival import Survival, split_by_feasibility
 from pymoo.core.population import Population
+
+# pymoode imports
 from pymoode.survival.rank_and_crowding.metrics import get_crowding_function
 
+
+# =========================================================================================================
+# Implementation
+# =========================================================================================================
 
 class RankAndCrowding(Survival):
 
@@ -58,7 +67,12 @@ class RankAndCrowding(Survival):
         self.nds = nds if nds is not None else NonDominatedSorting()
         self.crowding_func = crowding_func_
 
-    def _do(self, problem, pop, *args, n_survive=None, **kwargs):
+    def _do(self,
+            problem,
+            pop,
+            *args,
+            n_survive=None,
+            **kwargs):
 
         # get the objective space values and objects
         F = pop.get("F").astype(float, copy=False)
@@ -70,9 +84,11 @@ class RankAndCrowding(Survival):
         fronts = self.nds.do(F, n_stop_if_ranked=n_survive)
 
         for k, front in enumerate(fronts):
+            
+            I = np.arange(len(front))
 
             # current front sorted by crowding distance if splitting
-            while len(survivors) + len(front) > n_survive:
+            if len(survivors) + len(I) > n_survive:
 
                 # Define how many will be removed
                 n_remove = len(survivors) + len(front) - n_survive
@@ -85,9 +101,7 @@ class RankAndCrowding(Survival):
                     )
 
                 I = randomized_argsort(crowding_of_front, order='descending', method='numpy')
-
                 I = I[:-n_remove]
-                front = front[I]
 
             # otherwise take the whole front unsorted
             else:
@@ -104,7 +118,7 @@ class RankAndCrowding(Survival):
                 pop[i].set("crowding", crowding_of_front[j])
 
             # extend the survivors by all or selected individuals
-            survivors.extend(front)
+            survivors.extend(front[I])
 
         return pop[survivors]
 
@@ -180,9 +194,12 @@ class ConstrRankAndCrowding(Survival):
                 # Constraints to new ranking
                 G = pop[infeas].get("G")
                 G = np.maximum(G, 0)
+                H = pop[infeas].get("H")
+                H = np.absolute(H)
+                C = np.column_stack((G, H))
 
                 # Fronts in infeasible population
-                infeas_fronts = self.nds.do(G, n_stop_if_ranked=n_remaining)
+                infeas_fronts = self.nds.do(C, n_stop_if_ranked=n_remaining)
 
                 # Iterate over fronts
                 for k, front in enumerate(infeas_fronts):

@@ -1,5 +1,11 @@
+# pymoo imports
 from pymoode.algorithms.base.evolutionary import EvolutionaryAlgorithm
 from pymoo.core.mating import Mating
+
+
+# =========================================================================================================
+# Implementation
+# =========================================================================================================
 
 class GeneticAlgorithm(EvolutionaryAlgorithm):
     
@@ -31,7 +37,7 @@ class GeneticAlgorithm(EvolutionaryAlgorithm):
         crossover : Crossover, optional
             pymoo crossover operator, by default None
         
-        mutation : Mutation, optional
+        genetic_mutation, optional
             pymoo mutation operator, by default None
         
         survival : Survival, optional
