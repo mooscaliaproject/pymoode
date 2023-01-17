@@ -194,9 +194,12 @@ class ConstrRankAndCrowding(Survival):
                 # Constraints to new ranking
                 G = pop[infeas].get("G")
                 G = np.maximum(G, 0)
+                H = pop[infeas].get("H")
+                H = np.absolute(H)
+                C = np.column_stack((G, H))
 
                 # Fronts in infeasible population
-                infeas_fronts = self.nds.do(G, n_stop_if_ranked=n_remaining)
+                infeas_fronts = self.nds.do(C, n_stop_if_ranked=n_remaining)
 
                 # Iterate over fronts
                 for k, front in enumerate(infeas_fronts):

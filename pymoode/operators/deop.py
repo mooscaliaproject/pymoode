@@ -1,13 +1,13 @@
 import numpy as np
 from abc import abstractmethod
-from pymoo.core.operator import Operator
+from pymoo.core.crossover import Crossover
 
 
 # =========================================================================================================
 # Implementation
 # =========================================================================================================
 
-class DifferentialOperator(Operator):
+class DifferentialOperator(Crossover):
 
     def __init__(self, n_parents=None, **kwargs):
         """White label for differential evolution operators
@@ -18,11 +18,8 @@ class DifferentialOperator(Operator):
             Number of parents necessary in its operations. Useful for compatibility with pymoo.
         """
         # __init__ operator
-        super().__init__(**kwargs)
-        
-        # pymoo crossover basic structure
-        self.n_parents = n_parents
-        self.n_offsprings = 1
+        super().__init__(n_parents=n_parents, n_offsprings=1, prob=1.0, **kwargs)
+
     
     @staticmethod
     def default_prepare(pop, parents):
