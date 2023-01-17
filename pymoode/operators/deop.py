@@ -1,7 +1,6 @@
 import numpy as np
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from pymoo.core.operator import Operator
-from pymoo.core.population import Population
 
 
 # =========================================================================================================

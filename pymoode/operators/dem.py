@@ -3,7 +3,6 @@ import numpy as np
 from abc import abstractmethod
 
 # pymoo imports
-from pymoo.core.operator import Operator
 from pymoo.core.population import Population
 
 # pymoode imports
