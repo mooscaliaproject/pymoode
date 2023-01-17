@@ -127,9 +127,10 @@ pymoode
 ├───performance
 │   └───SpacingIndicator
 └───operators
-    ├───dex.py
-    │   ├───DEX
+    ├───dem.py
     │   └───DEM
+    ├───dex.py
+    │   └───DEX
     └───des.py
         └───DES
 ```
