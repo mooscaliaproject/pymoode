@@ -41,9 +41,9 @@ base_kwargs = dict(
             'Metaheuristics',
         ],
     install_requires=[
-            'numpy>=1.19.*',
+            'numpy>=1.19.0',
             'pymoo==0.6.*',
-            'scipy>=1.7.*',
+            'scipy>=1.7.0',
             'future',
         ],
 )

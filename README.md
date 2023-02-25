@@ -25,7 +25,7 @@ pip install pymoode
 
 From the current version on github:
 ```
-pip install -e git+https://github.com/mooscalia/pymoode#egg=pymoode
+pip install git+https://github.com/mooscalia/pymoode
 ```
 
 ## Algorithms
