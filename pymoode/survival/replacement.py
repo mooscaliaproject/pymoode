@@ -6,9 +6,7 @@ from pymoo.core.duplicate import DefaultDuplicateElimination
 from pymoo.core.individual import Individual
 from pymoo.core.population import Population
 from pymoo.core.survival import Survival
-
-# pymoode imports
-from pymoode.survival.fitness import FitnessSurvival
+from pymoo.algorithms.soo.nonconvex.ga import FitnessSurvival
 
 
 # =========================================================================================================
@@ -131,7 +129,7 @@ class ImprovementReplacement(BaseReplacement):
         Population
             Population that proceeds into the next generation
         """
-        return super().do(problem, pop, off, return_indices=False, inplace=False, **kwargs)
+        return super().do(problem, pop, off, return_indices=return_indices, inplace=inplace, **kwargs)
 
     def _do(self, problem, pop, off, **kwargs):
 
