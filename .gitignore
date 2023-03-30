@@ -1,7 +1,8 @@
 build
 dist
+dist.*
 experimental
-pymoode.egg-info
+*.egg-info
 /venv
 */venv
 cythonize_files.py
