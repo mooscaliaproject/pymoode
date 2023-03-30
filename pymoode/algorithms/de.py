@@ -1,6 +1,3 @@
-# pymoo imports
-from pymoo.operators.sampling.lhs import LHS
-
 # pymoode imports
 from pymoode.survival.replacement import ImprovementReplacement
 from pymoode.algorithms.base.differential import DifferentialEvolution
@@ -14,7 +11,6 @@ class DE(DifferentialEvolution):
 
     def __init__(self,
                  pop_size=100,
-                 sampling=LHS(),
                  variant="DE/rand/1/bin",
                  CR=0.7,
                  F=(0.5, 1.0),
@@ -31,9 +27,6 @@ class DE(DifferentialEvolution):
         ----------
         pop_size : int, optional
             Population size. Defaults to 100.
-
-        sampling : Sampling, optional
-            Sampling strategy of pymoo. Defaults to LHS().
 
         variant : str, optional
             Differential evolution strategy. Must be a string in the format: "DE/selection/n/crossover", in which, n in an integer of number of difference vectors, and crossover is either 'bin' or 'exp'. Selection variants are:
@@ -82,7 +75,6 @@ class DE(DifferentialEvolution):
         
         super().__init__(
             pop_size=pop_size,
-            sampling=sampling,
             variant=variant,
             CR=CR,
             F=F,

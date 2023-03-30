@@ -20,7 +20,6 @@ class DifferentialOperator(Crossover):
         # __init__ operator
         super().__init__(n_parents=n_parents, n_offsprings=1, prob=1.0, **kwargs)
 
-    
     @staticmethod
     def default_prepare(pop, parents):
         """Utility function that converts population and parents from pymoo Selection to pop and X
@@ -29,7 +28,7 @@ class DifferentialOperator(Crossover):
         ----------
         pop : Population
             pymoo population
-        
+
         parents : Population | np.array (n_samples, n_parents) | None
             Parent population or indices
 
@@ -49,7 +48,7 @@ class DifferentialOperator(Crossover):
     @abstractmethod
     def do(self, problem, pop, parents=None, **kwargs):
         pass
-    
+
     @abstractmethod
     def _do(self, problem, X, **kwargs):
         pass

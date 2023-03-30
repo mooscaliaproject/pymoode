@@ -17,7 +17,7 @@ try:
         IS_COMPILED = True
     else:
         IS_COMPILED = False
-except:
+except Exception:
     IS_COMPILED = False
 
 
@@ -88,20 +88,50 @@ def get_crowding_function(label):
 
 
 class CrowdingDiversity:
+    
+    def __init__(self, *args, **kwargs) -> None:
+        """Instantiates an operator that calculates crowding metrics given an array of objectives F
+        """
+        pass
 
-    def do(self, F, n_remove=0):
+    def do(self, F, n_remove=0, **kwargs):
+        """Returns a crowding metric defined in the method of signature ``_do(F, n_remove=None, **kwargs)``
+
+        Parameters
+        ----------
+        F : _type_
+            _description_
+        n_remove : int, optional
+            _description_, by default 0
+
+        Returns
+        -------
+        _type_
+            _description_
+        """
         # Converting types Python int to Cython int would fail in some cases converting to long instead
         n_remove = np.intc(n_remove)
         F = np.array(F, dtype=np.double)
-        return self._do(F, n_remove=n_remove)
+        return self._do(F, n_remove=n_remove, **kwargs)
 
-    def _do(self, F, n_remove=None):
+    def _do(self, F, n_remove=None, **kwargs):
         pass
 
 
 class FunctionalDiversity(CrowdingDiversity):
 
     def __init__(self, function=None, filter_out_duplicates=True):
+        """Operator to evaluate crowding metrics with useful strategies of filtering out duplicates
+
+        Parameters
+        ----------
+        function : Callable, optional
+            Function in the format ``func(F, n_remove=None, **kwargs)``
+            that should return crowding metrics. By default None
+        
+        filter_out_duplicates : bool, optional
+            Either of not to filter out duplicates before calculating crowding metrics, by default True
+        """
         self.function = function
         self.filter_out_duplicates = filter_out_duplicates
         super().__init__()
@@ -146,7 +176,7 @@ class FuncionalDiversityMNN(FunctionalDiversity):
             return super()._do(F, **kwargs)
 
 
-def calc_crowding_entropy(F, filter_out_duplicates=True, **kwargs):
+def calc_crowding_entropy(F, **kwargs):
     """Wang, Y.-N., Wu, L.-H. & Yuan, X.-F., 2010. Multi-objective self-adaptive differential 
     evolution with elitist archive and crowding entropy-based diversity measure. 
     Soft Comput., 14(3), pp. 193-209.
@@ -155,9 +185,6 @@ def calc_crowding_entropy(F, filter_out_duplicates=True, **kwargs):
     ----------
     F : 2d array like
         Objective functions.
-
-    filter_out_duplicates : bool, optional
-        Defaults to True.
 
     Returns
     -------

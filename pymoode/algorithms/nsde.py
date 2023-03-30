@@ -1,6 +1,5 @@
 # pymoo imports
 from pymoo.core.population import Population
-from pymoo.operators.sampling.lhs import LHS
 
 # pymoode imports
 from pymoode.algorithms.base.differential import MODE
@@ -15,7 +14,6 @@ class NSDE(MODE):
     
     def __init__(self,
                  pop_size=100,
-                 sampling=LHS(),
                  variant="DE/rand/1/bin",
                  CR=0.7,
                  F=None,
@@ -87,7 +85,6 @@ class NSDE(MODE):
         """
         super().__init__(
             pop_size=pop_size,
-            sampling=sampling,
             variant=variant,
             CR=CR,
             F=F,

@@ -1,6 +1,7 @@
 # pymoo imports
 from pymoode.algorithms.base.evolutionary import EvolutionaryAlgorithm
 from pymoo.core.mating import Mating
+from pymoo.core.duplicate import DefaultDuplicateElimination, NoDuplicateElimination
 
 
 # =========================================================================================================
@@ -56,10 +57,19 @@ class GeneticAlgorithm(EvolutionaryAlgorithm):
             Either or not apply survival after initialization, by default False
         """
         
+        # set the duplicate detection class - a boolean value chooses the default duplicate detection
+        if isinstance(eliminate_duplicates, bool):
+            if eliminate_duplicates:
+                eliminate_duplicates = DefaultDuplicateElimination()
+            else:
+                eliminate_duplicates = NoDuplicateElimination()
+        
+        # Mating operator of genetic algorithms
         mating = Mating(selection, crossover, mutation,
                         repair=repair,
                         eliminate_duplicates=eliminate_duplicates)
         
+        # Instantiate generic evolutionary algorithm
         super().__init__(
             pop_size=pop_size,
             sampling=sampling,

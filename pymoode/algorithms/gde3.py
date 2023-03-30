@@ -1,7 +1,6 @@
 # pymoo imports
 from pymoo.core.population import Population
 from pymoo.util.dominator import get_relation
-from pymoo.operators.sampling.lhs import LHS
 
 # pymoode imports
 from pymoode.algorithms.base.differential import MODE
@@ -16,7 +15,6 @@ class GDE3(MODE):
     
     def __init__(self,
                  pop_size=100,
-                 sampling=LHS(),
                  variant="DE/rand/1/bin",
                  CR=0.5,
                  F=None,
@@ -40,9 +38,6 @@ class GDE3(MODE):
         ----------
         pop_size : int, optional
             Population size. Defaults to 100.
-
-        sampling : Sampling, optional
-            Sampling strategy of pymoo. Defaults to LHS().
 
         variant : str, optional
             Differential evolution strategy. Must be a string in the format: "DE/selection/n/crossover", in which, n in an integer of number of difference vectors, and crossover is either 'bin' or 'exp'. Selection variants are:
@@ -93,7 +88,6 @@ class GDE3(MODE):
         
         super().__init__(
             pop_size=pop_size,
-            sampling=sampling,
             variant=variant,
             CR=CR,
             F=F,
@@ -152,7 +146,7 @@ class GDE32NN(GDE3):
         super().__init__(pop_size, variant, CR, F, gamma, survival=survival, **kwargs)
 
 
-class GDE3PCD(GDE3):
+class GDE3P(GDE3):
 
     def __init__(self, pop_size=100, variant="DE/rand/1/bin", CR=0.5, F=None, gamma=0.0001, **kwargs):
         survival = RankAndCrowding(crowding_func="pcd")

@@ -42,7 +42,9 @@ class DifferentialMutation(DifferentialOperator):
                 - 'rand-init'
                 - 'to-bounds'
 
-            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
+            If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations,
+            Xb contains reference vectors for repair in feasible space,
+            xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
             Defaults to 'bounce-back'.
         
         n_diffs : int, optional
@@ -125,7 +127,7 @@ class DEM(DifferentialMutation):
         if not hasattr(de_repair, "__call__"):
             try:
                 de_repair = REPAIRS[de_repair]
-            except:
+            except Exception:
                 raise KeyError("Repair must be either callable or in " + str(list(REPAIRS.keys())))
 
         # Define which strategy of rotation will be used

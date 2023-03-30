@@ -85,5 +85,8 @@ def calc_pcd(X, n_remove=0):
         d[H] = _d
         d[extremes] = np.inf
     
+    # Divide by number of objectives to obtain correct metric
+    d = d / M
+    
     return d
 
