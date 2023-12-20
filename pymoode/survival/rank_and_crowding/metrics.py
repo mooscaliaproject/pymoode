@@ -88,7 +88,7 @@ class CrowdingDiversity:
         """
         pass
 
-    def do(self, F: np.ndarray, n_remove: int = 0) -> np.ndarray:
+    def do(self, F: np.ndarray, n_remove: int = 0, **kwargs) -> np.ndarray:
         """Computes diversity metric for a given objective space
 
         Parameters
