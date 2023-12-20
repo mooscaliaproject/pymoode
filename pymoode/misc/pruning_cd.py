@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def calc_pcd(X, n_remove=0):
 
     N = X.shape[0]
@@ -15,17 +16,17 @@ def calc_pcd(X, n_remove=0):
 
     extremes_min = np.argmin(X, axis=0)
     extremes_max = np.argmax(X, axis=0)
-    
+
     min_vals = np.min(X, axis=0)
     max_vals = np.max(X, axis=0)
 
     extremes = np.concatenate((extremes_min, extremes_max))
-    
+
     X = (X - min_vals) / (max_vals - min_vals)
-    
+
     H = np.arange(N)
     d = np.full(N, np.inf)
-    
+
     I = np.argsort(X, axis=0, kind='mergesort')
 
     # sort the objective space values for the whole matrix
@@ -47,7 +48,7 @@ def calc_pcd(X, n_remove=0):
     _d = np.sum(dist_to_last[J, np.arange(M)] + dist_to_next[J, np.arange(M)], axis=1)
     d[H] = _d
     d[extremes] = np.inf
-    
+
     n_removed = 0
 
     #While n_remove not acheived
@@ -57,9 +58,9 @@ def calc_pcd(X, n_remove=0):
         _d = d[H]
         _k = np.argmin(_d)
         k = H[_k]
-        
+
         H = H[H != k]
-        
+
         #Update index
         n_removed = n_removed + 1
 
@@ -84,6 +85,6 @@ def calc_pcd(X, n_remove=0):
         _d = np.sum(dist_to_last[J, np.arange(M)] + dist_to_next[J, np.arange(M)], axis=1)
         d[H] = _d
         d[extremes] = np.inf
-    
+
     return d
 

@@ -1,9 +1,13 @@
+# Native
+from typing import Optional, Tuple, Union
+from abc import abstractmethod
+
 # External
 import numpy as np
-from abc import abstractmethod
 
 # pymoo imports
 from pymoo.core.population import Population
+from pymoo.core.problem import Problem
 
 # pymoode imports
 from pymoode.operators.deop import DifferentialOperator
@@ -44,7 +48,7 @@ class DifferentialMutation(DifferentialOperator):
 
             If callable, has the form fun(X, Xb, xl, xu) in which X contains mutated vectors including violations, Xb contains reference vectors for repair in feasible space, xl is a 1d vector of lower bounds, and xu a 1d vector of upper bounds.
             Defaults to 'bounce-back'.
-        
+
         n_diffs : int, optional
             Number of difference vectors in operation, by default 1
 
@@ -62,20 +66,26 @@ class DifferentialMutation(DifferentialOperator):
         self.gamma = gamma
         self.de_repair = de_repair
 
-    def do(self, problem, pop, parents=None, **kwargs):
+    def do(
+        self,
+        problem: Problem,
+        pop: Population,
+        parents: Optional[np.ndarray] = None,
+        **kwargs
+    ):
         """Perform Differential Evolution mutation
 
         Parameters
         ----------
         problem : Problem
             Optimization problem
-        
+
         pop : Population
             Original parent population at a given generation
-        
-        parents : numpy.array (n_offsprings, n_select) of dtype int | None, optional
-            Parent (indexes) to crossover. 
-            If None, the argument pop should already be sampled as parents to crossover. 
+
+        parents : numpy.ndarray (n_offsprings, n_select) of dtype int | None, optional
+            Parent (indexes) to crossover.
+            If None, the argument pop should already be sampled as parents to crossover.
             By default None
 
         Returns
@@ -96,19 +106,24 @@ class DifferentialMutation(DifferentialOperator):
             V = self.de_repair(V, X[0], *problem.bounds())
 
         return Population.new("X", V)
-    
+
     @abstractmethod
-    def _do(self, problem, X, **kwargs):
+    def _do(
+        self,
+        problem: Problem,
+        X: np.ndarray,
+        **kwargs
+    ):
         pass
 
 
 class DEM(DifferentialMutation):
 
     def __init__(self,
-                 F=None,
-                 gamma=1e-4,
-                 de_repair="bounce-back",
-                 n_diffs=1,
+                 F: Optional[Union[float, Tuple[float, float]]] = None,
+                 gamma: float = 1e-4,
+                 de_repair: str = "bounce-back",
+                 n_diffs: int = 1,
                  **kwargs):
 
         # Default value for F
@@ -139,17 +154,17 @@ class DEM(DifferentialMutation):
             n_diffs=n_diffs, **kwargs,
         )
 
-    def _do(self, problem, X, **kwargs):
+    def _do(self, problem: Problem, X: np.ndarray, **kwargs):
         return self.de_mutation(X, return_differentials=False)
 
-    def de_mutation(self, X, return_differentials=True):
+    def de_mutation(self, X: np.ndarray, return_differentials=True):
         """Perform DE mutation operator
 
         Parameters
         ----------
-        X : numpy.array (n_parents, n_matings, n_var)
+        X : numpy.ndarray (n_parents, n_matings, n_var)
             Three dimensional array of parents selected to take part in DE mutation
-        
+
         return_differentials : bool, optional
             Either or not to return a tuple of ``(V, diffs)``, by default True
 
@@ -189,7 +204,13 @@ class DEM(DifferentialMutation):
     def _diff_simple(self, F, Xi, Xj, n_matings, n_var):
         return F[:, None] * (Xi - Xj)
 
-    def get_diffs(self, X, pairs, n_matings, n_var):
+    def get_diffs(
+        self,
+        X: np.ndarray,
+        pairs,
+        n_matings,
+        n_var
+    ):
 
         # The differentials from each pair subtraction
         diffs = np.zeros((n_matings, n_var))
@@ -219,21 +240,21 @@ def bounce_back(X, Xb, xl, xu):
 
     Parameters
     ----------
-    X : numpy.array (n_samples, n_var)
+    X : numpy.ndarray (n_samples, n_var)
         Original population in decision space (including violations)
-    
-    Xb : numpy.array (n_samples, n_var)
+
+    Xb : numpy.ndarray (n_samples, n_var)
         Feasible reference points in decision space
-    
-    xl : numpy.array (n_var,)
+
+    xl : numpy.ndarray (n_var,)
         Lower bounds for decision variables
-    
-    xu : numpy.array (n_var,)
+
+    xu : numpy.ndarray (n_var,)
         Upper bounds for decision variables
 
     Returns
     -------
-    numpy.array (n_samples, n_var)
+    numpy.ndarray (n_samples, n_var)
         Repaired population
     """
 
@@ -256,21 +277,21 @@ def midway(X, Xb, xl, xu):
 
     Parameters
     ----------
-    X : numpy.array (n_samples, n_var)
+    X : numpy.ndarray (n_samples, n_var)
         Original population in decision space (including violations)
-    
-    Xb : numpy.array (n_samples, n_var)
+
+    Xb : numpy.ndarray (n_samples, n_var)
         Feasible reference points in decision space
-    
-    xl : numpy.array (n_var,)
+
+    xl : numpy.ndarray (n_var,)
         Lower bounds for decision variables
-    
-    xu : numpy.array (n_var,)
+
+    xu : numpy.ndarray (n_var,)
         Upper bounds for decision variables
 
     Returns
     -------
-    numpy.array (n_samples, n_var)
+    numpy.ndarray (n_samples, n_var)
         Repaired population
     """
 
@@ -293,21 +314,21 @@ def to_bounds(X, Xb, xl, xu):
 
     Parameters
     ----------
-    X : numpy.array (n_samples, n_var)
+    X : numpy.ndarray (n_samples, n_var)
         Original population in decision space (including violations)
-    
-    Xb : numpy.array (n_samples, n_var)
+
+    Xb : numpy.ndarray (n_samples, n_var)
         Feasible reference points in decision space
-    
-    xl : numpy.array (n_var,)
+
+    xl : numpy.ndarray (n_var,)
         Lower bounds for decision variables
-    
-    xu : numpy.array (n_var,)
+
+    xu : numpy.ndarray (n_var,)
         Upper bounds for decision variables
 
     Returns
     -------
-    numpy.array (n_samples, n_var)
+    numpy.ndarray (n_samples, n_var)
         Repaired population
     """
 
@@ -333,21 +354,21 @@ def rand_init(X, Xb, xl, xu):
 
     Parameters
     ----------
-    X : numpy.array (n_samples, n_var)
+    X : numpy.ndarray (n_samples, n_var)
         Original population in decision space (including violations)
-    
-    Xb : numpy.array (n_samples, n_var)
+
+    Xb : numpy.ndarray (n_samples, n_var)
         Feasible reference points in decision space
-    
-    xl : numpy.array (n_var,)
+
+    xl : numpy.ndarray (n_var,)
         Lower bounds for decision variables
-    
-    xu : numpy.array (n_var,)
+
+    xu : numpy.ndarray (n_var,)
         Upper bounds for decision variables
 
     Returns
     -------
-    numpy.array (n_samples, n_var)
+    numpy.ndarray (n_samples, n_var)
         Repaired population
     """
 
@@ -371,21 +392,21 @@ def squared_bounce_back(X, Xb, xl, xu):
 
     Parameters
     ----------
-    X : numpy.array (n_samples, n_var)
+    X : numpy.ndarray (n_samples, n_var)
         Original population in decision space (including violations)
-    
-    Xb : numpy.array (n_samples, n_var)
+
+    Xb : numpy.ndarray (n_samples, n_var)
         Feasible reference points in decision space
-    
-    xl : numpy.array (n_var,)
+
+    xl : numpy.ndarray (n_var,)
         Lower bounds for decision variables
-    
-    xu : numpy.array (n_var,)
+
+    xu : numpy.ndarray (n_var,)
         Upper bounds for decision variables
 
     Returns
     -------
-    numpy.array (n_samples, n_var)
+    numpy.ndarray (n_samples, n_var)
         Repaired population
     """
 

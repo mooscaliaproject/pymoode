@@ -1,10 +1,16 @@
+# Native
+from typing import Optional
+
 # pymoo imports
 from pymoo.core.algorithm import Algorithm
 from pymoo.core.duplicate import DefaultDuplicateElimination, NoDuplicateElimination
 from pymoo.core.initialization import Initialization
 from pymoo.core.infill import InfillCriterion
 from pymoo.core.population import Population
-from pymoo.core.repair import NoRepair
+from pymoo.core.repair import NoRepair, Repair
+from pymoo.core.survival import Survival
+from pymoo.core.sampling import Sampling
+from pymoo.core.mating import Mating
 
 
 # =========================================================================================================
@@ -13,42 +19,44 @@ from pymoo.core.repair import NoRepair
 
 class EvolutionaryAlgorithm(Algorithm):
 
-    def __init__(self,
-                 pop_size=None,
-                 sampling=None,
-                 mating=None,
-                 survival=None,
-                 n_offsprings=None,
-                 eliminate_duplicates=True,
-                 repair=None,
-                 advance_after_initial_infill=False,
-                 **kwargs):
+    def __init__(
+        self,
+        pop_size: Optional[int] = None,
+        sampling: Optional[Sampling] = None,
+        mating: Optional[Mating] = None,
+        survival: Optional[Survival] = None,
+        n_offsprings: Optional[int] = None,
+        eliminate_duplicates: bool = True,
+        repair: Optional[Repair] = None,
+        advance_after_initial_infill: bool = False,
+        **kwargs
+    ):
         """Base class for Evolutionary Algorithms
 
         Parameters
         ----------
         pop_size : int, optional
             Population size, by default None
-        
+
         sampling : Sampling, optional
             pymoo Sampling instance, by default None
-        
+
         mating : InfillCriterion, optional
             pymoo mating operator, by default None
-        
+
         survival : Survival, optional
             pymoo survival operator, by default None
-        
+
         n_offsprings : int, optional
             Number of offspring individuals created at each generation, by default None
-        
+
         eliminate_duplicates : DuplicateElimination | bool | None, optional
             Eliminate duplicates in mating, by default True
-        
+
         repair : Repair, optional
             pymoo repair operator. In the algorithm level it should be called when sampling.
             It is recommended that mating operators also have some repair associated with. By default None
-        
+
         advance_after_initial_infill : bool, optional
             Either or not apply survival after initialization, by default False
         """

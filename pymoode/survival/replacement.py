@@ -1,3 +1,6 @@
+# Native
+from typing import Optional
+
 # External
 import numpy as np
 
@@ -5,7 +8,9 @@ import numpy as np
 from pymoo.core.duplicate import DefaultDuplicateElimination
 from pymoo.core.individual import Individual
 from pymoo.core.population import Population
+from pymoo.core.problem import Problem
 from pymoo.core.survival import Survival
+from pymoo.core.individual import Individual
 
 # pymoode imports
 from pymoode.survival.fitness import FitnessSurvival
@@ -15,7 +20,7 @@ from pymoode.survival.fitness import FitnessSurvival
 # Implementation
 # =========================================================================================================
 
-def is_better(_new, _old, eps=0.0):
+def is_better(_new: Individual, _old: Individual, eps=0.0):
     both_infeasible = not _old.feasible[0] and not _new.feasible[0]
     both_feasible = _old.feasible[0] and _new.feasible[0]
 
@@ -30,8 +35,11 @@ def is_better(_new, _old, eps=0.0):
 
 
 class BaseReplacement(Survival):
-    
-    def __init__(self, fitness=None):
+
+    def __init__(
+        self,
+        fitness: Optional[Survival] = None
+    ):
         """Base class for Replacement survival
 
         Parameters
@@ -44,7 +52,15 @@ class BaseReplacement(Survival):
             fitness = FitnessSurvival()
         self.fitness = fitness
 
-    def do(self, problem, pop, off, return_indices=False, inplace=False, **kwargs):
+    def do(
+        self,
+        problem: Problem,
+        pop: Population,
+        off: Population,
+        return_indices=False,
+        inplace=False,
+        **kwargs
+    ):
         """Given a problem a parent population and offspring canditates return next generation.
         By default, only fitness assigment is performed on parents. To define which ones should be replaced,
         define method ``_do`` in child classes that returns a boolean if parent should be replaced.
@@ -53,16 +69,16 @@ class BaseReplacement(Survival):
         ----------
         problem : Problem
             Pymoo problem
-        
+
         pop : Population
             Parent population
-        
+
         off : Population | None
             Offspring candidates. If None, only fitness assigment is performed on parents.
-        
+
         return_indices : bool, optional
             Either or not to just return boolean of positions to be replaced, by default False
-        
+
         inplace : bool, optional
             Change population inplace, by default False
 
@@ -71,7 +87,7 @@ class BaseReplacement(Survival):
         Population
             Population that proceeds into the next generation
         """
-        
+
         # If no offspring is available just do fitness assignment
         if (off is None) or len(off) == 0:
             return self.fitness.do(problem, pop, n_survive=None)
@@ -97,13 +113,27 @@ class BaseReplacement(Survival):
             pop[I] = off[I]
             return self.fitness.do(problem, pop, n_survive=None)
 
-    def _do(self, problem, pop, off, **kwargs):
+    def _do(
+        self,
+        problem: Problem,
+        pop: Population,
+        off: Population,
+        **kwargs
+    ):
         return np.zeros(len(pop), dtype=np.bool_)
 
 
 class ImprovementReplacement(BaseReplacement):
-    
-    def do(self, problem, pop, off, return_indices=False, inplace=False, **kwargs):
+
+    def do(
+        self,
+        problem: Problem,
+        pop: Population,
+        off: Population,
+        return_indices=False,
+        inplace=False,
+        **kwargs
+    ):
         """Given a problem a parent population and offspring canditates return next generation,
         it selects those that proceed into the next generation via one-to-one comparison.
         Feasible solutions are always preferred to infeasible and infeasible solutions are compared by
@@ -113,16 +143,16 @@ class ImprovementReplacement(BaseReplacement):
         ----------
         problem : Problem
             Pymoo problem
-        
+
         pop : Population
             Parent population
-        
+
         off : Population | None
             Offspring candidates. If None, only fitness assigment is performed on parents.
-        
+
         return_indices : bool, optional
             Either or not to just return boolean of positions to be replaced, by default False
-        
+
         inplace : bool, optional
             Change population inplace, by default False
 
@@ -133,7 +163,13 @@ class ImprovementReplacement(BaseReplacement):
         """
         return super().do(problem, pop, off, return_indices=False, inplace=False, **kwargs)
 
-    def _do(self, problem, pop, off, **kwargs):
+    def _do(
+        self,
+        problem: Problem,
+        pop: Population,
+        off: Population,
+        **kwargs
+    ):
 
         ret = np.full((len(pop), 1), False)
 

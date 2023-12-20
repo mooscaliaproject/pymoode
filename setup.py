@@ -12,7 +12,7 @@ from setuptools.command.build_ext import build_ext
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
-    
+
 BASE_PACKAGE = 'pymoode'
 
 base_kwargs = dict(
@@ -42,7 +42,7 @@ base_kwargs = dict(
         ],
     install_requires=[
             'numpy>=1.19.*',
-            'pymoo==0.6.*',
+            'pymoo==0.6.1',
             'scipy>=1.7.*',
             'future',
         ],
@@ -104,7 +104,7 @@ ROOT = os.path.dirname(os.path.realpath(__file__))
 
 if params.nopyx:
     ext_modules = []
-    
+
 else:
     try:
         if params.nocython:
@@ -136,14 +136,14 @@ if not params.nolibs:
         try:
             import numpy as np
             base_kwargs['include_dirs'] = [np.get_include()]
-            
+
         except BaseException:
             raise CompileError(
                 "NumPy libraries must be installed for compiled extensions! Speedups are not enabled."
             )
-        
+
         base_kwargs['cmdclass'] = dict(build_ext=construct_build_ext(build_ext))
-    
+
     else:
         print('*' * 75)
         print("External cython modules found.")

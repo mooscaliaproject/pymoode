@@ -1,11 +1,14 @@
+# Native
+import warnings
+
 # External
 import numpy as np
-import warnings
 
 # pymoo imports
 from pymoo.operators.mutation.nom import NoMutation
 from pymoo.core.infill import InfillCriterion
 from pymoo.core.population import Population
+from pymoo.core.problem import Problem
 
 # pymoode imports
 from pymoode.operators.des import DES
@@ -67,7 +70,7 @@ class DifferentialVariant(InfillCriterion):
 
         genetic_mutation : Mutation, optional
             Pymoo's genetic algorithm's mutation operator after crossover. Defaults to NoMutation().
-        
+
         repair : Repair, optional
             Pymoo's repair operator after mutation. Defaults to NoRepair().
         """
@@ -88,7 +91,7 @@ class DifferentialVariant(InfillCriterion):
 
         # Define parent selection operator
         self.selection = DES(selection_variant)
-        
+
         # Define differential evolution mutation
         self.de_mutation = DEM(F=F, gamma=gamma, de_repair=de_repair, n_diffs=n_diffs)
 
@@ -98,7 +101,13 @@ class DifferentialVariant(InfillCriterion):
         # Define posterior mutation strategy and repair
         self.genetic_mutation = genetic_mutation if genetic_mutation is not None else NoMutation()
 
-    def _do(self, problem, pop, n_offsprings, **kwargs):
+    def _do(
+        self,
+        problem: Problem,
+        pop: Population,
+        n_offsprings: int,
+        **kwargs
+    ):
 
         # Select parents including donor vector
         parents = self.selection(
@@ -109,7 +118,7 @@ class DifferentialVariant(InfillCriterion):
 
         # Mutant vectors from DE
         mutants = self.de_mutation(problem, pop, parents, **kwargs)
-        
+
         # Crossover between mutant vector and target
         matings = self.merge_columnwise(pop, mutants)
         trials = self.crossover(problem, matings, **kwargs)
@@ -118,11 +127,11 @@ class DifferentialVariant(InfillCriterion):
         off = self.genetic_mutation(problem, trials, **kwargs)
 
         return off
-    
+
     @property
     def n_parents(self):
         return self.de_mutation.n_parents
-    
+
     @staticmethod
     def merge_columnwise(*populations):
         matings = np.column_stack(populations).view(Population)

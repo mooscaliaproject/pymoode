@@ -1,12 +1,10 @@
 build
 dist
+dist.*
 experimental
-pymoode.egg-info
+*.egg-info
 /venv
 */venv
-cythonize_files.py
 /pymoode/cython/*.html
 /pymoode/cython/*.pyd
 __pycache__/
-cheat_codes.txt
-notebooks/validate_runtime.ipynb

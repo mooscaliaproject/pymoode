@@ -3,7 +3,6 @@ import numpy as np
 from scipy.spatial.distance import pdist, squareform
 
 # pymoo imports
-from pymoo.algorithms.moo.nsga2 import calc_crowding_distance as _calc_crowding_distance
 from pymoo.util.misc import find_duplicates
 
 
@@ -24,11 +23,6 @@ except:
 # =========================================================================================================
 # pymoode imports and definitions
 # =========================================================================================================
-
-
-# Redefine function to be able to support more kwargs
-def calc_crowding_distance(F, **kwargs):
-    return _calc_crowding_distance(F, filter_out_duplicates=True)
 
 
 if IS_COMPILED:
@@ -89,7 +83,22 @@ def get_crowding_function(label):
 
 class CrowdingDiversity:
 
-    def do(self, F, n_remove=0):
+    def do(self, F: np.ndarray, n_remove: int = 0) -> np.ndarray:
+        """Computes diversity metric for a given objective space
+
+        Parameters
+        ----------
+        F : 2d array like
+        Objective space (each row represents an individual and each column an objective)
+
+        n_remove : int, optional
+            Number of individuals to be removed (in case of recursive elimination), by default 0
+
+        Returns
+        -------
+        np.ndarray
+            Diversity metric (1d)
+        """
         # Converting types Python int to Cython int would fail in some cases converting to long instead
         n_remove = np.intc(n_remove)
         F = np.array(F, dtype=np.double)
@@ -108,7 +117,7 @@ class FunctionalDiversity(CrowdingDiversity):
 
     def _do(self, F, **kwargs):
 
-        n_points, n_obj = F.shape
+        n_points, _ = F.shape
 
         if n_points <= 2:
             return np.full(n_points, np.inf)
@@ -146,18 +155,15 @@ class FuncionalDiversityMNN(FunctionalDiversity):
             return super()._do(F, **kwargs)
 
 
-def calc_crowding_entropy(F, filter_out_duplicates=True, **kwargs):
-    """Wang, Y.-N., Wu, L.-H. & Yuan, X.-F., 2010. Multi-objective self-adaptive differential 
-    evolution with elitist archive and crowding entropy-based diversity measure. 
+def calc_crowding_entropy(F, **kwargs) -> np.ndarray:
+    """Wang, Y.-N., Wu, L.-H. & Yuan, X.-F., 2010. Multi-objective self-adaptive differential
+    evolution with elitist archive and crowding entropy-based diversity measure.
     Soft Comput., 14(3), pp. 193-209.
 
     Parameters
     ----------
     F : 2d array like
-        Objective functions.
-
-    filter_out_duplicates : bool, optional
-        Defaults to True.
+        Objective space (each row represents an individual and each column an objective)
 
     Returns
     -------
@@ -206,6 +212,48 @@ def calc_crowding_entropy(F, filter_out_duplicates=True, **kwargs):
     ce = _cej.sum(axis=1)
 
     return ce
+
+
+def calc_crowding_distance(F: np.ndarray, **kwargs) -> np.ndarray:
+    """Pymoo's native function to compute crowding distances
+
+    Parameters
+    ----------
+    F : 2d array like
+        Objective space (each row represents an individual and each column an objective)
+
+    Returns
+    -------
+    crwoding_distances : 1d array
+    """
+    _, n_obj = F.shape
+
+    # sort each column and get index
+    I = np.argsort(F, axis=0, kind='mergesort')
+
+    # sort the objective space values for the whole matrix
+    F = F[I, np.arange(n_obj)]
+
+    # calculate the distance from each point to the last and next
+    dist = np.row_stack([F, np.full(n_obj, np.inf)]) - np.row_stack([np.full(n_obj, -np.inf), F])
+
+    # calculate the norm for each objective - set to NaN if all values are equal
+    norm = np.max(F, axis=0) - np.min(F, axis=0)
+    norm[norm == 0] = np.nan
+
+    # prepare the distance to last and next vectors
+    dist_to_last, dist_to_next = dist, np.copy(dist)
+    dist_to_last, dist_to_next = dist_to_last[:-1] / norm, dist_to_next[1:] / norm
+
+    # if we divide by zero because all values in one columns are equal replace by none
+    dist_to_last[np.isnan(dist_to_last)] = 0.0
+    dist_to_next[np.isnan(dist_to_next)] = 0.0
+
+    # sum up the distance to next and last and norm by objectives - also reorder from sorted list
+    J = np.argsort(I, axis=0)
+    cd = np.sum(dist_to_last[J, np.arange(n_obj)] + dist_to_next[J, np.arange(n_obj)], axis=1) / n_obj
+
+    return cd
 
 
 def calc_mnn_fast(F, **kwargs):
