@@ -1,3 +1,6 @@
+# Native
+from typing import Optional
+
 # External
 import numpy as np
 
@@ -35,7 +38,7 @@ class DifferentialEvolution(EvolutionaryAlgorithm):
                  **kwargs):
         """
         Base class for Differential Evolution algorithms
-        
+
         Parameters
         ----------
         pop_size : int, optional
@@ -81,7 +84,7 @@ class DifferentialEvolution(EvolutionaryAlgorithm):
 
         genetic_mutation, optional
             Pymoo's genetic mutation operator after crossover. Defaults to NoMutation().
-        
+
         survival : Survival, optional
             Replacement survival operator. Defaults to ImprovementReplacement().
 
@@ -109,7 +112,7 @@ class DifferentialEvolution(EvolutionaryAlgorithm):
             advance_after_initial_infill=advance_after_initial_infill,
             **kwargs,
         )
-        
+
         self.termination = DefaultSingleObjectiveTermination()
 
     def _initialize_advance(self, infills=None, **kwargs):
@@ -125,7 +128,7 @@ class DifferentialEvolution(EvolutionaryAlgorithm):
 
         # One-to-one replacement survival
         self.pop = self.survival.do(self.problem, self.pop, infills)
-    
+
     def _set_optimum(self, **kwargs):
         if not has_feasible(self.pop):
             self.opt = self.pop[[np.argmin(self.pop.get("CV"))]]
@@ -134,7 +137,7 @@ class DifferentialEvolution(EvolutionaryAlgorithm):
 
 
 class MODE(DifferentialEvolution):
-    
+
     def __init__(self,
                  pop_size=100,
                  sampling=LHS(),
@@ -146,7 +149,7 @@ class MODE(DifferentialEvolution):
                  survival=RankAndCrowding(),
                  output=MultiObjectiveOutput(),
                  **kwargs):
-        
+
         super().__init__(
             pop_size=pop_size,
             sampling=sampling,
@@ -159,8 +162,8 @@ class MODE(DifferentialEvolution):
             output=output,
             **kwargs,
         )
-        
+
         self.termination = DefaultMultiObjectiveTermination()
-    
+
     def _initialize_advance(self, infills=None, **kwargs):
         self.pop = self.survival.do(self.problem, infills, None, n_survive=self.pop_size)

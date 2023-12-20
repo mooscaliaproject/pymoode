@@ -11,7 +11,7 @@ from pymoode.survival import RankAndCrowding
 # =========================================================================================================
 
 class NSDE(MODE):
-    
+
     def __init__(self,
                  pop_size=100,
                  variant="DE/rand/1/bin",
@@ -22,7 +22,7 @@ class NSDE(MODE):
                  survival=RankAndCrowding(),
                  **kwargs):
         """
-        NSDE is an algorithm that combines that combines NSGA-II sorting and survival strategies 
+        NSDE is an algorithm that combines that combines NSGA-II sorting and survival strategies
         to DE mutation and crossover.
 
         For many-objective problems, try using NSDE-R, GDE3-MNN, or GDE3-2NN.
@@ -93,7 +93,7 @@ class NSDE(MODE):
             survival=survival,
             **kwargs,
         )
-        
+
     def _advance(self, infills=None, **kwargs):
 
         assert infills is not None, "This algorithms uses the AskAndTell interface thus 'infills' must to be provided."

@@ -1,9 +1,13 @@
+# Native
+from abc import abstractmethod
+from typing import Optional, Union
+
 # External
 import numpy as np
-from abc import abstractmethod
 
 # pymoo imports
 from pymoo.core.population import Population
+from pymoo.core.problem import Problem
 
 # pymoode imports
 from pymoode.operators.deop import DifferentialOperator
@@ -14,7 +18,7 @@ from pymoode.operators.deop import DifferentialOperator
 # =========================================================================================================
 
 class DifferentialCrossover(DifferentialOperator):
-    
+
     def __init__(self,
                  variant="bin",
                  CR=0.7,
@@ -29,7 +33,7 @@ class DifferentialCrossover(DifferentialOperator):
             Crossover variant. Must be either "bin", "exp", or callable. By default "bin".
             If callable, it has the form:
             ``cross_function(n_matings, n_var, CR, at_least_once=True)``
-        
+
         CR : float, optional
             Crossover parameter. Defined in the range [0, 1]
             To reinforce mutation, use higher values. To control convergence speed, use lower values.
@@ -37,16 +41,22 @@ class DifferentialCrossover(DifferentialOperator):
         at_least_once : bool, optional
             Either or not offsprings must inherit at least one attribute from mutant vectors, by default True
         """
-        
+
         # __init__ operator
         super().__init__(n_parents=2, **kwargs)
-        
+
         self.CR = CR
         self.variant = variant
         self.at_least_once = at_least_once
-    
-    def do(self, problem, pop, parents=None, **kwargs):
-        
+
+    def do(
+        self,
+        problem: Problem,
+        pop: Population,
+        parents: Optional[Union[Population, np.ndarray]] = None,
+        **kwargs
+    ):
+
         # Convert pop if parents is not None
         pop, X = self.default_prepare(pop, parents)
 
@@ -54,26 +64,26 @@ class DifferentialCrossover(DifferentialOperator):
         U = self._do(problem, X, **kwargs)
 
         return Population.new("X", U)
-    
+
     @abstractmethod
-    def _do(self, problem, X, **kwargs):
+    def _do(self, problem: Problem, X: np.ndarray, **kwargs):
         pass
 
 
 class DEX(DifferentialCrossover):
-    
+
     def __init__(self,
                  variant="bin",
                  CR=0.7,
                  at_least_once=True,
                  **kwargs):
-        
+
         super().__init__(
             variant=variant, CR=CR,
             at_least_once=at_least_once,
             **kwargs,
         )
-        
+
         if self.variant == "bin":
             self.cross_function = cross_binomial
         elif self.variant == "exp":
@@ -83,20 +93,20 @@ class DEX(DifferentialCrossover):
         else:
             raise ValueError("Crossover variant must be either 'bin', 'exp', or callable")
 
-    def _do(self, problem, X, **kwargs):
-        
+    def _do(self, problem: Problem, X: np.ndarray, **kwargs):
+
         # Decompose input vector
         V = X[1]
         X_ = X[0]
         U = np.array(X_, copy=True)
-        
+
         # About X
         n_matings, n_var = X_.shape
-        
+
         # Mask
         M = self.cross_function(n_matings, n_var, self.CR, self.at_least_once)
         U[M] = V[M]
-        
+
         return U
 
 
@@ -106,7 +116,7 @@ class DEX(DifferentialCrossover):
 
 
 # From version 0.5.0 of pymoo
-def row_at_least_once_true(M):
+def row_at_least_once_true(M: np.ndarray):
 
     _, d = M.shape
 

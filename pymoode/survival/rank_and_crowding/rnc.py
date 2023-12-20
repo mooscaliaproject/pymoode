@@ -1,12 +1,16 @@
+# Native
+import warnings
+from typing import Optional
+
 # External
 import numpy as np
-import warnings
 
 # pymoo imports
 from pymoo.util.randomized_argsort import randomized_argsort
 from pymoo.util.nds.non_dominated_sorting import NonDominatedSorting
 from pymoo.core.survival import Survival, split_by_feasibility
 from pymoo.core.population import Population
+from pymoo.core.problem import Problem
 
 # pymoode imports
 from pymoode.survival.rank_and_crowding.metrics import get_crowding_function
@@ -50,8 +54,8 @@ class RankAndCrowding(Survival):
             in which F (n, m) and must return metrics in a (n,) array.
 
             The options 'pcd', 'cd', and 'ce' are recommended for two-objective problems, whereas 'mnn' and '2nn' for many objective.
-            When using 'pcd', 'mnn', or '2nn', individuals are already eliminated in a 'single' manner. 
-            Due to Cython implementation, they are as fast as the corresponding 'cd', 'mnn-fast', or '2nn-fast', 
+            When using 'pcd', 'mnn', or '2nn', individuals are already eliminated in a 'single' manner.
+            Due to Cython implementation, they are as fast as the corresponding 'cd', 'mnn-fast', or '2nn-fast',
             although they can singnificantly improve diversity of solutions.
             Defaults to 'cd'.
         """
@@ -67,12 +71,14 @@ class RankAndCrowding(Survival):
         self.nds = nds if nds is not None else NonDominatedSorting()
         self.crowding_func = crowding_func_
 
-    def _do(self,
-            problem,
-            pop,
-            *args,
-            n_survive=None,
-            **kwargs):
+    def _do(
+        self,
+        problem: Problem,
+        pop: Population,
+        *args,
+        n_survive: Optional[int] = None,
+        **kwargs
+    ):
 
         # get the objective space values and objects
         F = pop.get("F").astype(float, copy=False)
@@ -84,7 +90,7 @@ class RankAndCrowding(Survival):
         fronts = self.nds.do(F, n_stop_if_ranked=n_survive)
 
         for k, front in enumerate(fronts):
-            
+
             I = np.arange(len(front))
 
             # current front sorted by crowding distance if splitting
@@ -148,8 +154,8 @@ class ConstrRankAndCrowding(Survival):
             in which F (n, m) and must return metrics in a (n,) array.
 
             The options 'pcd', 'cd', and 'ce' are recommended for two-objective problems, whereas 'mnn' and '2nn' for many objective.
-            When using 'pcd', 'mnn', or '2nn', individuals are already eliminated in a 'single' manner. 
-            Due to Cython implementation, they are as fast as the corresponding 'cd', 'mnn-fast', or '2nn-fast', 
+            When using 'pcd', 'mnn', or '2nn', individuals are already eliminated in a 'single' manner.
+            Due to Cython implementation, they are as fast as the corresponding 'cd', 'mnn-fast', or '2nn-fast',
             although they can singnificantly improve diversity of solutions.
             Defaults to 'cd'.
         """
@@ -163,7 +169,14 @@ class ConstrRankAndCrowding(Survival):
         self.nds = nds if nds is not None else NonDominatedSorting()
         self.ranking = RankAndCrowding(nds=nds, crowding_func=crowding_func)
 
-    def _do(self, problem, pop, *args, n_survive=None, **kwargs):
+    def _do(
+        self,
+        problem: Problem,
+        pop: Population,
+        *args,
+        n_survive: Optional[int] = None,
+        **kwargs
+    ):
 
         if n_survive is None:
             n_survive = len(pop)

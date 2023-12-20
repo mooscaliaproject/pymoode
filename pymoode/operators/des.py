@@ -1,9 +1,13 @@
+# Native
+import warnings
+
 # External
 import numpy as np
-import warnings
 
 # pymoo imports
 from pymoo.core.selection import Selection
+from pymoo.core.population import Population
+from pymoo.core.problem import Problem
 
 
 # =========================================================================================================
@@ -14,7 +18,7 @@ from pymoo.core.selection import Selection
 # This is the core differential evolution selection class
 class DES(Selection):
 
-    def __init__(self, variant, **kwargs):
+    def __init__(self, variant: str, **kwargs):
         """Differential Evolution parent selection class
 
         Parameters
@@ -33,7 +37,14 @@ class DES(Selection):
         super().__init__()
         self.variant = variant
 
-    def _do(self, problem, pop, n_select, n_parents, **kwargs):
+    def _do(
+        self,
+        problem: Problem,
+        pop: Population,
+        n_select: int,
+        n_parents: int,
+        **kwargs
+    ):
 
         # Obtain number of elements in population
         n_pop = len(pop)
@@ -52,13 +63,13 @@ class DES(Selection):
 
         elif self.variant == "current-to-rand":
             P = self._current_to_rand(pop, n_select, n_parents)
-        
+
         elif self.variant == "rand-to-best":
             P = self._rand_to_best(pop, n_select, n_parents)
 
         elif self.variant == "rand":
             P = self._rand(pop, n_select, n_parents)
-            
+
         else:
             _warn_variant()
             P = self._rand(pop, n_select, n_parents)
@@ -182,15 +193,15 @@ class DES(Selection):
                 reselect = get_reselect(P, target, j)
 
         return P
-    
+
     def _rand_to_best(self, pop, n_select, n_parents, **kwargs):
-        
+
         PB = self._best(pop, n_select, n_parents, **kwargs)
         P = PB.copy()
-        
+
         P[:, 0] = PB[:, 1]
         P[:, 1] = PB[:, 0]
-        
+
         return P
 
     def _ranked(self, pop, n_select, n_parents, **kwargs):
@@ -215,11 +226,11 @@ def _warn_variant():
     )
 
 
-def get_reselect(P, target, j):
+def get_reselect(P: np.ndarray, target: np.ndarray, j: int):
     return (P[:, j] == target) | (P[:, j].reshape([-1, 1]) == P[:, :j]).any(axis=1)
 
 
-def ranks_from_cv(pop):
+def ranks_from_cv(pop: Population):
 
     ranks = pop.get("rank")
     cv_elements = ranks == None
@@ -230,7 +241,7 @@ def ranks_from_cv(pop):
     return ranks
 
 
-def rank_sort(P, pop):
+def rank_sort(P: np.ndarray, pop: Population):
 
     ranks = ranks_from_cv(pop)
 
@@ -248,7 +259,7 @@ def rank_sort(P, pop):
     return P
 
 
-def reiforce_directions(P, pop):
+def reiforce_directions(P: np.ndarray, pop: Population):
 
     ranks = ranks_from_cv(pop)
 
