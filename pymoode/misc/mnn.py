@@ -7,9 +7,6 @@ def calc_mnn(X, n_remove=0, twonn=False):
     N = X.shape[0]
     M = X.shape[1]
 
-    if N <= M:
-        return np.full(N, np.inf)
-
     if n_remove <= (N - M):
         if n_remove < 0:
             n_remove = 0
@@ -20,6 +17,9 @@ def calc_mnn(X, n_remove=0, twonn=False):
 
     if twonn:
         M = 2
+
+    if N <= M:
+        return np.full(N, np.inf)
 
     extremes_min = np.argmin(X, axis=0)
     extremes_max = np.argmax(X, axis=0)
@@ -62,4 +62,3 @@ def calc_mnn(X, n_remove=0, twonn=False):
             d[extremes] = np.inf
 
     return d
-

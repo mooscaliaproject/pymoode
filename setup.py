@@ -18,7 +18,7 @@ BASE_PACKAGE = 'pymoode'
 base_kwargs = dict(
     name = 'pymoode',
     packages = [BASE_PACKAGE] + [f"{BASE_PACKAGE}." + e for e in find_packages(where=BASE_PACKAGE)],
-    version = '0.3.0rc2',
+    version = '0.3.0rc3',
     license='Apache License 2.0',
     description = 'A Python optimization package using Differential Evolution.',
     long_description=long_description,

@@ -31,14 +31,9 @@ def calc_mnn(double[:, :] X, int n_remove=0):
     N = X.shape[0]
     M = X.shape[1]
 
-    if N <= M:
-        return np.full(N, HUGE_VAL, dtype=np.double)
-
     if n_remove <= (N - M):
         if n_remove < 0:
             n_remove = 0
-        else:
-            pass
     else:
         n_remove = N - M
 
@@ -71,8 +66,6 @@ def calc_2nn(double[:, :] X, int n_remove=0):
     if n_remove <= (N - M):
         if n_remove < 0:
             n_remove = 0
-        else:
-            pass
     else:
         n_remove = N - M
 
@@ -94,7 +87,7 @@ def calc_2nn(double[:, :] X, int n_remove=0):
     return c_calc_mnn(X, n_remove, N, M, extremes)
 
 
-cdef c_calc_mnn(double[:, :] X, int n_remove, int N, int M, cpp_set[int] extremes):
+cdef double[:] c_calc_mnn(double[:, :] X, int n_remove, int N, int M, cpp_set[int] extremes):
 
     cdef:
         int n, mm, i, j, n_removed, k, MM
@@ -104,6 +97,10 @@ cdef c_calc_mnn(double[:, :] X, int n_remove, int N, int M, cpp_set[int] extreme
         double[:, :] D
         double[:] d
         int[:, :] Mnn
+
+    # Return infinity if not enough points
+    if N <= M:
+        return np.full(N, HUGE_VAL, dtype=np.double)
 
     # Define items to calculate distances
     calc_items = cpp_set[int]()
