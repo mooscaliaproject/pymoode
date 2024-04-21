@@ -4,7 +4,6 @@ on:
     branches:
       - deploy
 
-
 jobs:
 
   build:
@@ -52,7 +51,7 @@ jobs:
         with:
           build-requirements: "cython numpy"
           pip-wheel-args: "-w ./dist --no-deps"
-          python-versions: "cp37-cp37m cp38-cp38 cp39-cp39 cp310-cp310 cp311-cp311"
+          python-versions: "cp37-cp37m cp38-cp38 cp39-cp39 cp310-cp310 cp311-cp311 cp312-cp312"
       - name: "Remove non-compatible packages"
         run: "sudo rm dist/*linux_x86_64.whl\n"
       - uses: actions/upload-artifact@v3
