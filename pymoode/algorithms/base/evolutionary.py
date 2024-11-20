@@ -3,23 +3,25 @@ from typing import Optional
 
 # pymoo imports
 from pymoo.core.algorithm import Algorithm
-from pymoo.core.duplicate import DefaultDuplicateElimination, NoDuplicateElimination
-from pymoo.core.initialization import Initialization
+from pymoo.core.duplicate import (
+    DefaultDuplicateElimination,
+    NoDuplicateElimination,
+)
 from pymoo.core.infill import InfillCriterion
+from pymoo.core.initialization import Initialization
+from pymoo.core.mating import Mating
 from pymoo.core.population import Population
 from pymoo.core.repair import NoRepair, Repair
-from pymoo.core.survival import Survival
 from pymoo.core.sampling import Sampling
-from pymoo.core.mating import Mating
+from pymoo.core.survival import Survival
 
-
-# =========================================================================================================
+# =============================================================================
 # Implementation
-# =========================================================================================================
+# =============================================================================
+
 
 class EvolutionaryAlgorithm(Algorithm):
-
-    def __init__(
+    def __init__(  # noqa: PLR0913, PLR0917
         self,
         pop_size: Optional[int] = None,
         sampling: Optional[Sampling] = None,
@@ -29,7 +31,7 @@ class EvolutionaryAlgorithm(Algorithm):
         eliminate_duplicates: bool = True,
         repair: Optional[Repair] = None,
         advance_after_initial_infill: bool = False,
-        **kwargs
+        **kwargs,
     ):
         """Base class for Evolutionary Algorithms
 
@@ -48,14 +50,17 @@ class EvolutionaryAlgorithm(Algorithm):
             pymoo survival operator, by default None
 
         n_offsprings : int, optional
-            Number of offspring individuals created at each generation, by default None
+            Number of offspring individuals created at each generation,
+            by default None
 
         eliminate_duplicates : DuplicateElimination | bool | None, optional
             Eliminate duplicates in mating, by default True
 
         repair : Repair, optional
-            pymoo repair operator. In the algorithm level it should be called when sampling.
-            It is recommended that mating operators also have some repair associated with. By default None
+            pymoo repair operator. In the algorithm level it should be called
+            when sampling.
+            It is recommended that mating operators also have some repair
+            associated with. By default None
 
         advance_after_initial_infill : bool, optional
             Either or not apply survival after initialization, by default False
@@ -79,7 +84,8 @@ class EvolutionaryAlgorithm(Algorithm):
         if self.n_offsprings is None:
             self.n_offsprings = pop_size
 
-        # set the duplicate detection class - a boolean value chooses the default duplicate detection
+        # set the duplicate detection class - a boolean value chooses
+        # the default duplicate detection
         if isinstance(eliminate_duplicates, bool):
             if eliminate_duplicates:
                 self.eliminate_duplicates = DefaultDuplicateElimination()
@@ -92,7 +98,8 @@ class EvolutionaryAlgorithm(Algorithm):
         self.repair = repair if repair is not None else NoRepair()
 
         self.initialization = Initialization(
-            sampling, repair=self.repair,
+            sampling,
+            repair=self.repair,
             eliminate_duplicates=self.eliminate_duplicates,
         )
 
@@ -100,28 +107,39 @@ class EvolutionaryAlgorithm(Algorithm):
             mating = InfillCriterion(
                 repair=self.repair,
                 eliminate_duplicates=self.eliminate_duplicates,
-        )
+            )
         self.mating = mating
 
-        # other run specific data updated whenever solve is called - to share them in all algorithms
+        # other run specific data updated whenever solve is called
+        # - to share them in all algorithms
         self.n_gen = None
         self.pop = None
         self.off = None
 
     def _initialize_infill(self):
-        pop = self.initialization.do(self.problem, self.pop_size, algorithm=self)
+        pop = self.initialization.do(
+            self.problem, self.pop_size, algorithm=self
+        )
         return pop
 
     def _initialize_advance(self, infills=None, **kwargs):
         if self.advance_after_initial_infill:
-            self.pop = self.survival.do(self.problem, infills, n_survive=len(infills), algorithm=self, **kwargs)
+            self.pop = self.survival.do(
+                self.problem,
+                infills,
+                n_survive=len(infills),
+                algorithm=self,
+                **kwargs,
+            )
 
     def _infill(self):
-
         # do the mating using the current population
-        off = self.mating.do(self.problem, self.pop, self.n_offsprings, algorithm=self)
+        off = self.mating.do(
+            self.problem, self.pop, self.n_offsprings, algorithm=self
+        )
 
-        # if the mating could not generate any new offspring (duplicate elimination might make that happen)
+        # if the mating could not generate any new offspring
+        # (duplicate elimination might make that happen)
         if len(off) == 0:
             self.termination.force_termination = True
             return
@@ -129,12 +147,14 @@ class EvolutionaryAlgorithm(Algorithm):
         # if not the desired number of offspring could be created
         elif len(off) < self.n_offsprings:
             if self.verbose:
-                print("WARNING: Mating could not produce the required number of (unique) offsprings!")
+                print(
+                    'WARNING: Mating could not produce the'
+                    ' required number of (unique) offsprings!'
+                )
 
         return off
 
     def _advance(self, infills=None, **kwargs):
-
         # the current population
         pop = self.pop
 
@@ -143,4 +163,10 @@ class EvolutionaryAlgorithm(Algorithm):
             pop = Population.merge(self.pop, infills)
 
         # execute the survival to find the fittest solutions
-        self.pop = self.survival.do(self.problem, pop, n_survive=self.pop_size, algorithm=self, **kwargs)
+        self.pop = self.survival.do(
+            self.problem,
+            pop,
+            n_survive=self.pop_size,
+            algorithm=self,
+            **kwargs,
+        )
