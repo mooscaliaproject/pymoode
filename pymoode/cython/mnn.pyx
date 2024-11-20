@@ -2,9 +2,11 @@
 # cython: language_level=2, boundscheck=False, wraparound=False, cdivision=True
 
 # This was implemented using the full distances matrix
-# Other strategies can be more efficient depending on the population size and number of objectives
+# Other strategies can be more efficient depending on the population size
+# and number of objectives
 # This approach was the most promising for N = 3
-# I believe for a large number of objectives M, some strategy based on upper bounds for distances would be helpful
+# I believe for a large number of objectives M, some strategy
+# based on upper bounds for distances would be helpful
 # Those interested in contributing please contact me at bruscalia12@gmail.com
 
 
