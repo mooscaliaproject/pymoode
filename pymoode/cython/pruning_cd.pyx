@@ -3,7 +3,7 @@
 
 import numpy as np
 
-from pymoode.cython.utils cimport c_get_drop, c_get_argmin, c_get_argmax, c_normalize_array
+from pymoode.cython.utils cimport c_get_drop, c_normalize_array
 
 from libcpp cimport bool
 from libcpp.vector cimport vector
@@ -34,8 +34,16 @@ def calc_pcd(double[:, :] X, int n_remove=0):
     else:
         n_remove = N - M
 
-    extremes_min = c_get_argmin(X)
-    extremes_max = c_get_argmax(X)
+    _I = np.argsort(X, axis=0, kind='mergesort').astype(np.intc)
+    I = _I[:, :]
+
+    extremes_min = vector[int]()
+    for n in I[0, :]:
+        extremes_min.push_back(n)
+
+    extremes_max = vector[int]()
+    for n in I[N - 1, :]:
+        extremes_max.push_back(n)
 
     extremes = cpp_set[int]()
 
@@ -45,16 +53,20 @@ def calc_pcd(double[:, :] X, int n_remove=0):
     for n in extremes_max:
         extremes.insert(n)
 
-    _I = np.argsort(X, axis=0, kind='mergesort').astype(np.intc)
-    I = _I[:, :]
-
     X = c_normalize_array(X, extremes_max, extremes_min)
 
     return c_calc_pcd(X, I, n_remove, N, M, extremes)
 
 
 # Returns crowding metrics with recursive elimination
-cdef c_calc_pcd(double[:, :] X, int[:, :] I, int n_remove, int N, int M, cpp_set[int] extremes):
+cdef c_calc_pcd(
+    double[:, :] X,
+    int[:, :] I,
+    int n_remove,
+    int N,
+    int M,
+    cpp_set[int] extremes
+):
 
     cdef:
         int n, n_removed, k
